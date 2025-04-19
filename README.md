@@ -3,6 +3,7 @@
 Mcdoc for mod Origins - definition files using the schema format, mcdoc, for describing data structures used by Minecraft, including its CODECs, JSONs, and NBTs
 
 Dependencies: Datapack Helper Plus by Spyglass (ofc)
+
 Reference mcdoc used: https://github.com/SpyglassMC/vanilla-mcdoc
 
 ## How to use
