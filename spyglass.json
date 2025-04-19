@@ -1,0 +1,37 @@
+{
+  "env": {
+    "mcmetaSummaryOverrides": {
+      "commands": {
+        "path": "./spyglass/commands.json",
+        "replace": false
+      }
+    },
+    "customResources": {
+      "badges": {
+        "category": "origins:badge",
+        "ext": ".json",
+        "pack": "data"
+      },
+      "global_powers": {
+        "category": "origins:global_power",
+        "ext": ".json",
+        "pack": "data"
+      },
+      "origins": {
+        "category": "origins:origin",
+        "ext": ".json",
+        "pack": "data"
+      },
+      "origin_layers": {
+        "category": "origins:origin_layer",
+        "ext": ".json",
+        "pack": "data"
+      },
+      "powers": {
+        "category": "origins:power",
+        "ext": ".json",
+        "pack": "data"
+      }
+    }
+  }
+}

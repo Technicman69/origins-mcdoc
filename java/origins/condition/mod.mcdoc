@@ -1,0 +1,7 @@
+use ::java::origins::condition::meta::MetaCondition
+use ::java::origins::condition::entity::EntityConditionType
+
+type EntityCondition = (
+    EntityConditionType |
+    MetaCondition<EntityConditionType> |
+)

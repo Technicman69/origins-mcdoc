@@ -1,0 +1,97 @@
+type ResourceBarFile = (
+    ResourceBar |
+    #[id] string |
+)
+
+type BadgeFile = (
+    Color |
+    Icon |
+    NumberOrExpression |
+    Shape |
+    SunOrMoon |
+    #[id] string |
+)
+
+enum(string) ResourceBar {
+    Apace = "origins:textures/gui/resource_bar.png",
+    SpiderKolo1 = "origins:textures/gui/community/spiderkolo/resource_bar_01.png",
+    SpiderKolo2 = "origins:textures/gui/community/spiderkolo/resource_bar_02.png",
+    SpiderKolo3 = "origins:textures/gui/community/spiderkolo/resource_bar_03.png",
+    SpiderKoloBarPoints = "origins:textures/gui/community/spiderkolo/resource_bar_points_01.png",
+    JustHuangHere1 = "origins:textures/gui/community/huang/resource_bar_01.png",
+    JustHuangHere2 = "origins:textures/gui/community/huang/resource_bar_02.png",
+}
+
+enum(string) Color {
+    Black = "origins:textures/gui/community/silent/badge/colors/black.png",
+    White = "origins:textures/gui/community/silent/badge/colors/white.png",
+    Red = "origins:textures/gui/community/silent/badge/colors/red.png",
+    Green = "origins:textures/gui/community/silent/badge/colors/green.png",
+    Blue = "origins:textures/gui/community/silent/badge/colors/blue.png",
+    Yellow = "origins:textures/gui/community/silent/badge/colors/yellow.png",
+    Magenta = "origins:textures/gui/community/silent/badge/colors/magenta.png",
+    Pink = "origins:textures/gui/community/silent/badge/colors/pink.png",
+    Cyan = "origins:textures/gui/community/silent/badge/colors/cyan.png",
+    Brown = "origins:textures/gui/community/silent/badge/colors/brown.png",
+    DarkGray = "origins:textures/gui/community/silent/badge/colors/dark_gray.png",
+    LightGray = "origins:textures/gui/community/silent/badge/colors/light_gray.png",
+}
+
+enum(string) Icon {
+    Active = "origins:textures/gui/badge/active.png",
+    Info = "origins:textures/gui/badge/info.png",
+    Toggle = "origins:textures/gui/badge/toggle.png",
+    Armor = "origins:textures/gui/community/silent/badge/icons/armor.png",
+    Pickaxe = "origins:textures/gui/community/silent/badge/icons/pickaxe.png",
+    Shield = "origins:textures/gui/community/silent/badge/icons/shield.png",
+    Sword = "origins:textures/gui/community/silent/badge/icons/sword.png",
+}
+
+enum(string) NumberOrExpression {
+    Addition = "origins:textures/gui/community/silent/badge/math/expression_add.png",
+    Divide = "origins:textures/gui/community/silent/badge/math/expression_divide.png",
+    Equal = "origins:textures/gui/community/silent/badge/math/expression_equals.png",
+    Multiply = "origins:textures/gui/community/silent/badge/math/expression_multiply.png",
+    AltMultiply = "origins:textures/gui/community/silent/badge/math/expression_multiply_alt.png",
+    Subtract = "origins:textures/gui/community/silent/badge/math/expression_subtract.png",
+    Number0 = "origins:textures/gui/community/silent/badge/math/number_0.png",
+    Number1 = "origins:textures/gui/community/silent/badge/math/number_1.png",
+    Number2 = "origins:textures/gui/community/silent/badge/math/number_2.png",
+    Number3 = "origins:textures/gui/community/silent/badge/math/number_3.png",
+    Number4 = "origins:textures/gui/community/silent/badge/math/number_4.png",
+    Number5 = "origins:textures/gui/community/silent/badge/math/number_5.png",
+    Number6 = "origins:textures/gui/community/silent/badge/math/number_6.png",
+    Number7 = "origins:textures/gui/community/silent/badge/math/number_7.png",
+    Number8 = "origins:textures/gui/community/silent/badge/math/number_8.png",
+    Number9 = "origins:textures/gui/community/silent/badge/math/number_9.png",
+}
+
+enum(string) Shape {
+    ArrowDown = "origins:textures/gui/community/silent/badge/shapes/arrow_down.png",
+    ArrowLeft = "origins:textures/gui/community/silent/badge/shapes/arrow_left.png",
+    ArrowRight = "origins:textures/gui/community/silent/badge/shapes/arrow_right.png",
+    ArrowUp = "origins:textures/gui/badge/arrow_up.png",
+    Circle = "origins:textures/gui/community/silent/badge/shapes/shape_circle.png",
+    Heart = "origins:textures/gui/community/silent/badge/shapes/shape_heart.png",
+    Square = "origins:textures/gui/community/silent/badge/shapes/shape_square.png",
+    Star = "origins:textures/gui/badge/star.png",
+    Triangle = "origins:textures/gui/community/silent/badge/shapes/shape_triangle.png",
+    PointedTriangleDown = "origins:textures/gui/community/silent/badge/shapes/triangle_down.png",
+    PointedTriangleLeft = "origins:textures/gui/community/silent/badge/shapes/triangle_left.png",
+    PointedTriangleRight = "origins:textures/gui/community/silent/badge/shapes/triangle_right.png",
+    PointedTriangleUp = "origins:textures/gui/community/silent/badge/shapes/triangle_up.png",
+}
+
+enum(string) SunOrMoon {
+    MoonFirstQuarter = "origins:textures/gui/community/silent/badge/icons/sky/moon_first_quarter.png",
+    MoonFull = "origins:textures/gui/community/silent/badge/icons/sky/moon_full.png",
+    MoonNew = "origins:textures/gui/community/silent/badge/icons/sky/moon_new.png",
+    MoonIcon = "origins:textures/gui/community/silent/badge/icons/moon_icon.png",
+    MoonThirdQuarter = "origins:textures/gui/community/silent/badge/icons/sky/moon_third_quarter.png",
+    MoonWaningCrescent = "origins:textures/gui/community/silent/badge/icons/sky/moon_waning_crescent.png",
+    MoonWaningGibbous = "origins:textures/gui/community/silent/badge/icons/sky/moon_waning_gibbous.png",
+    MoonWaxingCrescent = "origins:textures/gui/community/silent/badge/icons/sky/moon_waxing_crescent.png",
+    MoonWaxingGibbous = "origins:textures/gui/community/silent/badge/icons/sky/moon_waxing_gibbous.png",
+    SunIcon = "origins:textures/gui/community/silent/badge/icons/sun_icon.png",
+    SunSky = "origins:textures/gui/community/silent/badge/icons/sky/sun.png",
+}

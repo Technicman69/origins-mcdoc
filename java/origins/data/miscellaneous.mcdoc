@@ -1,0 +1,45 @@
+use ::java::util::slot::EquipmentSlotGroup
+use ::java::data::advancement::trigger::TriggerBase
+use ::java::data::advancement::trigger::Conditions
+use ::java::data::advancement::Trigger
+
+use ::java::origins::data::origin_layer::OriginLayer
+use ::java::origins::data::power::Power
+use ::java::origins::data::origin::Origin
+
+dispatch minecraft:loot_condition[origins:origin] to struct OriginCondition {
+  /// Checks if the player has the specified origin.
+	origin: Origin,
+  /// If specified, checks if the specified origin is from this origin layer.
+  layer?: OriginLayer,
+}
+
+dispatch minecraft:loot_condition[origins:power] to struct PowerCondition {
+  /// Checks if the entity has the specified power.
+  power: Power,
+  /// If specified, checks if the specified power is from this power source.
+  source?: #[id] string,
+}
+
+// Still waiting for it to work...
+inject enum(string) ::java::data::advancement::Trigger {
+  ChoseOrigin = "origins:chose_origin"
+}
+
+/// Player has choosen specified origin
+dispatch minecraft:trigger[origins:chose_origin] to Conditions<struct ChoseOrigin {
+	...TriggerBase,
+	origin: Origin,
+}>
+
+dispatch minecraft:loot_function[origins:add_power] to struct AddPower {
+	power: Power,
+  slot: EquipmentSlotGroup,
+  hidden?: boolean,
+  negative?: boolean,
+}
+
+dispatch minecraft:loot_function[origins:remove_power] to struct RemovePower {
+	power: Power,
+  slot: EquipmentSlotGroup,
+}

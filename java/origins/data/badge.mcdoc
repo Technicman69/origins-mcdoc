@@ -1,0 +1,66 @@
+use ::java::util::text::Text
+
+use ::java::origins::util::sprite::BadgeFile
+
+dispatch minecraft:resource["origins:badge"] to struct Badge {
+	type: #[id] BadgeType,
+	...origins:badge[[type]],
+}
+
+dispatch origins:badge["origins:crafting_recipe"] to struct CraftingRecipeBadge {
+	...BadgeBase,
+	/// The recipe to display.
+	recipe: CraftingRecipe,
+	/// If specified, this text will be used as the suffix for the tooltip.
+	suffix?: Text,
+	/// If specified, this text will be used as the prefix for the tooltip.
+	prefix?: Text,
+}
+
+dispatch origins:badge["origins:keybind"] to struct Keybind {
+	...BadgeBase,
+	/// The string to use in the tooltip.
+	text: string,
+}
+
+dispatch origins:badge["origins:sprite"] to struct Sprite {
+	...BadgeBase,
+}
+
+dispatch origins:badge["origins:tooltip"] to struct Tooltip {
+	...BadgeBase,
+	/// The string to use in the tooltip.
+	text: Text,
+}
+
+struct BadgeBase {
+	/// The namespace, path and ID of the texture to use as the icon of the badge.
+	sprite: BadgeFile,
+}
+
+/// An Object specifying a shapeless or shaped crafting recipe. For some more information, view the page on recipes on the MC wiki.
+struct CraftingRecipe {
+	/// The type of recipe.
+	type: #[id] CraftingRecipeType,
+	/// An ID for this recipe. Has to be unique among all recipes, otherwise there will be a conflict.
+	id: #[id] string,
+	/// The result of the crafting. Note that vanilla does not support NBT tags in the result.
+	result: struct {
+		item: #[id="item"] string,
+		count?: int @ 1..64,
+	},
+	...minecraft:recipe_serializer[[type]],
+}
+
+enum(string) CraftingRecipeType {
+	CraftingShaped = "crafting_shaped",
+	CraftingShapeless = "crafting_shapeless",
+
+}
+
+enum(string) BadgeType {
+	CraftingRecipe = "origins:crafting_recipe",
+	Keybind = "origins:keybind",
+	Sprite = "origins:sprite",
+	Tooltip = "origins:tooltip",
+}

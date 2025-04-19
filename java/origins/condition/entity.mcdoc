@@ -1,0 +1,33 @@
+type EntityConditionType = (
+	struct Command {
+        /// Compares the result of the specified command to the specified value.
+        /// !Caution
+        /// This entity condition type only operates on the server-side, meaning that it cannot be used in fields that are evaluated on the client-side.
+		type: ("origins:command" | "apoli:command"),
+        /// The command to execute on the entity with entity's command context (position, rotation, etc.).
+		command: #[command(slash="allowed")] string,
+        ...Comparable
+	} |
+)
+
+struct Comparable {
+    /// Determines how the result value (an integer) of the executed command should be compared to the specified value.
+    comparison: Comparison,
+    /// The value at which the result value (an integer) of the executed command will be compared to.
+    compare_to: int,
+}
+
+enum(string) Comparison {
+    /// Checks if the first number is less than the second number.
+    LessThan = "<",
+    /// Checks if the first number is less than or equal to the second number.
+    LessThanOrEqual = "<=",
+    /// Checks if the first number is greater than the second number.
+    GreaterThan = ">",
+    /// Checks if the first number is greater than or equal to the second number.
+    GreaterThanOrEqual = ">=",
+    /// Checks if the first number is equal to the second number.
+    Equal = "==",
+    /// Checks if the first number is not equal to the second number.
+    NotEqual = "!=",
+}

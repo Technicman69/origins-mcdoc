@@ -1,0 +1,20 @@
+use ::java::util::text::Keybind
+
+type Key = (
+    Keybind |
+    OriginKeybind |
+    struct KeyType {
+        key: (
+            Keybind |
+            OriginKeybind |
+        ),
+        /// Determines how the keybinding behaves when the key is held down. If set to false, the power will activate only once when the key is first pressed. If set to true, the power will try to activate continuously as long as the key is held down, accounting for any cooldown or conditions the power may have.
+        continuous?: boolean,
+    }
+)
+
+enum(string) OriginKeybind {
+    PrimaryActive = "key.origins.primary_active",
+    SecondaryActive = "key.origins.secondary_active",
+    ViewOrigin = "key.origins.view_origin",
+}

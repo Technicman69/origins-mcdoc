@@ -1,0 +1,1068 @@
+{
+    "type": "root",
+    "children": {
+        "origin": {
+            "type": "literal",
+            "children": {
+                "get": {
+                    "type": "literal",
+                    "children": {
+                        "target": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "single"
+                            },
+                            "children": {
+                                "originLayer": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:origin_layer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "has": {
+                    "type": "literal",
+                    "children": {
+                        "origin": {
+                            "type": "literal",
+                            "children": {
+                                "targets": {
+                                    "type": "argument",
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "multiple"
+                                    },
+                                    "children": {
+                                        "originLayer": {
+                                            "type": "argument",
+                                            "parser": "minecraft:resource",
+                                            "properties": {
+                                                "registry": "origins:origin_layer"
+                                            },
+                                            "children": {
+                                                "origin": {
+                                                    "type": "argument",
+                                                    "executable": true,
+                                                    "parser": "minecraft:resource",
+                                                    "properties": {
+                                                        "registry": "origins:origin"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "power": {
+                            "type": "literal",
+                            "children": {
+                                "targets": {
+                                    "type": "argument",
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "multiple"
+                                    },
+                                    "children": {
+                                        "power": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:resource",
+                                            "properties": {
+                                                "registry": "origins:origin_layer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "set": {
+                    "type": "literal",
+                    "children": {
+                        "targets": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "multiple"
+                            },
+                            "children": {
+                                "originLayer": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:origin_layer"
+                                    },
+                                    "children": {
+                                        "origin": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:resource",
+                                            "properties": {
+                                                "registry": "origins:origin_layer"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "gui": {
+                    "type": "literal",
+                    "executable": true,
+                    "children": {
+                        "targets": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "multiple"
+                            },
+                            "children": {
+                                "originLayer": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:origin_layer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "random": {
+                    "type": "literal",
+                    "executable": true,
+                    "children": {
+                        "targets": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "multiple"
+                            },
+                            "children": {
+                                "originLayer": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:origin_layer"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "power": {
+            "type": "literal",
+            "children": {
+                "clear": {
+                    "type": "literal",
+                    "children": {
+                        "targets": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "multiple"
+                            }
+                        }
+                    }
+                },
+                "grant": {
+                    "type": "literal",
+                    "children": {
+                        "targets": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "multiple"
+                            },
+                            "children": {
+                                "power": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:power"
+                                    },
+                                    "children": {
+                                        "source": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:resource_location"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "has": {
+                    "type": "literal",
+                    "children": {
+                        "targets": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "multiple"
+                            },
+                            "children": {
+                                "power": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:power"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "list": {
+                    "type": "literal",
+                    "children": {
+                        "target": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "single"
+                            },
+                            "children": {
+                                "subpower": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "brigadier:bool"
+                                }
+                            }
+                        }
+                    }
+                },
+                "remove": {
+                    "type": "literal",
+                    "children": {
+                        "targets": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "multiple"
+                            },
+                            "children": {
+                                "power": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:power"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "revoke": {
+                    "type": "literal",
+                    "children": {
+                        "targets": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "multiple"
+                            },
+                            "children": {
+                                "power": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:power"
+                                    },
+                                    "children": {
+                                        "source": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:resource_location"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "revokeall": {
+                    "type": "literal",
+                    "children": {
+                        "targets": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "multiple"
+                            },
+                            "children": {
+                                "source": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource_location"
+                                }
+                            }
+                        }
+                    }
+                },
+                "sources": {
+                    "type": "literal",
+                    "children": {
+                        "target": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "single"
+                            },
+                            "children": {
+                                "power": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:power"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "dump": {
+                    "type": "literal",
+                    "children": {
+                        "power": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "minecraft:resource",
+                            "properties": {
+                                "registry": "origins:power"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "resource": {
+            "type": "literal",
+            "children": {
+                "has": {
+                    "type": "literal",
+                    "children": {
+                        "target": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "single"
+                            },
+                            "children": {
+                                "power": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:power"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "get": {
+                    "type": "literal",
+                    "children": {
+                        "target": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "single"
+                            },
+                            "children": {
+                                "power": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:power"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "set": {
+                    "type": "literal",
+                    "children": {
+                        "target": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "single"
+                            },
+                            "children": {
+                                "power": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:power"
+                                    },
+                                    "children": {
+                                        "value": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "brigadier:integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "change": {
+                    "type": "literal",
+                    "children": {
+                        "target": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "single"
+                            },
+                            "children": {
+                                "power": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:power"
+                                    },
+                                    "children": {
+                                        "value": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "brigadier:integer"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operation": {
+                    "type": "literal",
+                    "children": {
+                        "target": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "single"
+                            },
+                            "children": {
+                                "power": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "origins:power"
+                                    },
+                                    "children": {
+                                        "operator": {
+                                            "type": "argument",
+                                            "parser": "minecraft:operation",
+                                            "children": {
+                                                "sourceEntity": {
+                                                    "type": "argument",
+                                                    "parser": "minecraft:entity",
+                                                    "properties": {
+                                                        "type": "entities",
+                                                        "amount": "single"
+                                                    },
+                                                    "children": {
+                                                        "sourceObjective": {
+                                                            "type": "argument",
+                                                            "executable": true,
+                                                            "parser": "minecraft:objective"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "scale": {
+            "type": "literal",
+            "children": {
+                "set": {
+                    "type": "literal",
+                    "children": {
+                        "value": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "brigadier:float",
+                            "children": {
+                                "target": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "single"
+                                    }
+                                }
+                            }
+                        },
+                        "scale_type": {
+                            "type": "argument",
+                            "parser": "minecraft:resource",
+                            "properties": {
+                                "registry": "pehkui:scale_type"
+                            },
+                            "children": {
+                                "value": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "brigadier:float",
+                                    "children": {
+                                        "target": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "type": "entities",
+                                                "amount": "single"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "add": {
+                    "type": "literal",
+                    "children": {
+                        "value": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "brigadier:float",
+                            "children": {
+                                "target": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "single"
+                                    }
+                                }
+                            }
+                        },
+                        "scale_type": {
+                            "type": "argument",
+                            "parser": "minecraft:resource",
+                            "properties": {
+                                "registry": "pehkui:scale_type"
+                            },
+                            "children": {
+                                "value": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "brigadier:float",
+                                    "children": {
+                                        "target": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "type": "entities",
+                                                "amount": "single"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "substract": {
+                    "type": "literal",
+                    "children": {
+                        "value": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "brigadier:float",
+                            "children": {
+                                "target": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "single"
+                                    }
+                                }
+                            }
+                        },
+                        "scale_type": {
+                            "type": "argument",
+                            "parser": "minecraft:resource",
+                            "properties": {
+                                "registry": "pehkui:scale_type"
+                            },
+                            "children": {
+                                "value": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "brigadier:float",
+                                    "children": {
+                                        "target": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "type": "entities",
+                                                "amount": "single"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "multiply": {
+                    "type": "literal",
+                    "children": {
+                        "value": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "brigadier:float",
+                            "children": {
+                                "target": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "single"
+                                    }
+                                }
+                            }
+                        },
+                        "scale_type": {
+                            "type": "argument",
+                            "parser": "minecraft:resource",
+                            "properties": {
+                                "registry": "pehkui:scale_type"
+                            },
+                            "children": {
+                                "value": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "brigadier:float",
+                                    "children": {
+                                        "target": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "type": "entities",
+                                                "amount": "single"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "divide": {
+                    "type": "literal",
+                    "children": {
+                        "value": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "brigadier:float",
+                            "children": {
+                                "target": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "single"
+                                    }
+                                }
+                            }
+                        },
+                        "scale_type": {
+                            "type": "argument",
+                            "parser": "minecraft:resource",
+                            "properties": {
+                                "registry": "pehkui:scale_type"
+                            },
+                            "children": {
+                                "value": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "brigadier:float",
+                                    "children": {
+                                        "target": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "type": "entities",
+                                                "amount": "single"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "get": {
+                    "type": "literal",
+                    "children": {
+                        "target": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "single"
+                            }
+                        },
+                        "scale_type": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "minecraft:resource",
+                            "properties": {
+                                "registry": "pehkui:scale_type"
+                            },
+                            "children": {
+                                "target": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "single"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "compute": {
+                    "type": "literal",
+                    "children": {
+                        "scale_type": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "minecraft:resource",
+                            "properties": {
+                                "registry": "pehkui:scale_type"
+                            },
+                            "children": {
+                                "target": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "single"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "delay": {
+                    "type": "literal",
+                    "children": {
+                        "get": {
+                            "type": "literal",
+                            "children": {
+                                "target": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "single"
+                                    }
+                                },
+                                "scale_type": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "target": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "type": "entities",
+                                                "amount": "single"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "set": {
+                            "type": "literal",
+                            "children": {
+                                "ticks": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "brigadier:integer",
+                                    "children": {
+                                        "target": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "type": "entities",
+                                                "amount": "single"
+                                            }
+                                        }
+                                    }
+                                },
+                                "scale_type": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "ticks": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "brigadier:integer",
+                                            "children": {
+                                                "target": {
+                                                    "type": "argument",
+                                                    "executable": true,
+                                                    "parser": "minecraft:entity",
+                                                    "properties": {
+                                                        "type": "entities",
+                                                        "amount": "single"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "reset": {
+                    "type": "literal",
+                    "children": {
+                        "target": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "type": "entities",
+                                "amount": "single"
+                            }
+                        },
+                        "scale_type": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "minecraft:resource",
+                            "properties": {
+                                "registry": "pehkui:scale_type"
+                            },
+                            "children": {
+                                "target": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "single"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "nbt": {
+                    "type": "literal",
+                    "children": {
+                        "get": {
+                            "type": "literal",
+                            "executable": true,
+                            "children": {
+                                "target": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "single"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "persist": {
+                    "type": "literal",
+                    "children": {
+                        "set": {
+                            "type": "literal",
+                            "children": {
+                                "value": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "brigadier:bool",
+                                    "children": {
+                                        "target": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "type": "entities",
+                                                "amount": "single"
+                                            }
+                                        }
+                                    }
+                                },
+                                "scale_type": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "value": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "brigadier:bool",
+                                            "children": {
+                                                "target": {
+                                                    "type": "argument",
+                                                    "executable": true,
+                                                    "parser": "minecraft:entity",
+                                                    "properties": {
+                                                        "type": "entities",
+                                                        "amount": "single"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "get": {
+                            "type": "literal",
+                            "children": {
+                                "scale_type": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "target": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "type": "entities",
+                                                "amount": "single"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "reset": {
+                            "type": "literal",
+                            "children": {
+                                "target": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "single"
+                                    }
+                                },
+                                "scale_type": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "target": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "type": "entities",
+                                                "amount": "single"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

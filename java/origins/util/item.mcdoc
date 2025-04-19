@@ -1,0 +1,9 @@
+// Until 1.21
+struct ItemStack {
+    /// ID of a registered item.
+    item: #[id="item"] string,
+    /// Size of the stack.
+    amount?: byte,
+    /// NBT data of the item.
+    tag?: #[nbt=minecraft:item[%fallback]] string,
+}
