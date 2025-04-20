@@ -4,7 +4,7 @@ dispatch minecraft:resource["origins:global_power"] to struct GlobalPower {
     /// If specified, the specified powers will only be granted to entities that fulfill this tag-like specifier.
 	entity_types?: [#[id="entity_type"] string],
     /// The ID(s) of the power(s) to grant to entities globally.
-    powers: [Power],
+    powers: [#[id="origins:power"] string],
     /// Determines the order at which the global power set is applied.
     order?: int,
 }

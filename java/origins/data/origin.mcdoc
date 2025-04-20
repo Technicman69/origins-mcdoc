@@ -3,14 +3,9 @@ use ::java::util::text::Text
 use ::java::origins::util::item::ItemStack
 use ::java::origins::data::power::Power
 
-type Origin = (
-    #[id="origins:origin"] string |
-    DefaultOrigin |
-)
-
-dispatch minecraft:resource["origins:origin"] to struct CustomOrigin {
+dispatch minecraft:resource["origins:origin"] to struct Origin {
 	/// The namespace and IDs of the powers this origin should have.
-	powers?: [Power],
+	powers?: [#[id="origins:power"] string],
 	/// The item stack which is displayed as the icon for the origin in the top-left corner of the choose/view origin screen.
 	icon?: (
 		ItemStack |
@@ -36,21 +31,7 @@ struct Upgrade {
     /// The namespace and ID of an advancement which should trigger this upgrade.
     condition: #[id="advancement"] string,
     /// The namespace and ID of an origin the origin with this upgrade should upgrade to.
-    origin: Origin,
+    origin: #[id="origins:origin"] string,
     /// A text which will show up in the local chat of the player in a pretty color. If none is specified, there won't be a message.
     announcement?: string,
-}
-
-enum(string) DefaultOrigin {
-	Empty = "origins:empty",
-	Human = "origins:human",
-	Avian = "origins:avian",
-	Arachnid = "origins:arachnid",
-	Elytrian = "origins:elytrian",
-	Shulk = "origins:shulk",
-	Feline = "origins:feline",
-	Enderian = "origins:enderian",
-	Merling = "origins:merling",
-	Blazeborn = "origins:blazeborn",
-	Phantom = "origins:phantom",
 }

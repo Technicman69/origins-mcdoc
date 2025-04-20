@@ -6,13 +6,7 @@ use ::java::origins::util::sprite::ResourceBarFile
 use ::java::origins::condition::EntityCondition
 use ::java::origins::action::EntityAction
 
-type Power = (
-    #[id="origins:power"] string |
-    DefaultPower |
-)
-
-dispatch minecraft:resource["origins:power"] to struct CustomPower {
-    /// The namespace and ID of the desired Power Type.
+dispatch minecraft:resource["origins:power"] to struct Power {
 	type: #[id] PowerType,
     /// The display name of the power.
     name?: Text,
@@ -29,6 +23,8 @@ dispatch minecraft:resource["origins:power"] to struct CustomPower {
 	...origins:power[[type]],
 }
 
+dispatch origins:power[%unknown] to struct {}
+
 dispatch origins:power["origins:simple", "apoli:simple"] to struct Simple {}
 
 dispatch origins:power["origins:cooldown", "apoli:cooldown"] to struct Cooldown {
@@ -38,8 +34,20 @@ dispatch origins:power["origins:cooldown", "apoli:cooldown"] to struct Cooldown 
     hud_render?: HudRender,
 }
 
+struct OptionalCooldown {
+    /// Interval of ticks this power needs to recharge before the power can be triggered again.
+    cooldown?: int @ 1..,
+    /// Determines how the cooldown of this power is visualized on the HUD.
+    hud_render?: HudRender,
+}
+
+dispatch origins:power["origins:multiple", "apoli:multiple"] to struct Multiple {
+    [#[subpower(definition=true)] string]: Power,
+}
+
+/// Example doc comment
 dispatch origins:power["origins:active_self", "apoli:active_self"] to struct ActiveSelf {
-    ...Cooldown,
+    ...OptionalCooldown,
     /// The action to execute on the player.
     entity_action: EntityAction,
     /// Which active key this power should respond to.
@@ -48,7 +56,7 @@ dispatch origins:power["origins:active_self", "apoli:active_self"] to struct Act
 
 struct HudRender {
     /// Whether the bar should be visible or not.
-    should_redner?: boolean,
+    should_render?: boolean,
     /// The path to the file in the assets which contains what the bar looks like. See the List of sprites for a list of files included by default in the mod.
     sprite_location?: ResourceBarFile,
     /// The indexed position of the bar on the sprite to use. Please note that indexes start at 0.
@@ -67,68 +75,5 @@ enum(string) PowerType {
 	Simple = "origins:simple", ApoliSimple = "apoli:simple",
     Cooldown = "origins:cooldown", ApoliCooldown = "apoli:cooldown",
     ActiveSelf = "origins:active_self", ApoliActiveSelf = "apoli:active_self",
-}
-
-enum(string) DefaultPower {
-    Acrobatics = "origins:fall_immunity",
-    AerialCombatant = "origins:aerial_combatant",
-    AquaAffinity = "origins:aqua_affinity",
-    Aquatic = "origins:aquatic",
-    Arthropod = "origins:arthropod",
-    BrittleBones = "origins:more_kinetic_damage",
-    BurningWrath = "origins:burning_wrath",
-    Carnivore = "origins:carnivore",
-    CatlikeAppearance = "origins:scare_creepers",
-    Claustrophobia = "origins:claustrophobia",
-    Climbing = "origins:climbing",
-    FastMetabolism = "origins:hunger_over_time",
-    Featherweight = "origins:slow_falling",
-    Fins = "origins:swim_speed",
-    FireImmunity = "origins:fire_immunity",
-    Fragile = "origins:fragile",
-    FreshAir = "origins:fresh_air",
-    GiftOfTheWinds = "origins:launch_into_air",
-    Gills = "origins:water_breathing",
-    Hoarder = "origins:shulker_inventory",
-    Hotblooded = "origins:hotblooded",
-    Hydrophobia = "origins:water_vulnerability",
-    Invisibility = "origins:invisibility",
-    LargeAppetite = "origins:more_exhaustion",
-    LikeAir = "origins:like_air",
-    LikeWater = "origins:like_water",
-    MasterOfWebs = "origins:master_of_webs",
-    NeedForMobility = "origins:light_armor",
-    NetherInhabitant = "origins:nether_spawn",
-    NineLives = "origins:nine_lives",
-    Nocturnal = "origins:cat_vision",
-    Oviparous = "origins:lay_eggs",
-    Phasing = "origins:phasing",
-    Photoallergic = "origins:burn_in_daylight",
-    ArcaneSpeed = "origins:arcane_skin",
-    EndSpawn = "origins:end_spawn",
-    PhantomizeOverlay = "origins:phantomize_overlay",
-    ScaredOfGourds = "origins:pumpkin_hate",
-    SlenderBody = "origins:extra_reach",
-    StrongAnkles = "origins:sprint_jump",
-    StrongArms = "origins:strong_arms",
-    SturdySkin = "origins:natural_armor",
-    Tailwind = "origins:tailwind",
-    Teleportation = "origins:throw_ender_pearl",
-    Translucent = "origins:translucent",
-    Unwieldy = "origins:no_shield",
-    Vegetarian = "origins:vegetarian",
-    VelvetPaws = "origins:velvet_paws",
-    WeakArms = "origins:weak_arms",
-    Webbing = "origins:webbing",
-    WetEyes = "origins:water_vision",
-    Winged = "origins:elytra",
-    AirFromPotions = "origins:air_from_potions",
-    ConduitPowerOnLand = "origins:conduit_power_on_land",
-    DamageFromPotions = "origins:damage_from_potions",
-    DamageFromSnowballs = "origins:damage_from_snowballs",
-    EnderParticles = "origins:ender_particles",
-    FlameParticles = "origins:flame_particles",
-    NoCobwebSlowdown = "origins:no_cobweb_slowdown",
-    Phantomize = "origins:phantomize",
-    StrongArmsBreakSpeed = "origins:strong_arms_break_speed",
+    Multiple = "origins:multiple", ApoliMultiple = "apoli:multiple",
 }

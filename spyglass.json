@@ -1,5 +1,9 @@
 {
   "env": {
+    "dependencies": [
+      "@vanilla-mcdoc",
+      "./resources/origins/"
+    ],
     "mcmetaSummaryOverrides": {
       "commands": {
         "path": "./spyglass/commands.json",

@@ -1,5 +1,13 @@
-type MetaAction<T> = (
-    struct Action {
+type MetaAction<T> = struct {
+    type: #[id="origins:meta_action"] OriginsMetaAction,
+    ...origins:meta_action[[type]]<T>,
+}
 
-    }
-)
+dispatch origins:meta_action["origins:and", "apoli:and"]<T> to struct {
+    /// These actions will be executed one after the other (but in the same tick).
+ 	actions: [(T | MetaAction<T>)],
+}
+
+enum(string) OriginsMetaAction {
+	And = "origins:and", ApoliAnd = "apoli:and"
+}
