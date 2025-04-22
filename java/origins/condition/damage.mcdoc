@@ -1,3 +1,5 @@
+use ::java::origins::util::compare::Comparison
+
 use super::EntityCondition
 
 struct DamageCondition {
@@ -171,7 +173,7 @@ dispatch origins:damage_condition["origins:from_falling", "apoli:from_falling"] 
 /// This example will check if the damage is considered drowning damage.
 dispatch origins:damage_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
 	/// The namespace and ID of the tag which the damage type should be in to pass the check.
-	tag: Identifier,
+	tag: #[id(registry="damage_type",tags="implicit")] string,
 }
 
 /// # Name
@@ -261,7 +263,7 @@ dispatch origins:damage_condition["origins:out_of_world", "apoli:out_of_world"] 
 /// This example will check if the damage source is a burning arrow.
 dispatch origins:damage_condition["origins:projectile", "apoli:projectile"] to struct Projectile {
 	/// If set, the check will only pass if the projectile was of an entity type with the specified namespace and ID.
-	projectile?: Identifier,
+	projectile?: #[id=entity_type] string,
 	/// If set, the check will only pass if the projectile entity fulfills this condition.
 	projectile_condition?: EntityCondition,
 }

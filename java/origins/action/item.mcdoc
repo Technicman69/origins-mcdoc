@@ -109,7 +109,7 @@ dispatch origins:item_action["origins:holder_action", "apoli:holder_action", "or
 /// This example will merge the `{custom_stuff: 1b}` NBT to the item's NBT.
 dispatch origins:item_action["origins:merge_nbt", "apoli:merge_nbt"] to struct MergeNbt {
 	/// The NBT to merge to the item's NBT.
-	nbt: NBT,
+	nbt: #[nbt_path=minecraft:item[%fallback]] string,
 }
 
 /// # Modify
@@ -150,7 +150,7 @@ dispatch origins:item_action["origins:merge_nbt", "apoli:merge_nbt"] to struct M
 /// This being the contents of the `example:stuff` (`data/example/item_modifiers/stuff.json`) item modifier.
 dispatch origins:item_action["origins:modify", "apoli:modify"] to struct Modify {
 	/// The ID of an item modifier.
-	modifier: Identifier,
+	modifier: #[id=item_modifier] string,
 }
 
 /// #   Remove Enchantment
@@ -175,9 +175,9 @@ dispatch origins:item_action["origins:modify", "apoli:modify"] to struct Modify 
 /// This example will remove the Mending enchantment from the item whilst resetting its 'repair cost'.
 dispatch origins:item_action["origins:remove_enchantment", "apoli:remove_enchantment"] to struct RemoveEnchantment {
 	/// If specified, this enchantment will be removed from the item.
-	enchantment?: Identifier,
+	enchantment?: #[id=enchantment] string,
 	/// If specified, these enchantments will be removed from the item.
-	enchantments?: Array,
+	enchantments?: [#[id=enchantment] string],
 	/// If specified, only the enchantments that has the specified level will be removed from the item.
 	levels?: int,
 	/// Determines whether the 'repair cost' of the item should be reset.

@@ -1,3 +1,9 @@
+use super::FluidCondition
+
+use ::java::origins::util::compare::Comparison
+use ::java::origins::util::Vector
+use ::java::origins::util::Shape
+
 struct BlockCondition {
 	type: #[id] #[dispatcher_key="origins:block_condition"] string,
     /// If true, the condition acts inverted.
@@ -123,7 +129,7 @@ dispatch origins:block_condition["origins:blast_resistance", "apoli:blast_resist
 /// This example will check if the block is either a Diamond Block or an Emerald Block.
 dispatch origins:block_condition["origins:block", "apoli:block"] to struct Block {
 	/// The namespace and ID of the block that this block needs to be to pass the check.
-	block: Identifier,
+	block: #[id=block] string,
 }
 
 /// #   Block Entity
@@ -228,7 +234,7 @@ dispatch origins:block_condition["origins:block_state", "apoli:block_state"] to 
 /// This example will check if there is an entity inside the block.
 dispatch origins:block_condition["origins:command", "apoli:command"] to struct Command {
 	/// The command to execute.
-	command: string,
+	command: #[command(slash="allowed")] string,
 	/// Determines how the result value (an integer) of the executed command should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the result value (an integer) of the executed command will be compared to.
@@ -262,7 +268,7 @@ dispatch origins:block_condition["origins:command", "apoli:command"] to struct C
 /// This example will check if the block is within an 8 blocks radius relative to the specified coordinates (X: 1024, Z: 512).
 dispatch origins:block_condition["origins:distance_from_coordinates", "apoli:distance_from_coordinates"] to struct DistanceFromCoordinates {
 	/// The point to compare the distance to. Accepts `"world_origin"` or `"world_spawn"`.
-	reference?: string,
+	reference?: ("world_origin" | "world_spawn"),
 	/// If specified, determines how much the reference point should be offset.
 	offset?: Vector,
 	/// Determines whether to consider the X axis to be 0.
@@ -272,7 +278,7 @@ dispatch origins:block_condition["origins:distance_from_coordinates", "apoli:dis
 	/// Determines whether to consider the Z axis to be 0.
 	ignore_z?: boolean,
 	/// Determines the shape of the check. Accepts `"cube"`, `"star"` or `"sphere"`.
-	shape?: string,
+	shape?: Shape,
 	/// Determines whether to check for the reference point whilst considering the coordinate scale of the dimension.
 	scale_reference_to_dimension?: boolean,
 	/// If specified, this value will override the result of the comparison if the block being tested is not in the reference's dimension.
@@ -409,7 +415,7 @@ dispatch origins:block_condition["origins:height", "apoli:height"] to struct Hei
 /// This example will check if the block is included in the `#minecraft:base_stone_overworld` (`data/minecraft/tags/blocks/base_stone_overworld.json`) block tag.
 dispatch origins:block_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
 	/// The namespace and ID of the tag which the block should be in to pass the check.
-	tag: Identifier,
+	tag: #[id(registry="block",tags="implicit")] string,
 }
 
 /// # Light Blocking
@@ -460,7 +466,7 @@ dispatch origins:block_condition["origins:light_blocking", "apoli:light_blocking
 /// This example will check if the light level at the specified position is more than 10, and is emitted by a block.
 dispatch origins:block_condition["origins:light_level", "apoli:light_level"] to struct LightLevel {
 	/// If specified, determines the type of light level to compare. Accepts `"sky"` or `"block"`.
-	light_type?: string,
+	light_type?: ("sky" | "block"),
 	/// Determines how the light level should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the light level will be compared to.
@@ -490,11 +496,61 @@ dispatch origins:block_condition["origins:light_level", "apoli:light_level"] to 
 /// ```
 /// 
 /// This example will check if the block classifies as "wood".
-dispatch origins:block_condition["origins:material", "apoli:material"] to struct Material {
+dispatch origins:block_condition["origins:material", "apoli:material"] to struct MaterialCondition {
 	/// If specified, checks if the block classifies as this material.
 	material?: Material,
 	/// If specified, checks if the block classifies as one of these materials.
-	materials?: Array,
+	materials?: [Material],
+}
+
+enum(string) Material {
+    Air = "air",
+    StructureVoid = "structure_void",
+    Portal = "portal",
+    Carpet = "carpet",
+    Plant = "plant",
+    UnderwaterPlant = "underwater_plant",
+    ReplaceablePlant = "replaceable_plant",
+    NetherShoots = "nether_shoots",
+    ReplaceableUnderwaterPlant = "replaceable_underwater_plant",
+    Water = "water",
+    BubbleColumn = "bubble_column",
+    Lava = "lava",
+    SnowLayer = "snow_layer",
+    Fire = "fire",
+    Decoration = "decoration",
+    Cobweb = "cobweb",
+    Sculk = "sculk",
+    Redstone_lamp = "redstone_lamp",
+    OrganicProduct = "organic_product",
+    Soil = "soil",
+    SolidOrganic = "solid_organic",
+    DenseIce = "dense_ice",
+    Aggregate = "aggregate",
+    Sponge = "sponge",
+    ShulkerBox = "shulker_box",
+    Wood = "wood",
+    NetherWood = "nether_wood",
+    BambooSapling = "bamboo_sapling",
+    Bamboo = "bamboo",
+    Wool = "wool",
+    Tnt = "tnt",
+    Leaves = "leaves",
+    Glass = "glass",
+    Ice = "ice",
+    Cactus = "cactus",
+    Stone = "stone",
+    Metal = "metal",
+    SnowBlock = "snow_block",
+    RepairStation = "repair_station",
+    Barrier = "barrier",
+    Piston = "piston",
+    Moss_block = "moss_block",
+    Gourd = "gourd",
+    Egg = "egg",
+    Cake = "cake",
+    Amethyst = "amethyst",
+    PowderSnow = "powder_snow",
 }
 
 /// # Movement Blocking
@@ -545,7 +601,7 @@ dispatch origins:block_condition["origins:movement_blocking", "apoli:movement_bl
 /// This example will check if Beacon block has a `Level` value of 1.
 dispatch origins:block_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
 	/// The NBT data to check for.
-	nbt: NBT,
+	nbt: #[nbt_path=minecraft:block[%fallback]] string,
 }
 
 /// # Offset

@@ -5,6 +5,10 @@ use super::super::condition::BlockCondition
 use super::super::condition::BientityCondition
 use super::super::condition::EntityCondition
 use super::super::condition::ItemCondition
+use ::java::origins::util::FluidHandling
+use ::java::origins::util::DamageSource
+use ::java::origins::util::attribute::AttributeModifier
+use ::java::origins::util::Shape
 
 struct EntityAction {
 	type: #[id] #[dispatcher_key="origins:entity_action"] string,
@@ -428,7 +432,7 @@ dispatch origins:entity_action["origins:crafting_table", "apoli:crafting_table"]
 dispatch origins:entity_action["origins:damage", "apoli:damage"] to struct Damage {
 	/// The amount of damage to deal.
 	amount: float,
-	/// Use `damage_type` instead. See [Damage Source (Data Type)](https://origins.readthedocs.io/en/latest/types/data_types/damage_source) for more details.
+	/// **DEPRICATED** Use `damage_type` instead. See [Damage Source (Data Type)](https://origins.readthedocs.io/en/latest/types/data_types/damage_source) for more details.
 	source?: DamageSource,
 	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
 	damage_type: Identifier,
@@ -877,9 +881,9 @@ dispatch origins:entity_action["origins:grant_advancement", "apoli:grant_advance
 /// This example will grant the entity the `origins:burn_in_daylight` power from the `example:power_source` source.
 dispatch origins:entity_action["origins:grant_power", "apoli:grant_power"] to struct GrantPower {
 	/// The namespace and ID of the power to be granted to the entity.
-	power: #[id="origins:power"] string,
+	power: (#[id="origins:power"] string | string),
 	/// The namespace and ID of the source of the granted power.
-	source: Identifier,
+	source: (#[id(registry="origins:source", define=true)] string | string),
 }
 
 /// # Heal
@@ -1354,13 +1358,13 @@ dispatch origins:entity_action["origins:raycast", "apoli:raycast"] to struct Ray
 	/// If specified, execute this entity action on the entity that executed the ray-cast if the ray-cast did not hit an entity/block.
 	miss_action?: EntityAction,
 	/// The command to execute upon the block/entity the ray-cast has hit.
-	command_at_hit?: string,
+	command_at_hit?: #[command(slash="allowed")] string,
 	/// Determines the offset of the command specified in the `command_at_hit` field.
 	command_hit_offset?: float,
 	/// The command to execute for each step of the ray-cast.
-	command_along_ray?: string,
+	command_along_ray?: #[command(slash="allowed")] string,
 	/// Determines the size of the step of the ray-cast (in blocks).
-	command_step?: float,
+	command_step?: float @ 0.0<..,
 	/// Determines if the command specified in the `command_along_ray` field should be executed only if the ray-cast has hit a block/entity.
 	command_along_ray_only_on_hit?: boolean,
 }
@@ -1541,9 +1545,9 @@ dispatch origins:entity_action["origins:revoke_all_powers", "apoli:revoke_all_po
 /// This example will revoke the `origins:elytra` power from the `origins:elytrian` source from the entity.
 dispatch origins:entity_action["origins:revoke_power", "apoli:revoke_power"] to struct RevokePower {
 	/// The namespace and ID of the power to be revoked from the entity.
-	power: Identifier,
+	power: (#[id="origins:power"] string | string),
 	/// The namespace and ID of the source of the power.
-	source: Identifier,
+	source: (#[id(registry="origins:source", define=true)] string | string),
 }
 
 /// # Riding Action

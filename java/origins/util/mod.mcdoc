@@ -1,0 +1,61 @@
+// Lesser enums and stuffs
+
+enum(string) FluidHandling {
+    /// The ray will stop at both flowing and source fluids.
+    Any = "any",
+    /// The ray will ignore fluids.
+    None = "none",
+    /// The ray will only stop at source fluids.
+    SourceOnly = "source_only"
+}
+
+struct DamageSource {
+    /// The name of the damage source. Controls death message as well as other interactions. Consider the List of Damage Source Names when picking a name.
+    name: string,
+    /// When true, armor values are not taken into account when calculating the actual damage amount taken.
+    bypasses_armor?: boolean,
+    /// When true, the damage will be considered fire damage.
+    fire?: boolean,
+    /// When true, the damage will be unblockable (not reduced by resistance effects or protection enchantments).
+    unblockable?: boolean,
+    /// When true, the damage will be considered magic damage.
+    magic?: boolean,
+    /// When true, the damage will be considered "out of world" damage, i.e. damage from falling into the void.
+    out_of_world?: boolean,
+}
+
+enum(string) Shape {
+    /// Determines the area to be shaped like a fixed cube.
+    Cube = "cube",
+    /// Determines the area to be shaped like a diamond.
+    Star = "star",
+    /// Determines the area to be shaped like a sphere.
+    Sphere = "sphere",
+}
+
+type Axes = (
+    ["x"] @ 1 |
+    ["y"] @ 1 |
+    ["z"] @ 1 |
+    ["x", "y"] |
+    ["y", "x"] |
+    ["y", "z"] |
+    ["z", "y"] |
+    ["z", "x"] |
+    ["x", "z"] |
+    ["x", "y", "z"] |
+    ["x", "z", "y"] |
+    ["y", "x", "z"] |
+    ["z", "x", "y"] |
+    ["y", "z", "x"] |
+    ["z", "y", "x"] |
+)
+
+struct Vector {
+    /// The X coordinate of the point.
+    x?: float,
+    /// The Y coordinate of the point.
+    y?: float,
+    /// The Z coordinate of the point.
+    z?: float,
+}

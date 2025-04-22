@@ -1,3 +1,5 @@
+use ::java::origins::util::compare::Comparison
+
 struct ItemCondition {
 	type: #[id] #[dispatcher_key="origins:item_condition"] string,
     /// If true, the condition acts inverted.
@@ -164,7 +166,7 @@ dispatch origins:item_condition["origins:enchantable", "apoli:enchantable"] to s
 /// This example will check if the item has 3 or more enchantments.
 dispatch origins:item_condition["origins:enchantment", "apoli:enchantment"] to struct Enchantment {
 	/// If specified, the level of the enchantment that corresponds to this identifier will be compared. Otherwise, the amount of enchantments in the item stack will be compared instead.
-	enchantment?: Identifier,
+	enchantment?: #[id=enchantment] string,
 	/// Determines whether to account for enchantments that were added/modified by unnatural means (e.g: via the [Modify Enchantment Level (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/modify_enchantment_level).)
 	use_modifications?: boolean,
 	/// Determines how the level of the specified enchantment, or the amount of enchantments in the item stack, should be compared to the specified value.
@@ -297,7 +299,7 @@ dispatch origins:item_condition["origins:harvest_level", "apoli:harvest_level"] 
 /// This example will check if the item has Elytrian's Winged *(`origins:elytra`)* power embedded to it.
 dispatch origins:item_condition["origins:has_power", "apoli:has_power"] to struct HasPower {
 	/// The ID of the power to check for.
-	power: Identifier,
+	power: #[id="origins:power"] string,
 	/// If specified, this will check if the power embedded to the item is assigned to this equipment slot. Accepts one of `"head"`, `"chest"`, `"legs"`, `"feet"`, `"mainhand"` or `"offhand"`.
 	slot?: string,
 }
@@ -449,7 +451,7 @@ dispatch origins:item_condition["origins:meat", "apoli:meat"] to struct Meat {}
 /// This example will check if the item stack has the `exampleCustomTag: 1b` NBT.
 dispatch origins:item_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
 	/// The NBT data to check for.
-	nbt: NBT,
+	nbt: #[nbt_path=minecraft:item[%fallback]] string,
 }
 
 /// #   Power Count

@@ -1,5 +1,8 @@
+use ::java::origins::util::compare::Comparison
+use ::java::origins::util::FluidHandling
+use ::java::origins::util::Shape
+use ::java::origins::util::Axes
 use super::EntityCondition
-use super::entity::Comparison
 
 struct BientityCondition {
 	type: #[id] #[dispatcher_key="origins:bientity_condition"] string,
@@ -315,7 +318,7 @@ dispatch origins:bientity_condition["origins:owner", "apoli:owner"] to struct Ow
 /// This example will check if the actor's head is essentially facing the same way as the target's body.
 dispatch origins:bientity_condition["origins:relative_rotation", "apoli:relative_rotation"] to struct RelativeRotation {
 	/// The axes to get the angle values to calculate, and compare to.
-	axes?: Array,
+	axes?: Axes,
 	/// Determines the initial point of the rotation for the actor. Accepts `"head"` or `"body"`.
 	actor_rotation?: string,
 	/// Determines the initial point of the rotation for the target. Accepts `"head"` or `"body"`.

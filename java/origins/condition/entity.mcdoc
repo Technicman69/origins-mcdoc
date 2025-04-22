@@ -1,3 +1,10 @@
+use super::BlockCondition
+use super::BiomeCondition
+
+use ::java::origins::util::compare::Comparison
+use ::java::origins::util::FluidHandling
+use ::java::origins::util::Shape
+
 struct EntityCondition {
 	type: #[id] #[dispatcher_key="origins:entity_condition"] string,
     /// If true, the condition acts inverted.
@@ -44,7 +51,10 @@ struct EntityCondition {
 dispatch origins:entity_condition["origins:command", "apoli:command"] to struct Command {
 	/// The command to execute on the entity with entity's command context (position, rotation, etc.).
     command: #[command(slash="allowed")] string,
-    ...Comparable
+    /// Determines how the result value (an integer) of the executed command should be compared to the specified value.
+    comparison: Comparison,
+    /// The value at which the result value (an integer) of the executed command will be compared to.
+    compare_to: int,
 }
 
 /// # Ability
@@ -155,7 +165,7 @@ dispatch origins:entity_condition["origins:air", "apoli:air"] to struct Air {
 /// This example will check if the value of the entity's `minecraft:generic.armor` attribute is 10 or more.
 dispatch origins:entity_condition["origins:attribute", "apoli:attribute"] to struct Attribute {
 	/// ID of the attribute of which the value should be checked. See [Minecraft Wiki: Attribute (Attributes)](https://minecraft.wiki/w/Attribute#Attributes) for a list of vanilla attributes that can be checked for.
-	attribute: Identifier,
+	attribute:  #[id="attribute"] string,
 	/// Determines how the attribute's total value should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the attribute's total value will be compared to.
@@ -1107,7 +1117,7 @@ dispatch origins:entity_condition["origins:in_snow", "apoli:in_snow"] to struct 
 /// This example will check if the entity is inside the `#minecraft:skeletons` entity type tag. (`data/minecraft/tags/entity_types/skeletons.json`)
 dispatch origins:entity_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
 	/// The namespace and ID of the entity type tag the entity type needs to be in to pass the check.
-	tag: Identifier,
+	tag: #[id(registry="entity_type",tags="implicit")] string,
 }
 
 /// # In Thunderstorm
@@ -1206,7 +1216,7 @@ dispatch origins:entity_condition["origins:moving", "apoli:moving"] to struct Mo
 /// This example will check if the entity has the `example_tag` added via `/tag` or by modifying the entity's `Tags` NBT string list.
 dispatch origins:entity_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
 	/// The NBT data to check for.
-	nbt: NBT,
+	nbt: #[nbt_path=minecraft:entity[%fallback]] string,
 }
 
 /// # On Block
@@ -2160,25 +2170,10 @@ dispatch origins:entity_condition["origins:xp_points", "apoli:xp_points"] to str
 }
 
 
-
-struct Comparable {
-    /// Determines how the result value (an integer) of the executed command should be compared to the specified value.
-    comparison: Comparison,
-    /// The value at which the result value (an integer) of the executed command will be compared to.
-    compare_to: int,
-}
-
-enum(string) Comparison {
-    /// Checks if the first number is less than the second number.
-    LessThan = "<",
-    /// Checks if the first number is less than or equal to the second number.
-    LessThanOrEqual = "<=",
-    /// Checks if the first number is greater than the second number.
-    GreaterThan = ">",
-    /// Checks if the first number is greater than or equal to the second number.
-    GreaterThanOrEqual = ">=",
-    /// Checks if the first number is equal to the second number.
-    Equal = "==",
-    /// Checks if the first number is not equal to the second number.
-    NotEqual = "!=",
-}
+// TODO Reduce code by using Comparable to every comparing condition
+// struct Comparable {
+//     /// Determines how the result value (an integer) of the executed command should be compared to the specified value.
+//     comparison: Comparison,
+//     /// The value at which the result value (an integer) of the executed command will be compared to.
+//     compare_to: int,
+// }

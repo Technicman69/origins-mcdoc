@@ -1,0 +1,14 @@
+enum(string) Comparison {
+    /// Checks if the first number is less than the second number.
+    LessThan = "<",
+    /// Checks if the first number is less than or equal to the second number.
+    LessThanOrEqual = "<=",
+    /// Checks if the first number is greater than the second number.
+    GreaterThan = ">",
+    /// Checks if the first number is greater than or equal to the second number.
+    GreaterThanOrEqual = ">=",
+    /// Checks if the first number is equal to the second number.
+    Equal = "==",
+    /// Checks if the first number is not equal to the second number.
+    NotEqual = "!=",
+}

@@ -1,0 +1,197 @@
+
+/// # Attributed Attribute Modifier
+/// 
+/// [Data Type](https://origins.readthedocs.io/en/latest/types/data_types)
+/// 
+/// An [Object](object) used to specify how the numerical value of a specific attribute should be modified.
+/// 
+/// 
+/// !!! note
+/// 
+///     Not to be confused with [Attribute Modifier](attribute_modifier), which do not use vanilla's attribute modifier system.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "modifier": {
+///     "attribute": "minecraft:generic.attack_damage",
+///     "operation": "addition",
+///     "value": 9
+/// }
+/// ```
+/// 
+/// This example will add `9.0` to the base value of the entity's `minecraft:generic.attack_damage` attribute.
+/// (For example: if the current base value is 1, the new base value will be 10 since `1 + 9 = 10`)
+/// <br>
+/// 
+/// ```json
+/// "modifier": {
+///     "attribute": "minecraft:generic.max_health",
+///     "operation": "multiply_base",
+///     "value": 2
+/// }
+/// ```
+/// 
+/// This example will add the base value multiplied by the modifier value to the current base value of the entity's `minecraft:generic.max_health` attribute.
+/// (For example: if the current base value is 20, the new base value will be 60 since `20 + (20 * 2) = 60`)
+/// <br>
+/// 
+/// ```json
+/// "modifier": {
+///     "attribute": "minecraft:generic.movement_speed",
+///     "operation": "multiply_total",
+///     "value": 0.5
+/// }
+/// ```
+/// 
+/// This example will multiply the total value of the entity's `minecraft:generic.movement_speed` attribute by 1.5, essentially increasing the total value by 50%. 
+/// (For example: if the total value is 0.7, the new total value will be 1.05 since `0.7 * (1 + 0.5) = 1.05`)
+struct AttributedAttributeModifier {
+	/// ID of the attribute which will be modified by this modifier.
+	attribute: #[id="attribute"] string,
+	/// The operation which will be performed by this modifier.
+	operation: AttributedAttributeModifierOperation,
+	/// The value to use for the modifier operation.
+	value: float,
+	/// A descriptive name for the modifier, describing where it comes from.
+	name?: string,
+}
+
+/// #   Attributed Attribute Modifier Operation
+/// 
+/// [Data Type](https://origins.readthedocs.io/en/latest/types/data_types)
+/// 
+/// A [String](string) used to specify the operation used by [Attributed Attribute Modifiers](attributed_attribute_modifier).
+/// 
+/// !!! note
+/// 
+///     The listed values are ordered based on the order of priority; with `addition` being applied before `multiply_base` and `multiply_total` being applied last.
+enum(string) AttributedAttributeModifierOperation {
+	/// Adds (or subtracts) the modifier value to the base value. (`NewValue = BaseValue + ModifierValue`)
+	Addition = "addition",
+	/// Adds (or subtracts) the base value multiplied by the modifier value to the base value. (`NewValue = BaseValue + (BaseValue * ModifierValue)`)
+	MultiplyBase = "multiply_base",
+	/// Multiplies the total value by the modifier value + 1. (`NewTotalValue = TotalValue * (1 + ModifierValue)`)
+	MultiplyTotal = "multiply_total",
+}
+
+/// # Attribute Modifier
+/// 
+/// [Data Type](https://origins.readthedocs.io/en/latest/types/data_types)
+/// 
+/// An [Object](object) used to specify how a numerical value should be modified. The numerical value in question can be anything depending on the power/action type using this data type.
+/// 
+/// 
+/// !!! note
+/// 
+///     Not to be confused with [Attributed Attribute Modifier](attributed_attribute_modifier), which are strictly for modifying attributes.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "modifier": {
+///     "operation": "add_base_early",
+///     "value": 9
+/// }
+/// ```
+/// 
+/// This example will add `9.0` to the base value.
+/// (For example: if the current base value is 6.0, the new base value will be 15 since `6 + 9 = 15`)
+/// <br>
+/// 
+/// ```json
+/// "modifier": {
+///     "operation": "multiply_base_additive",
+///     "value": 2
+/// }
+/// ```
+/// 
+/// This example will add the base value multiplied by the modifier value to the current base value.
+/// (For example: if the current base value is 5, the new base value will be 15 since `5 + (5 * 2) = 15`)
+/// <br>
+/// 
+/// ```json
+/// "modifier": {
+///     "operation": "multiply_total_multiplicative",
+///     "value": 0.25
+/// }
+/// ```
+/// 
+/// This example will multiply the total value by 1.25, essentially increasing the total value by 125%.
+/// (For example: if the current total value is 30, the new total value will be 37.5 since `30 * (1 + 0.25) = 37.5`)
+/// <br>
+/// 
+/// ```json
+/// "modifier": {
+///     "operation": "add_base_early",
+///     "resource": "example:resource",
+///     "value": 0
+/// }
+/// ```
+/// 
+/// This example will add the value of the `example:resource` (`data/example/powers/resource.json`) power to the base value.
+/// (For example: if the current base value is 20.0 and the value of the `example:resource` power is 10, the new base value will be 30.0 since `20.0 + 10 = 30`)
+/// <br>
+/// 
+/// ```json
+/// "modifier": {
+///     "operation": "add_base_early",
+///     "resource": "example:resource",
+///     "value": 0,
+///     "modifier": {
+///         "operation": "multiply_total_multiplicative",
+///         "value": -0.999
+///     }
+/// }
+/// ```
+/// 
+/// This example will add the value of the `example:resource` (`data/example/powers/resource.json`) power to the base value of the modifier and multiply it by 0.01.
+/// (For example: if the current base value is 0.1 and the value of the `example:resource` power is 25, the new base value will be 0.125 since `0.1 + (25 * (1 - 0.999)) = 0.125`)
+struct AttributeModifier {
+	/// The operation which will be performed by this modifier.
+	operation: AttributeModifierOperation,
+	/// The value to use for the modifier operation.
+	value: float,
+	/// If specified, the value of this power will be used instead of the value specified in the `value` field.
+	resource?: #[id="origins:resource"] string,
+	/// If specified, this modifier will be applied to the value of the modifier.
+	modifier?: AttributeModifier,
+}
+
+/// # Modifier Operation
+/// 
+/// [Data Type](https://origins.readthedocs.io/en/latest/types/data_types)
+/// 
+/// A [String](string) used to specify the operation used by [Attribute Modifiers](attribute_modifier).
+/// 
+/// !!! note
+/// 
+///     The listed values are ordered based on the order of priority; with `add_base_early` being applied before the other modifiers and `set_total` being applied last.
+enum(string) AttributeModifierOperation {
+	/// Adds the modifier value to the base value. (`NewBaseValue = BaseValue + ModifierValue`)
+	AddBaseEarly = "add_base_early",
+	/// Adds the base value multiplied by the modifier value to the current base value. (`NewBaseValue = BaseValue + (BaseValue * ModifierValue)`)
+	MultiplyBaseAdditive = "multiply_base_additive",
+	/// Multiplies the current base value by the modifier value. (`NewBaseValue = BaseValue * (1 + ModifierValue)`)
+	MultiplyBaseMultiplicative = "multiply_base_multiplicative",
+	/// Adds the modifier value to the base value. (`NewBaseValue = BaseValue + ModifierValue`)
+	AddBaseLate = "add_base_late",
+	/// Sets the bigger value between the base value and the modifier value as the new base value. (`NewBaseValue = (BaseValue > ModifierValue ? BaseValue : ModifierValue)`)
+	MinBase = "min_base",
+	/// Sets the smaller value between the base value and the modifier value as the new base value. (`NewBaseValue = (BaseValue < ModifierValue ? BaseValue : ModifierValue)`)
+	MaxBase = "max_base",
+	/// Sets the modifier value as the new base value. (`NewBaseValue = ModifierValue`)
+	SetBase = "set_base",
+	/// Multiplies the total value by the current total value multiplied by the modifier value. (`NewTotalValue = TotalValue * (TotalValue * ModifierValue)`)
+	MultiplyTotalAdditive = "multiply_total_additive",
+	/// Multiplies the total value by the modifier value + 1. (`NewTotalValue = TotalValue * (1 + ModifierValue)`)
+	MultiplyTotalMultiplicative = "multiply_total_multiplicative",
+	/// Sets the bigger value between the total value and the modifier value as the new total value. (`NewTotalValue = (TotalValue > ModifierValue ? TotalValue : ModifierValue)`)
+	MinTotal = "min_total",
+	/// Sets the smaller value between the total value and the modifier value as the new total value. (`NewTotalValue = (TotalValue < ModifierValue ? TotalValue : ModifierValue)`)
+	MaxTotal = "max_total",
+	/// Sets the modifier value as the new total value. (`NewTotalValue = ModifierValue`)
+	SetTotal = "set_total",
+}

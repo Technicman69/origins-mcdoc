@@ -1,4 +1,5 @@
 use super::super::condition::BlockCondition
+use ::java::origins::util::Shape
 
 struct BlockAction {
 	type: #[id] #[dispatcher_key="origins:block_action"] string,
@@ -36,7 +37,7 @@ struct BlockAction {
 /// This example will add a Chest block facing north at the position of the block action type.
 dispatch origins:block_action["origins:add_block", "apoli:add_block"] to struct AddBlock {
 	/// The namespace and ID of the block to place.
-	block: Identifier,
+	block: #[id=block] string,
 }
 
 /// # Area of Effect
@@ -140,7 +141,7 @@ dispatch origins:block_action["origins:bonemeal", "apoli:bonemeal"] to struct Bo
 /// This example will summon a Wheat item entity at the position of the block action type.
 dispatch origins:block_action["origins:execute_command", "apoli:execute_command"] to struct ExecuteCommand {
 	/// The command to execute.
-	command: string,
+	command: #[command(slash="allowed")] string,
 }
 
 /// # Explode
@@ -196,6 +197,15 @@ dispatch origins:block_action["origins:explode", "apoli:explode"] to struct Expl
 	destructible?: BlockCondition,
 	/// Determines if the summoned explosion should create fire.
 	create_fire?: boolean,
+}
+
+enum(string) Destruction {
+	/// The explosion will destroy blocks and drop the loot of said blocks.
+	Break = "break",
+	/// The explosion will not destroy blocks nor drop the loot of said blocks.
+	None = "none",
+	/// The explosion will destroy blocks and drop the loot of some of the said blocks. It has lower chance with higher explosion power; it also checks the minecraft:survives_explosion loot condition in loot tables.
+	Destroy = "destroy",
 }
 
 /// # Modify Block State
@@ -302,7 +312,7 @@ dispatch origins:block_action["origins:offset", "apoli:offset"] to struct Offset
 /// This example will set a Lit Redstone Lamp at the position of the block action type.
 dispatch origins:block_action["origins:set_block", "apoli:set_block"] to struct SetBlock {
 	/// The namespace and ID of the block to place.
-	block: Identifier,
+	block: #[id=block] string,
 }
 
 /// #	Spawn Entity
