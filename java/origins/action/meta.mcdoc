@@ -1,13 +1,201 @@
-type MetaAction<T> = struct {
-    type: #[id="origins:meta_action"] OriginsMetaAction,
-    ...origins:meta_action[[type]]<T>,
+use ::java::origins::action::EntityAction
+use ::java::origins::condition::EntityCondition
+
+// For every meta action there's a definition copied over to every action type (with changed action type inside)
+
+dispatch origins:bi-entity_action["origins:and", "apoli:and"] to struct BiEntityActionAnd {
+	/// These actions will be executed one after the other (but in the same tick).
+ 	actions: [BiEntityAction],
+}
+dispatch origins:bi-entity_action["origins:chance", "apoli:chance"] to struct BiEntityActionChance {
+	/// The action which might be executed.
+ 	action: BiEntityAction,
+    /// The chance that the action will execute, from 0 to 1. (E.g. 0.1 means 10% chance, 0.95 means 95% chance).
+    chance: float @ 0.0..1.0,
+    /// The action to execute if the specified action in the action field is not executed.
+    fail_action?: BiEntityAction,
+}
+dispatch origins:bi-entity_action["origins:choice", "apoli:choice"] to struct BiEntityActionChoice {
+	/// Each object has to have an element Action and a weight Integer.
+ 	actions: [struct {
+        element: BiEntityAction,
+        weight: int @ 1..,
+    }],
+}
+dispatch origins:bi-entity_action["origins:delay", "apoli:delay"] to struct BiEntityActionDelay {
+	/// The action which will be executed after the delay.
+ 	action: BiEntityAction,
+    /// The amount of ticks until the action is executed.
+    ticks: int @ 0..,
+}
+dispatch origins:bi-entity_action["origins:if-else-list", "apoli:if-else-list"] to struct BiEntityActionIfElseList {
+	/// Each object has to have an element Action and a weight Integer.
+ 	actions: [struct {
+        action: BiEntityAction,
+        condition: BiEntityCondition,
+    }],
+}
+dispatch origins:bi-entity_action["origins:if-else", "apoli:if-else"] to struct BiEntityActionIfElse {
+    /// A condition based on the type of action.
+    condition: BiEntityCondition,
+    /// The action which is executed when the condition evaluates to true.
+    if_action: BiEntityAction,
+    /// If present, this action will be executed when the condition evaluates to false.
+    else_action?: BiEntityAction,
+}
+dispatch origins:bi-entity_action["origins:nothing", "apoli:nothing"] to struct BiEntityActionNothing {}
+dispatch origins:bi-entity_action["origins:side", "apoli:side"] to struct BiEntityActionSide {
+	/// The action to execute.
+ 	action: BiEntityAction,
+    /// Determines where to execute the specified action type. Accepts "client" or "server"
+    side: Side
 }
 
-dispatch origins:meta_action["origins:and", "apoli:and"]<T> to struct {
-    /// These actions will be executed one after the other (but in the same tick).
- 	actions: [(T | MetaAction<T>)],
+dispatch origins:block_action["origins:and", "apoli:and"] to struct BlockActionAnd {
+	/// These actions will be executed one after the other (but in the same tick).
+ 	actions: [BlockAction],
+}
+dispatch origins:block_action["origins:chance", "apoli:chance"] to struct BlockActionChance {
+	/// The action which might be executed.
+ 	action: BlockAction,
+    /// The chance that the action will execute, from 0 to 1. (E.g. 0.1 means 10% chance, 0.95 means 95% chance).
+    chance: float @ 0.0..1.0,
+    /// The action to execute if the specified action in the action field is not executed.
+    fail_action?: BlockAction,
+}
+dispatch origins:block_action["origins:choice", "apoli:choice"] to struct BlockActionChoice {
+	/// Each object has to have an element Action and a weight Integer.
+ 	actions: [struct {
+        element: BlockAction,
+        weight: int @ 1..,
+    }],
+}
+dispatch origins:block_action["origins:delay", "apoli:delay"] to struct BlockActionDelay {
+	/// The action which will be executed after the delay.
+ 	action: BlockAction,
+    /// The amount of ticks until the action is executed.
+    ticks: int @ 0..,
+}
+dispatch origins:block_action["origins:if-else-list", "apoli:if-else-list"] to struct BlockActionIfElseList {
+	/// Each object has to have an element Action and a weight Integer.
+ 	actions: [struct {
+        action: BlockAction,
+        condition: BlockCondition,
+    }],
+}
+dispatch origins:block_action["origins:if-else", "apoli:if-else"] to struct BlockActionIfElse {
+    /// A condition based on the type of action.
+    condition: BlockCondition,
+    /// The action which is executed when the condition evaluates to true.
+    if_action: BlockAction,
+    /// If present, this action will be executed when the condition evaluates to false.
+    else_action?: BlockAction,
+}
+dispatch origins:block_action["origins:nothing", "apoli:nothing"] to struct BlockActionNothing {}
+dispatch origins:block_action["origins:side", "apoli:side"] to struct BlockActionSide {
+	/// The action to execute.
+ 	action: BlockAction,
+    /// Determines where to execute the specified action type. Accepts "client" or "server"
+    side: Side
 }
 
-enum(string) OriginsMetaAction {
-	And = "origins:and", ApoliAnd = "apoli:and"
+dispatch origins:entity_action["origins:and", "apoli:and"] to struct EntityActionAnd {
+	/// These actions will be executed one after the other (but in the same tick).
+ 	actions: [EntityAction],
+}
+dispatch origins:entity_action["origins:chance", "apoli:chance"] to struct EntityActionChance {
+	/// The action which might be executed.
+ 	action: EntityAction,
+    /// The chance that the action will execute, from 0 to 1. (E.g. 0.1 means 10% chance, 0.95 means 95% chance).
+    chance: float @ 0.0..1.0,
+    /// The action to execute if the specified action in the action field is not executed.
+    fail_action?: EntityAction,
+}
+dispatch origins:entity_action["origins:choice", "apoli:choice"] to struct EntityActionChoice {
+	/// Each object has to have an element Action and a weight Integer.
+ 	actions: [struct {
+        element: EntityAction,
+        weight: int @ 1..,
+    }],
+}
+dispatch origins:entity_action["origins:delay", "apoli:delay"] to struct EntityActionDelay {
+	/// The action which will be executed after the delay.
+ 	action: EntityAction,
+    /// The amount of ticks until the action is executed.
+    ticks: int @ 0..,
+}
+dispatch origins:entity_action["origins:if-else-list", "apoli:if-else-list"] to struct EntityActionIfElseList {
+	/// Each object has to have an element Action and a weight Integer.
+ 	actions: [struct {
+        action: EntityAction,
+        condition: EntityCondition,
+    }],
+}
+dispatch origins:entity_action["origins:if-else", "apoli:if-else"] to struct EntityActionIfElse {
+    /// A condition based on the type of action.
+    condition: EntityCondition,
+    /// The action which is executed when the condition evaluates to true.
+    if_action: EntityAction,
+    /// If present, this action will be executed when the condition evaluates to false.
+    else_action?: EntityAction,
+}
+dispatch origins:entity_action["origins:nothing", "apoli:nothing"] to struct EntityActionNothing {}
+dispatch origins:entity_action["origins:side", "apoli:side"] to struct EntityActionSide {
+	/// The action to execute.
+ 	action: EntityAction,
+    /// Determines where to execute the specified action type. Accepts "client" or "server"
+    side: Side
+}
+
+dispatch origins:item_action["origins:and", "apoli:and"] to struct ItemActionAnd {
+	/// These actions will be executed one after the other (but in the same tick).
+ 	actions: [ItemAction],
+}
+dispatch origins:item_action["origins:chance", "apoli:chance"] to struct ItemActionChance {
+	/// The action which might be executed.
+ 	action: ItemAction,
+    /// The chance that the action will execute, from 0 to 1. (E.g. 0.1 means 10% chance, 0.95 means 95% chance).
+    chance: float @ 0.0..1.0,
+    /// The action to execute if the specified action in the action field is not executed.
+    fail_action?: ItemAction,
+}
+dispatch origins:item_action["origins:choice", "apoli:choice"] to struct ItemActionChoice {
+	/// Each object has to have an element Action and a weight Integer.
+ 	actions: [struct {
+        element: ItemAction,
+        weight: int @ 1..,
+    }],
+}
+dispatch origins:item_action["origins:delay", "apoli:delay"] to struct ItemActionDelay {
+	/// The action which will be executed after the delay.
+ 	action: ItemAction,
+    /// The amount of ticks until the action is executed.
+    ticks: int @ 0..,
+}
+dispatch origins:item_action["origins:if-else-list", "apoli:if-else-list"] to struct ItemActionIfElseList {
+	/// Each object has to have an element Action and a weight Integer.
+ 	actions: [struct {
+        action: ItemAction,
+        condition: ItemCondition,
+    }],
+}
+dispatch origins:item_action["origins:if-else", "apoli:if-else"] to struct ItemActionIfElse {
+    /// A condition based on the type of action.
+    condition: ItemCondition,
+    /// The action which is executed when the condition evaluates to true.
+    if_action: ItemAction,
+    /// If present, this action will be executed when the condition evaluates to false.
+    else_action?: ItemAction,
+}
+dispatch origins:item_action["origins:nothing", "apoli:nothing"] to struct ItemActionNothing {}
+dispatch origins:item_action["origins:side", "apoli:side"] to struct ItemActionSide {
+	/// The action to execute.
+ 	action: ItemAction,
+    /// Determines where to execute the specified action type. Accepts "client" or "server"
+    side: Side
+}
+
+enum(string) Side {
+    Client = "client",
+    Server = "server",
 }

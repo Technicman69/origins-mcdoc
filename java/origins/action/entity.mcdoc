@@ -1,15 +1,9 @@
-struct EntityActionType {
-	type: #[id="origins:entity_action"] OriginsEntityAction,
+struct EntityAction {
+	type: #[id] #[dispatcher_key="origins:entity_action"] string,
 	...origins:entity_action[[type]],
 }
-
-dispatch origins:entity_action[%unknown] to struct {}
 
 dispatch origins:entity_action["origins:execute_command", "apoli:execute_command"] to struct ExecuteCommand {
 	/// The command to execute on the entity with entity's command context (position, rotation, etc.).
  	command: #[command(slash="allowed")] string,
-}
-
-enum(string) OriginsEntityAction {
-	ExecuteCommand = "origins:execute_command", ApoliExecuteCommand = "apoli:execute_command"
 }

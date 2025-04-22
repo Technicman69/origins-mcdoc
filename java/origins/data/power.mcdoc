@@ -7,7 +7,7 @@ use ::java::origins::condition::EntityCondition
 use ::java::origins::action::EntityAction
 
 dispatch minecraft:resource["origins:power"] to struct Power {
-	type: #[id] PowerType,
+	type: #[id] #[dispatcher_key="origins:power"] string,
     /// The display name of the power.
     name?: Text,
     /// The description of the power.
@@ -45,13 +45,12 @@ dispatch origins:power["origins:multiple", "apoli:multiple"] to struct Multiple 
     [#[subpower(definition=true)] string]: Power,
 }
 
-/// Example doc comment
 dispatch origins:power["origins:active_self", "apoli:active_self"] to struct ActiveSelf {
     ...OptionalCooldown,
     /// The action to execute on the player.
     entity_action: EntityAction,
     /// Which active key this power should respond to.
-    key: Key,
+    key?: Key,
 }
 
 struct HudRender {

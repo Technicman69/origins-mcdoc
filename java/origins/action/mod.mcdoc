@@ -1,7 +1,1 @@
-use ::java::origins::action::meta::MetaAction
-use ::java::origins::action::entity::EntityActionType
-
-type EntityAction = (
-    EntityActionType |
-    MetaAction<EntityActionType> |
-)
+type EntityAction = entity::EntityAction

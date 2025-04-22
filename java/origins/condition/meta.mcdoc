@@ -1,5 +1,120 @@
-type MetaCondition<T> = (
-    struct Condition {
+use super::entity::EntityCondition
 
-    }
-)
+dispatch origins:bi-entity_condition["origins:and", "apoli:and"] to struct BiEntityConditionAnd {
+	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [BiEntityCondition],
+}
+dispatch origins:bi-entity_condition["origins:chance", "apoli:chance"] to struct BiEntityConditionChance {
+	/// The value to compare the randomly generated number to.
+ 	chance: float @ 0.0..1.0,
+}
+dispatch origins:bi-entity_condition["origins:constant", "apoli:constant"] to struct BiEntityConditionConstant {
+	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
+ 	value: boolean,
+}
+dispatch origins:bi-entity_condition["origins:or", "apoli:or"] to struct BiEntityConditionOr {
+	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [BiEntityCondition],
+}
+
+dispatch origins:biome_condition["origins:and", "apoli:and"] to struct BiomeConditionAnd {
+	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [BiomeCondition],
+}
+dispatch origins:biome_condition["origins:chance", "apoli:chance"] to struct BiomeConditionChance {
+	/// The value to compare the randomly generated number to.
+ 	chance: float @ 0.0..1.0,
+}
+dispatch origins:biome_condition["origins:constant", "apoli:constant"] to struct BiomeConditionConstant {
+	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
+ 	value: boolean,
+}
+dispatch origins:biome_condition["origins:or", "apoli:or"] to struct BiomeConditionOr {
+	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [BiomeCondition],
+}
+
+dispatch origins:block_condition["origins:and", "apoli:and"] to struct BlockConditionAnd {
+	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [BlockCondition],
+}
+dispatch origins:block_condition["origins:chance", "apoli:chance"] to struct BlockConditionChance {
+	/// The value to compare the randomly generated number to.
+ 	chance: float @ 0.0..1.0,
+}
+dispatch origins:block_condition["origins:constant", "apoli:constant"] to struct BlockConditionConstant {
+	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
+ 	value: boolean,
+}
+dispatch origins:block_condition["origins:or", "apoli:or"] to struct BlockConditionOr {
+	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [BlockCondition],
+}
+
+dispatch origins:damage_condition["origins:and", "apoli:and"] to struct DamageConditionAnd {
+	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [DamageCondition],
+}
+dispatch origins:damage_condition["origins:chance", "apoli:chance"] to struct DamageConditionChance {
+	/// The value to compare the randomly generated number to.
+ 	chance: float @ 0.0..1.0,
+}
+dispatch origins:damage_condition["origins:constant", "apoli:constant"] to struct DamageConditionConstant {
+	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
+ 	value: boolean,
+}
+dispatch origins:damage_condition["origins:or", "apoli:or"] to struct DamageConditionOr {
+	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [DamageCondition],
+}
+
+dispatch origins:entity_condition["origins:and", "apoli:and"] to struct EntityConditionAnd {
+	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [EntityCondition],
+}
+dispatch origins:entity_condition["origins:chance", "apoli:chance"] to struct EntityConditionChance {
+	/// The value to compare the randomly generated number to.
+ 	chance: float @ 0.0..1.0,
+}
+dispatch origins:entity_condition["origins:constant", "apoli:constant"] to struct EntityConditionConstant {
+	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
+ 	value: boolean,
+}
+dispatch origins:entity_condition["origins:or", "apoli:or"] to struct EntityConditionOr {
+	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [EntityCondition],
+}
+
+dispatch origins:fluid_condition["origins:and", "apoli:and"] to struct FluidConditionAnd {
+	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [FluidCondition],
+}
+dispatch origins:fluid_condition["origins:chance", "apoli:chance"] to struct FluidConditionChance {
+	/// The value to compare the randomly generated number to.
+ 	chance: float @ 0.0..1.0,
+}
+dispatch origins:fluid_condition["origins:constant", "apoli:constant"] to struct FluidConditionConstant {
+	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
+ 	value: boolean,
+}
+dispatch origins:fluid_condition["origins:or", "apoli:or"] to struct FluidConditionOr {
+	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [FluidCondition],
+}
+
+dispatch origins:item_condition["origins:and", "apoli:and"] to struct ItemConditionAnd {
+	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [ItemCondition],
+}
+dispatch origins:item_condition["origins:chance", "apoli:chance"] to struct ItemConditionChance {
+	/// The value to compare the randomly generated number to.
+ 	chance: float @ 0.0..1.0,
+}
+dispatch origins:item_condition["origins:constant", "apoli:constant"] to struct ItemConditionConstant {
+	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
+ 	value: boolean,
+}
+dispatch origins:item_condition["origins:or", "apoli:or"] to struct ItemConditionOr {
+	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
+ 	conditions: [ItemCondition],
+}

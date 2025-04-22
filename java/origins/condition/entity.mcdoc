@@ -1,14 +1,19 @@
-type EntityConditionType = (
-	struct Command {
-        /// Compares the result of the specified command to the specified value.
-        /// !Caution
-        /// This entity condition type only operates on the server-side, meaning that it cannot be used in fields that are evaluated on the client-side.
-		type: ("origins:command" | "apoli:command"),
-        /// The command to execute on the entity with entity's command context (position, rotation, etc.).
-		command: #[command(slash="allowed")] string,
-        ...Comparable
-	} |
-)
+struct EntityCondition {
+	type: #[id] #[dispatcher_key="origins:entity_condition"] string,
+    /// If true, the condition acts inverted.
+    inverted?: boolean,
+	...origins:entity_condition[[type]],
+}
+
+dispatch origins:entity_condition["origins:command", "apoli:command"] to struct Command {
+	// /// Compares the result of the specified command to the specified value.
+    // /// !Caution
+    // /// This entity condition type only operates on the server-side, meaning that it cannot be used in fields that are evaluated on the client-side.
+    // type: #[id] ("origins:command" | "apoli:command"),
+    /// The command to execute on the entity with entity's command context (position, rotation, etc.).
+    command: #[command(slash="allowed")] string,
+    ...Comparable
+}
 
 struct Comparable {
     /// Determines how the result value (an integer) of the executed command should be compared to the specified value.

@@ -3,7 +3,7 @@ use ::java::util::text::Text
 use ::java::origins::util::sprite::BadgeFile
 
 dispatch minecraft:resource["origins:badge"] to struct Badge {
-	type: #[id] BadgeType,
+	type: #[id] #[dispatcher_key="origins:badge"] string,
 	...origins:badge[[type]],
 }
 
@@ -55,12 +55,4 @@ struct CraftingRecipe {
 enum(string) CraftingRecipeType {
 	CraftingShaped = "crafting_shaped",
 	CraftingShapeless = "crafting_shapeless",
-
-}
-
-enum(string) BadgeType {
-	CraftingRecipe = "origins:crafting_recipe",
-	Keybind = "origins:keybind",
-	Sprite = "origins:sprite",
-	Tooltip = "origins:tooltip",
 }
