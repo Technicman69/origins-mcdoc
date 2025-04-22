@@ -20,13 +20,13 @@ The syntax checking currently includes data types and files listed below:
   - Power JSON
 - General Types
   - Badge Types
-  - Data Types (only few of them)
   - Keybindings
 - Commands
   - Origins
   - Pehkui (most of them)
+- Power types
+- Action types
+- Condition types
  
 ## Currently not supported:
-- Power types (except `origins:cooldown`, `origins:active_self` and `origins:simple`)
-- Action types (except `origins:execute_command`)
-- Condition types (except `origins:command`)
+- Most of Data Types
