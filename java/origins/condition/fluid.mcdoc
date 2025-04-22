@@ -1,0 +1,66 @@
+struct FluidCondition {
+	type: #[id] #[dispatcher_key="origins:fluid_condition"] string,
+    /// If true, the condition acts inverted.
+    inverted?: boolean,
+	...origins:fluid_condition[[type]],
+}
+
+/// # Empty
+/// 
+/// [Fluid Condition Type](https://origins.readthedocs.io/en/latest/types/fluid_condition_types)
+/// 
+/// Checks whether there is no fluid in this state.
+/// 
+/// Type ID: `origins:empty`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "fluid_condition": {
+///     "type": "origins:empty"
+/// }
+/// ```
+dispatch origins:fluid_condition["origins:empty", "apoli:empty"] to struct Empty {}
+
+/// # In Tag
+/// 
+/// [Fluid Condition Type](https://origins.readthedocs.io/en/latest/types/fluid_condition_types)
+/// 
+/// Checks whether the fluid is in a specified tag.
+/// 
+/// Type ID: `origins:in_tag`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "fluid_condition": {
+///     "type": "origins:in_tag",
+///     "tag": "minecraft:water"
+/// }
+/// ```
+/// 
+/// This example will check if the fluid is included in the `#minecraft:water` (`data\minecraft\tags\fluids`) block tag.
+dispatch origins:fluid_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
+	/// ID of the tag which the fluid should be in to pass the check.
+	tag: Identifier,
+}
+
+/// # Still
+/// 
+/// [Fluid Condition Type](https://origins.readthedocs.io/en/latest/types/fluid_condition_types)
+/// 
+/// Checks whether this state describes a still (i.e. not flowing, i.e. source) fluid.
+/// 
+/// Type ID: `origins:still`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "fluid_condition": {
+///     "type": "origins:still"
+/// }
+/// ```
+dispatch origins:fluid_condition["origins:still", "apoli:still"] to struct Still {}

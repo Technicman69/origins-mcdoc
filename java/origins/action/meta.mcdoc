@@ -1,52 +1,61 @@
-use ::java::origins::action::EntityAction
-use ::java::origins::condition::EntityCondition
+use super::BientityAction
+use super::BlockAction
+use super::EntityAction
+use super::ItemAction
+use super::super::condition::BientityCondition
+use super::super::condition::BiomeCondition
+use super::super::condition::BlockCondition
+use super::super::condition::DamageCondition
+use super::super::condition::EntityCondition
+use super::super::condition::FluidCondition
+use super::super::condition::ItemCondition
 
 // For every meta action there's a definition copied over to every action type (with changed action type inside)
 
-dispatch origins:bi-entity_action["origins:and", "apoli:and"] to struct BiEntityActionAnd {
+dispatch origins:bientity_action["origins:and", "apoli:and"] to struct BientityActionAnd {
 	/// These actions will be executed one after the other (but in the same tick).
- 	actions: [BiEntityAction],
+ 	actions: [BientityAction],
 }
-dispatch origins:bi-entity_action["origins:chance", "apoli:chance"] to struct BiEntityActionChance {
+dispatch origins:bientity_action["origins:chance", "apoli:chance"] to struct BientityActionChance {
 	/// The action which might be executed.
- 	action: BiEntityAction,
+ 	action: BientityAction,
     /// The chance that the action will execute, from 0 to 1. (E.g. 0.1 means 10% chance, 0.95 means 95% chance).
     chance: float @ 0.0..1.0,
     /// The action to execute if the specified action in the action field is not executed.
-    fail_action?: BiEntityAction,
+    fail_action?: BientityAction,
 }
-dispatch origins:bi-entity_action["origins:choice", "apoli:choice"] to struct BiEntityActionChoice {
+dispatch origins:bientity_action["origins:choice", "apoli:choice"] to struct BientityActionChoice {
 	/// Each object has to have an element Action and a weight Integer.
  	actions: [struct {
-        element: BiEntityAction,
+        element: BientityAction,
         weight: int @ 1..,
     }],
 }
-dispatch origins:bi-entity_action["origins:delay", "apoli:delay"] to struct BiEntityActionDelay {
+dispatch origins:bientity_action["origins:delay", "apoli:delay"] to struct BientityActionDelay {
 	/// The action which will be executed after the delay.
- 	action: BiEntityAction,
+ 	action: BientityAction,
     /// The amount of ticks until the action is executed.
     ticks: int @ 0..,
 }
-dispatch origins:bi-entity_action["origins:if-else-list", "apoli:if-else-list"] to struct BiEntityActionIfElseList {
+dispatch origins:bientity_action["origins:if-else-list", "apoli:if-else-list"] to struct BientityActionIfElseList {
 	/// Each object has to have an element Action and a weight Integer.
  	actions: [struct {
-        action: BiEntityAction,
-        condition: BiEntityCondition,
+        action: BientityAction,
+        condition: BientityCondition,
     }],
 }
-dispatch origins:bi-entity_action["origins:if-else", "apoli:if-else"] to struct BiEntityActionIfElse {
+dispatch origins:bientity_action["origins:if-else", "apoli:if-else"] to struct BientityActionIfElse {
     /// A condition based on the type of action.
-    condition: BiEntityCondition,
+    condition: BientityCondition,
     /// The action which is executed when the condition evaluates to true.
-    if_action: BiEntityAction,
+    if_action: BientityAction,
     /// If present, this action will be executed when the condition evaluates to false.
-    else_action?: BiEntityAction,
+    else_action?: BientityAction,
 }
-dispatch origins:bi-entity_action["origins:nothing", "apoli:nothing"] to struct BiEntityActionNothing {}
-dispatch origins:bi-entity_action["origins:side", "apoli:side"] to struct BiEntityActionSide {
+dispatch origins:bientity_action["origins:nothing", "apoli:nothing"] to struct BientityActionNothing {}
+dispatch origins:bientity_action["origins:side", "apoli:side"] to struct BientityActionSide {
 	/// The action to execute.
- 	action: BiEntityAction,
+ 	action: BientityAction,
     /// Determines where to execute the specified action type. Accepts "client" or "server"
     side: Side
 }

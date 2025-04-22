@@ -3,7 +3,7 @@ use ::java::util::text::Text
 use ::java::origins::util::sprite::BadgeFile
 
 dispatch minecraft:resource["origins:badge"] to struct Badge {
-	type: #[id] #[dispatcher_key="origins:badge"] string,
+	type: #[id(registery="origins:badge",definition=true)] #[dispatcher_key="origins:badge"] string,
 	...origins:badge[[type]],
 }
 

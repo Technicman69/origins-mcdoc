@@ -1,0 +1,316 @@
+use super::EntityCondition
+
+struct DamageCondition {
+	type: #[id] #[dispatcher_key="origins:damage_condition"] string,
+    /// If true, the condition acts inverted.
+    inverted?: boolean,
+	...origins:damage_condition[[type]],
+}
+
+/// # Amount
+/// 
+/// [Damage Condition Type](https://origins.readthedocs.io/en/latest/types/damage_condition_types)
+/// 
+/// Checks whether the damage is of a specified amount.
+/// 
+/// Type ID: `origins:amount`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "damage_condition": {
+///     "type": "origins:amount",
+///     "comparison": "==",
+///     "compare_to": 4
+/// }
+/// ```
+/// 
+/// This example will check if the damage dealt/taken is equal to 2 hearts.
+dispatch origins:damage_condition["origins:amount", "apoli:amount"] to struct Amount {
+	/// Determines how the amount of damage should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the amount of damage will be compared to.
+	compare_to: float,
+}
+
+/// # Attacker
+/// 
+/// [Damage Condition Type](https://origins.readthedocs.io/en/latest/types/damage_condition_types)
+/// 
+/// Checks whether the damage source is from an entity.
+/// 
+/// Type ID: `origins:attacker`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "damage_condition": {
+///     "type": "origins:attacker",
+///     "entity_condition": {
+///         "type": "origins:entity_type",
+///         "entity_type": "minecraft:zombie"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the attacker is a Zombie entity, with the [Entity Type (Entity Condition Type)](https://origins.readthedocs.io/en/latest/types/entity_condition_types/entity_type)
+dispatch origins:damage_condition["origins:attacker", "apoli:attacker"] to struct Attacker {
+	/// If set, the attacker entity must fulfill the provided entity condition type in order for this condition to evaluate to true.
+	entity_condition?: EntityCondition,
+}
+
+/// #   Bypasses Armor
+/// 
+/// [Damage Condition Type](https://origins.readthedocs.io/en/latest/types/damage_condition_types)
+/// 
+/// Checks whether the damage source bypasses armor.
+/// 
+/// Type ID: `origins:bypasses_armor`
+/// 
+/// !!! danger
+/// 
+///     This damage condition type has been <span style="color:darkred"><b>deprecated</b></span> and may be removed in a future version. Please use [In Tag (Damage Condition Type)](in_tag) instead.
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "damage_condition": {
+///     "type": "origins:bypasses_armor"
+/// }
+/// ```
+dispatch origins:damage_condition["origins:bypasses_armor", "apoli:bypasses_armor"] to struct BypassesArmor {}
+
+/// #   Explosive
+/// 
+/// [Damage Condition Type](https://origins.readthedocs.io/en/latest/types/damage_condition_types)
+/// 
+/// Checks whether the damage source is an explosive.
+/// 
+/// Type ID: `origins:explosive`
+/// 
+/// !!! danger
+/// 
+///     This damage condition type has been <span style="color:darkred"><b>deprecated</b></span> and may be removed in a future version. Please use [In Tag (Damage Condition Type)](in_tag) instead.
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "damage_condition": {
+///     "type": "origins:explosive"
+/// }
+/// ```
+dispatch origins:damage_condition["origins:explosive", "apoli:explosive"] to struct Explosive {}
+
+/// # Fire
+/// 
+/// [Damage Condition Type](https://origins.readthedocs.io/en/latest/types/damage_condition_types)
+/// 
+/// Checks whether the damage is fire damage (this includes lava damage!).
+/// 
+/// Type ID: `origins:fire`
+/// 
+/// !!! danger
+/// 
+///     This damage condition type has been <span style="color:darkred"><b>deprecated</b></span> and may be removed in a future version. Please use [In Tag (Damage Condition Type)](in_tag) instead.
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "damage_condition": {
+///     "type": "origins:fire"
+/// }
+/// ```
+dispatch origins:damage_condition["origins:fire", "apoli:fire"] to struct Fire {}
+
+/// #   From Falling
+/// 
+/// [Damage Condition Type](https://origins.readthedocs.io/en/latest/types/damage_condition_types)
+/// 
+/// Checks whether the damage source is from falling.
+/// 
+/// Type ID: `origins:from_falling`
+/// 
+/// !!! danger
+/// 
+///     This damage condition type has been <span style="color:darkred"><b>deprecated</b></span> and may be removed in a future version. Please use [In Tag (Damage Condition Type)](in_tag) instead.
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "damage_condition": {
+///     "type": "origins:from_falling"
+/// }
+/// ```
+dispatch origins:damage_condition["origins:from_falling", "apoli:from_falling"] to struct FromFalling {}
+
+/// # In Tag
+/// 
+/// [Damage Condition Type](https://origins.readthedocs.io/en/latest/types/damage_condition_types)
+/// 
+/// Checks whether the type of this damage is in a specified tag.
+/// 
+/// Type ID: `origins:in_tag`
+/// 
+/// 
+/// !!! note
+/// 
+///     See [Minecraft Wiki: Damage type tag (Java Edition)](https://minecraft.wiki/w/Damage_type_tag_(Java_Edition)) for a list of of damage type tags provided/used in vanilla.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "damage_condition": {
+///     "type": "origins:in_tag",
+///     "tag": "minecraft:is_drowning"
+/// }
+/// ```
+/// 
+/// This example will check if the damage is considered drowning damage.
+dispatch origins:damage_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
+	/// The namespace and ID of the tag which the damage type should be in to pass the check.
+	tag: Identifier,
+}
+
+/// # Name
+/// 
+/// [Damage Condition Type](https://origins.readthedocs.io/en/latest/types/damage_condition_types)
+/// 
+/// Checks whether the damage source uses a specific name.
+/// 
+/// Type ID: `origins:name`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "damage_condition": {
+///     "type": "origins:name",
+///     "name": "inWall"
+/// }
+/// ```
+/// 
+/// This example will check if the damage source name is `inWall`, meaning that the condition will evaluate to true if the entity is suffocating in a block.
+dispatch origins:damage_condition["origins:name", "apoli:name"] to struct Name {
+	/// Name the damage source should have to pass the check. See [List of Damage Source Names](https://origins.readthedocs.io/en/latest/types/../misc/extras/damage_source_names) for possible values.
+	name: string,
+}
+
+/// #   Out of World
+/// 
+/// [Damage Condition Type](https://origins.readthedocs.io/en/latest/types/damage_condition_types)
+/// 
+/// Checks whether the damage source is out of world.
+/// 
+/// Type ID: `origins:out_of_world`
+/// 
+/// !!! danger
+/// 
+///     This damage condition type has been <span style="color:darkred"><b>deprecated</b></span> and may be removed in a future version. Please use [In Tag (Damage Condition Type)](in_tag) instead.
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "damage_condition": {
+///     "type": "origins:out_of_world"
+/// }
+/// ```
+dispatch origins:damage_condition["origins:out_of_world", "apoli:out_of_world"] to struct OutOfWorld {}
+
+/// # Projectile
+/// 
+/// [Damage Condition Type](https://origins.readthedocs.io/en/latest/types/damage_condition_types)
+/// 
+/// Checks whether the damage source was projectile damage, and optionally the type of projectile it was (if specified).
+/// 
+/// Type ID: `origins:projectile`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "damage_condition": {
+///     "type": "origins:projectile",
+///     "projectile": "minecraft:spectral_arrow"
+/// }
+/// ```
+/// 
+/// This example will check if the damage source is a Spectral Arrow projectile entity.
+/// <br>
+/// 
+/// ```json
+/// "damage_condition": {
+///     "type": "origins:projectile",
+///     "projectile_condition": {
+///       "type": "origins:and",
+///       "conditions": [
+///         {
+///           "type": "origins:entity_type",
+///           "entity_type": "minecraft:arrow"
+///         },
+///         {
+///           "type": "origins:on_fire"
+///         }
+///       ]
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the damage source is a burning arrow.
+dispatch origins:damage_condition["origins:projectile", "apoli:projectile"] to struct Projectile {
+	/// If set, the check will only pass if the projectile was of an entity type with the specified namespace and ID.
+	projectile?: Identifier,
+	/// If set, the check will only pass if the projectile entity fulfills this condition.
+	projectile_condition?: EntityCondition,
+}
+
+/// #	Type
+/// 
+/// [Damage Condition Type](https://origins.readthedocs.io/en/latest/types/damage_condition_types)
+/// 
+/// Checks whether the damage source is of a certain damage type.
+/// 
+/// Type ID: `origins:type`
+/// 
+/// 
+/// ###	Fields
+/// 
+/// Field | Type | Default | Description
+/// ------|------|---------|------------
+/// `damage_type` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the damage type to compare the damage source to.
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "damage_condition": {
+/// 	"type": "origins:type",
+/// 	"damage_type": "minecraft:magic"
+/// }
+/// ```
+/// 
+/// This example will check if the damage source is of the `minecraft:magic` damage type.
+dispatch origins:damage_condition["origins:type", "apoli:type"] to struct Type {}
+
+/// #   Unblockable
+/// 
+/// [Damage Condition Type](https://origins.readthedocs.io/en/latest/types/damage_condition_types)
+/// 
+/// Checks whether the damage source is unblockable.
+/// 
+/// Type ID: `origins:unblockable`
+/// 
+/// !!! danger
+/// 
+///     This damage condition type has been <span style="color:darkred"><b>deprecated</b></span> and may be removed in a future version. Please use [In Tag (Damage Condition Type)](in_tag) instead.
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "damage_condition": {
+///     "type": "origins:unblockable"
+/// }
+/// ```
+dispatch origins:damage_condition["origins:unblockable", "apoli:unblockable"] to struct Unblockable {}

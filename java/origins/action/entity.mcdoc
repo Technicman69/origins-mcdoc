@@ -1,9 +1,1912 @@
+use super::BientityAction
+use super::BlockAction
+use super::ItemAction
+use super::super::condition::BlockCondition
+use super::super::condition::BientityCondition
+use super::super::condition::EntityCondition
+use super::super::condition::ItemCondition
+
 struct EntityAction {
 	type: #[id] #[dispatcher_key="origins:entity_action"] string,
 	...origins:entity_action[[type]],
 }
 
+/// # Execute Command
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Executes a command with the entity as the source (i.e. `@s` will select the entity itself).
+/// 
+/// Type ID: `origins:execute_command`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:execute_command",
+///     "command": "tellraw @a {\"text\": \"Hello world!\", \"color\": \"green\"}"
+/// }
+/// ```
+/// 
+/// This example will execute a `/tellraw` command that will print a green-colored "Hello world!" message to all players.
 dispatch origins:entity_action["origins:execute_command", "apoli:execute_command"] to struct ExecuteCommand {
 	/// The command to execute on the entity with entity's command context (position, rotation, etc.).
  	command: #[command(slash="allowed")] string,
+}
+
+/// #	Action on Set
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Executes an action on entities stored within the power that uses the [Entity Set (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/entity_set).
+/// 
+/// Type ID: `origins:action_on_set`
+/// 
+/// 
+/// !!!	note
+/// 
+/// 	In the context of this entity action type, the actor will be the entity that invoked the entity action while the target will be the entities within the power.
+/// 
+/// !!!	note
+/// 
+/// 	The action will be executed on the entities stored within the power regardless of their dimension.
+/// 
+/// 
+/// ###	Fields
+/// 
+/// Field | Type | Default | Description
+/// ------|------|---------|------------
+/// `set` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the power.
+/// `bientity_action` | [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types) | | The bientity action to execute on both or either the actor and target.
+/// `bientity_condition` | [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types) | *optional* | If specified, only execute the bientity action if this bientity condition is fulfilled by both or either the actor and target.
+/// `limit` | [Integer](https://origins.readthedocs.io/en/latest/types/data_types/integer) | `0` | Determines the max amount of times the entity action type should iterate and execute the bientity action on the entities stored within the power. If the value is less than or equal to `0`, then there will be no limit.
+/// `reverse` | [Boolean](https://origins.readthedocs.io/en/latest/types/data_types/boolean) | `false` | Determines whether to reverse the order of the entities within the power when processing.
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "entity_action": {
+/// 	"type": "origins:action_on_set",
+/// 	"set": "example:special_pets",
+/// 	"bientity_action": {
+/// 		"type": "origins:target_action",
+/// 		"action": {
+/// 			"type": "origins:heal",
+/// 			"amount": 4
+/// 		}
+/// 	}
+/// }
+/// ```
+/// 
+/// This example will restore 2 hearts to entities that were added to the `example:special_pets` (`data/example/powers/special_pets.json`) power using the [Add to Set (Bientity Action Type)](https://origins.readthedocs.io/en/latest/types/bientity_action_types/add_to_set).
+dispatch origins:entity_action["origins:action_on_set", "apoli:action_on_set"] to struct ActionOnSet {}
+
+/// # Add Velocity
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Adds or sets velocity towards a specific direction.
+/// 
+/// Type ID: `origins:add_velocity`
+/// 
+/// !!! note
+/// 
+///     If the entity action type behaves unexpectedly, try setting either the `client` (should always work) or `server` (might not work) boolean fields to `false`. [Here are some examples.](https://github.com/apace100/apoli/blob/3115c41ea4390ad9ced3ae5be86151131accc36f/testdata/apoli/powers/add_velocity.json)
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:add_velocity",
+///     "y": 2
+/// }
+/// ```
+/// 
+/// This example will add velocity to the entity's positive Y axis, essentially launching the entity up in the air.
+dispatch origins:entity_action["origins:add_velocity", "apoli:add_velocity"] to struct AddVelocity {
+	/// The amount of velocity to add on the x-axis.
+	x?: float,
+	/// The amount of velocity to add on the y-axis.
+	y?: float,
+	/// The amount of velocity to add on the z-axis.
+	z?: float,
+	/// Determines how the direction of the velocity to add/set will be calculated.
+	space?: Space,
+	/// If this is false, the action will not execute on the client.
+	client?: boolean,
+	/// If this is false, the action will not execute on the server.
+	server?: boolean,
+	/// If this is true, the action will act as a "set" velocity action, overriding the entity's current velocity instead of adding to it.
+	set?: boolean,
+}
+
+/// # Add XP
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Adds experience points and levels to the player, or subtracts levels.
+/// 
+/// Type ID: `origins:add_xp`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:add_xp",
+///     "levels": 2
+/// }
+/// ```
+/// 
+/// This example will add 2 levels to the player.
+dispatch origins:entity_action["origins:add_xp", "apoli:add_xp"] to struct AddXp {
+	/// If set, this is the amount experience points that will be given to the player. Can not be negative.
+	points?: int,
+	/// If set, this is the amount experience levels that will be given to the player. Can be negative and thus used to subtract levels.
+	levels?: int,
+}
+
+/// # Apply Effect
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Adds one or more status effects to the living entity. Does not have an effect on non-living entities.
+/// 
+/// Type ID: `origins:apply_effect`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:apply_effect",
+///     "effect": {
+///         "effect": "minecraft:speed",
+///         "duration": 400,
+///         "amplifier": 0
+///     }
+/// }
+/// ```
+/// 
+/// This example will apply a Speed I status effect to the entity that would last for 20 seconds.
+/// <br>
+/// 
+/// ```json
+/// "entity_action": {
+/// 	"type": "origins:apply_effect",
+/// 	"effects": [
+/// 		{
+/// 			"effect": "minecraft:slow_falling",
+/// 			"duration": 400,
+/// 			"is_ambient": false,
+/// 			"show_particles": false,
+/// 			"show_icon": true
+/// 		},
+/// 		{
+/// 			"effect": "minecraft:slowness",
+/// 			"duration": 400,
+/// 			"is_ambient": false,
+/// 			"show_particles": false,
+/// 			"show_icon": true
+/// 		}
+/// 	]
+/// }
+/// ```
+/// This example will apply both Slowness I and Slow Falling I status effects that lasts for 20 seconds.
+dispatch origins:entity_action["origins:apply_effect", "apoli:apply_effect"] to struct ApplyEffect {
+	/// If set, this status effect will be applied by this action.
+	effect?: StatusEffectInstance,
+	/// If set, these status effects will be applied by this action.
+	effects?: Array,
+}
+
+/// # Area of Effect
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Executes a [Bi-Entity Action](https://origins.readthedocs.io/en/latest/types/bientity_action_types) within a specified radius.
+/// 
+/// Type ID: `origins:area_of_effect`
+/// 
+/// 
+/// !!! note
+/// 
+///     In the context of this entity action type, the '**actor**' is the entity that invoked the action and the '**target(s)**' is/are the entity/entities within the specified radius.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:area_of_effect",
+///     "radius": 10,
+///     "shape": "sphere",
+///     "bientity_action": {
+///         "type": "origins:target_action",
+///         "action": {
+///             "type": "origins:spawn_entity",
+///             "entity_type": "minecraft:lightning_bolt"
+///         }
+///     }
+/// }
+/// ```
+/// 
+/// This example will summon a lightning bolt on entities within a 10 block spherical radius.
+/// <br>
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:area_of_effect",
+///     "radius": 32,
+///     "bientity_action": {
+///         "type": "origins:target_action",
+///         "action": {
+///             "type": "origins:set_on_fire",
+///             "duration": 5
+///         }
+///     },
+///     "bientity_condition": {
+///         "type": "origins:can_see"
+///     }
+/// }
+/// ```
+/// 
+/// This example will set entities within a 32 block radius on fire for 5 seconds if the entities that are within the radius can be "seen" by the entity that invoked the action.
+dispatch origins:entity_action["origins:area_of_effect", "apoli:area_of_effect"] to struct AreaOfEffect {
+	/// Determines the radius of the area.
+	radius?: float,
+	/// Determines the shape of the area.
+	shape?: Shape,
+	/// The bientity action to execute on either or both the '**actor**' or the '**target(s)**'.
+	bientity_action: BientityAction,
+	/// If specified, the specified bientity action will only be executed on either or both the '**actor**' or '**target(s)**' that fulfill this bientity condition.
+	bientity_condition?: BientityCondition,
+	...(
+        struct {
+            /// Determines whether the '**actor**' should be included as a target.
+            include_acto?: boolean
+        } |
+        struct {
+            /// Determines whether the '**actor**' should be included as a target.
+            ["include_target"]?: boolean
+        }
+    )
+}
+
+/// # Block Action At
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Executes a [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types) at the position of the entity.
+/// 
+/// Type ID: `origins:block_action_at`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:block_action_at",
+///     "block_action": {
+///         "type": "origins:set_block",
+///         "block": "minecraft:sand"
+///     }
+/// }
+/// ```
+/// 
+/// This example will execute a [Set Block (Block Action Type)](https://origins.readthedocs.io/en/latest/types/block_action_types/set_block) that would set a Sand block at the entity's feet.
+dispatch origins:entity_action["origins:block_action_at", "apoli:block_action_at"] to struct BlockActionAt {
+	/// The block action type to execute.
+	block_action: BlockAction,
+}
+
+/// # Change Resource
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Changes the value of a power that either uses the [Resource](https://origins.readthedocs.io/en/latest/types/power_types/resource) power type, or has a built-in cooldown.
+/// 
+/// Type ID: `origins:change_resource`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:change_resource",
+///     "resource": "namespace:example",
+///     "change": 1
+/// }
+/// ```
+/// 
+/// This example will add 1 to the `namespace:example` (`data/namespace/powers/example.json`) power that uses the [Resource (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/resource).
+dispatch origins:entity_action["origins:change_resource", "apoli:change_resource"] to struct ChangeResource {
+	/// The namespace and ID of the power that uses the [Resource (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/resource) or has a built-in cooldown.
+	resource: Identifier,
+	/// This value will be added to the resource (won't go below `min` or above `max` of the [Resource (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/resource)).
+	change: int,
+	/// Determines if the action should add or set the value of the resource. Accepts `"add"` or `"set"`.
+	operation?: string,
+}
+
+/// # Clear Effect
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Removes one specific type of status effect, or all status effects, from a living entity.
+/// 
+/// Type ID: `origins:clear_effect`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:clear_effect",
+///     "effect": "minecraft:poison"
+/// }
+/// ```
+/// 
+/// This example will clear the Poison status effect from the entity.
+dispatch origins:entity_action["origins:clear_effect", "apoli:clear_effect"] to struct ClearEffect {
+	/// If specified, the status effect with this namespace and ID will be cleared. If not specified, all status effects will be cleared.
+	effect?: Identifier,
+}
+
+/// # Crafting Table
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Brings up the Crafting Table GUI as if the player has interacted with one.
+/// 
+/// Type ID: `origins:crafting_table`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:crafting_table"
+/// }
+/// ```
+dispatch origins:entity_action["origins:crafting_table", "apoli:crafting_table"] to struct CraftingTable {}
+
+/// # Damage
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Applies damage to an entity.
+/// 
+/// Type ID: `origins:damage`
+/// 
+/// 
+/// !!! info
+/// 
+///     The max health of the entity will be used as the base value for the modifier(s).
+/// 
+/// 
+/// !!! info
+/// 
+///     See [Minecraft Wiki: Damage type](https://minecraft.wiki/w/Damage_type) and [Minecraft Wiki: Damage type tag (Java Edition)](https://minecraft.wiki/w/Damage_type_tag_(Java_Edition)) for more information about vanilla damage types and damage type tags.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:damage",
+///     "amount": 4,
+///     "damage_type": "minecraft:on_fire"
+/// }
+/// ```
+/// 
+/// This example will deal 2 hearts of `on_fire` damage, which by its tags in vanilla is considered fire damage and bypasses armor.
+/// <br>
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:damage",
+///     "damage_type": "minecraft:out_of_world",
+///     "modifiers": [
+///         {
+///             "operation": "set_base",
+///             "value": 2
+///         },
+///         {
+///             "operation": "multiply_total_multiplicative",
+///             "resource": "example:damage_multiplier",
+///             "value": 0
+///         }
+///     ]
+/// }
+/// ```
+/// 
+/// This example will deal `2 * (1 + example:damage_multiplier)` amount of `out_of_world` damage to the entity, with `2` used for overriding the base value for the modifiers, and the value of the `example:damage_multiplier` (`data/example/powers/damage_multipler.json`) power as the "multiplier". If the value of the said power is `3`, the amount of damage that will be dealt will be `8` (`2 * (1 + 3) = 8`.)
+dispatch origins:entity_action["origins:damage", "apoli:damage"] to struct Damage {
+	/// The amount of damage to deal.
+	amount: float,
+	/// Use `damage_type` instead. See [Damage Source (Data Type)](https://origins.readthedocs.io/en/latest/types/data_types/damage_source) for more details.
+	source?: DamageSource,
+	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
+	damage_type: Identifier,
+	/// If specified, this modifier will be applied to the damage taken by the entity.
+	modifier?: AttributeModifier,
+	/// If specified, these modifiers will be applied to the damage taken by the entity.
+	modifiers?: Array,
+}
+
+/// # Dismount
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Dismounts the entity from their vehicle.
+/// 
+/// Type ID: `origins:dismount`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:dismount"
+/// }
+/// ```
+dispatch origins:entity_action["origins:dismount", "apoli:dismount"] to struct Dismount {}
+
+/// #   Drop Inventory
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Drops the items from either the entity's inventory or a power that uses the [Inventory (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/inventory).
+/// 
+/// Type ID: `origins:drop_inventory`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:drop_inventory"
+/// }
+/// ```
+/// 
+/// This example will drop all the items from the entity's inventory.
+/// <br>
+/// 
+/// ```json
+/// "entity_action": {
+/// 	"type": "origins:drop_inventory",
+/// 	"slots": [
+/// 		"weapon.offhand",
+/// 		"hotbar.0",
+/// 		"hotbar.1",
+/// 		"hotbar.2",
+/// 		"hotbar.3",
+/// 		"hotbar.4",
+/// 		"hotbar.5",
+/// 		"hotbar.6",
+/// 		"hotbar.7",
+/// 		"hotbar.8"
+/// 	]
+/// }
+/// ```
+/// 
+/// This example will drop all items located in your offhand, or hotbar.
+dispatch origins:entity_action["origins:drop_inventory", "apoli:drop_inventory"] to struct DropInventory {
+	/// Determines whether to drop the items from the inventory of the entity or the inventory of a power present in the entity.
+	inventory_type?: Inventory,
+	/// If specified, this action will be executed on the entity **before** the items are dropped.
+	entity_action?: EntityAction,
+	/// If specified, this action will be executed on the affected items **before** the affected items are dropped.
+	item_action?: ItemAction,
+	/// If specified, only items which fulfill this condition will be dropped.
+	item_condition?: ItemCondition,
+	/// If specified, only items in the designated slot will be dropped.
+	slot?: ItemSlot,
+	/// If specified, only items in the designated slots will be dropped.
+	slots?: Array,
+	/// If specified, the items in the inventory of this power will be dropped instead of the items in the entity's inventory if `inventory_type` is set to `"power"`.
+	power?: Identifier,
+	/// If `true`, items will be thrown in random directions instead of being normally dropped, similar to how items are dropped when you die.
+	throw_randomly?: boolean,
+	/// If `true`, the dropped items will have their `Thrower` NBT set as the `UUID` NBT of the entity that invoked the action.
+	retain_ownership?: boolean,
+	/// If specified, the affected items will be split by this amount.
+	amount?: int,
+}
+
+/// # Emit Game Event
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Emits a 'game event' at the entity's position.
+/// 
+/// Type ID: `origins:emit_game_event`
+/// 
+/// 
+/// !!! note
+/// 
+///     See [Minecraft Wiki: Sculk Sensor (Vibration amplitudes)](https://minecraft.wiki/w/Sculk_Sensor?oldid=2099339#Vibration_amplitudes) for a list of vanilla game events you can use.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:emit_game_event",
+///     "event": "minecraft:ring_bell"
+/// }
+/// ```
+/// This example will emit a `minecraft:ring_bell` game event, which has a redstone signal output of 6.
+dispatch origins:entity_action["origins:emit_game_event", "apoli:emit_game_event"] to struct EmitGameEvent {
+	/// The namespace and ID of a game event.
+	event: Identifier,
+}
+
+/// # Ender Chest
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Brings up the Ender Chest GUI as if the player has interacted with one.
+/// 
+/// Type ID: `origins:ender_chest`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:ender_chest"
+/// }
+/// ```
+dispatch origins:entity_action["origins:ender_chest", "apoli:ender_chest"] to struct EnderChest {}
+
+/// # Equipped Item Action
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Executes an [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types) on an item stack in a specified equipment slot.
+/// 
+/// Type ID: `origins:equipped_item_action`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///   	"type": "origins:equipped_item_action",
+///   	"equipment_slot": "mainhand",
+///   	"action": {
+/// 	  	"type": "origins:consume",
+/// 	  	"amount": 1
+///   	}
+/// }
+/// ```
+/// 
+/// This example will "consume" (remove) 1 item from the item stack in the mainhand equipment slot.
+dispatch origins:entity_action["origins:equipped_item_action", "apoli:equipped_item_action"] to struct EquippedItemAction {
+	/// Which equipped item to execute the action on. One of: `"mainhand"`, `"offhand"`, `"head"`, `"chest"`, `"legs"`, `"feet"`.
+	equipment_slot: string,
+	/// The item action type to execute on the item stack in the specified equipment slot.
+	action: ItemAction,
+}
+
+/// # Exhaust
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Applies exhaustion to the entity, reducing saturation and hunger.
+/// 
+/// Type ID: `origins:exhaust`
+/// 
+/// !!! note
+/// 
+///     **This entity action type will only work on players.**
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:exhaust",
+///     "amount": 0.4
+/// }
+/// ```
+/// 
+/// This example will apply 0.4 exhaustion to the player, which is similar in effect to jumping 8 times (without sprinting).
+dispatch origins:entity_action["origins:exhaust", "apoli:exhaust"] to struct Exhaust {
+	/// The amount of exhaustion to apply to the player.
+	amount: float,
+}
+
+/// # Explode
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Summons an explosion with a specific explosion power.
+/// 
+/// Type ID: `origins:explode`
+/// 
+/// !!! note
+/// 
+///     See [Minecraft Wiki: Explosion (Causes)](https://minecraft.wiki/w/Explosion#Causes) for a list of power values that are used in vanilla.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:explode",
+///     "power": 5,
+///     "destruction_type": "none",
+///     "damage_self": false,
+///     "create_fire": false
+/// }
+/// ```
+/// 
+/// This example will summon an explosion that will **not** damage the entity that invoked the action, the terrain, or create fire.
+dispatch origins:entity_action["origins:explode", "apoli:explode"] to struct Explode {
+	/// Determines the power of the explosion.
+	power: float,
+	/// Determines the effect of the explosion to the terrain.
+	destruction_type?: Destruction,
+	/// Determines if the entity that invoked the action should take damage from the summoned explosion.
+	damage_self?: boolean,
+	/// If specified, the blocks that fulfill this condition will not be destroyed by the summoned explosion.
+	indestructible?: BlockCondition,
+	/// If specified, only the blocks that fulfill this condition will be destroyed by the summoned explosion.
+	destructible?: BlockCondition,
+	/// Determines if the summoned explosion should create fire.
+	create_fire?: boolean,
+}
+
+/// # Extinguish
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Extinguishes the fire from the entity, removing the burning effect.
+/// 
+/// Type ID: `origins:extinguish`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:extinguish"
+/// }
+/// ```
+dispatch origins:entity_action["origins:extinguish", "apoli:extinguish"] to struct Extinguish {}
+
+/// # Feed
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Feeds the entity, filling up their hunger bar as if they had eaten a food item with the provided values.
+/// 
+/// Type ID: `origins:feed`
+/// 
+/// !!! note
+/// 
+///     The actual food saturation level is determined by the `food * saturation * 2` formula.
+/// 
+/// !!! note
+/// 
+///     **This entity action type will only work on players.**
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:feed",
+///     "food": 4,
+///     "saturation": 2
+/// }
+/// ```
+/// 
+/// This example will *feed* the player 2 hunger shanks (4 hunger points), and 16 saturation points.
+dispatch origins:entity_action["origins:feed", "apoli:feed"] to struct Feed {
+	/// The amount of food points to restore.
+	food: int,
+	/// The amount of saturation points to restore.
+	saturation: float,
+}
+
+/// #   Fire Projectile
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Fires one or more projectiles or entities.
+/// 
+/// Type ID: `origins:fire_projectile`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:fire_projectile",
+///     "entity_type": "minecraft:snowball",
+///     "divergence": 3.0,
+///     "count": 3
+/// }
+/// ```
+/// 
+/// This example will fire three snowballs at where the player is facing.
+dispatch origins:entity_action["origins:fire_projectile", "apoli:fire_projectile"] to struct FireProjectile {
+	/// The identifier of the projectile or entity that will be launched.
+	entity_type: Identifier,
+	/// Determines how much the projectile or entity that will be launched is affected by random spread.
+	divergence?: float,
+	/// Determines the speed of the projectile or entity that will be launched.
+	speed?: float,
+	/// Determines the count of projectiles or entities that will be launched.
+	count?: int,
+	/// If specified, this NBT data will be added to the projectile or entity that will be launched.
+	tag?: NBT,
+	/// If specified, this entity action will be executed on the projectile or entity that will be launched.
+	projectile_action?: EntityAction,
+}
+
+/// # Gain Air
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Restores breath (bubbles!) to a living entity.
+/// 
+/// Type ID: `origins:gain_air`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:gain_air",
+///     "value": 20
+/// }
+/// ```
+/// 
+/// This example will restore about 1 second of breath to the entity.
+dispatch origins:entity_action["origins:gain_air", "apoli:gain_air"] to struct GainAir {
+	/// The amount of breath to restore.
+	value: int,
+}
+
+/// # Give
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Gives the entity an item stack by inserting it into its inventory or dropping it on the ground if there is no available inventory space.
+/// 
+/// Type ID: `origins:give`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///   	"type": "origins:give",
+///   	"stack": {
+/// 	  "item": "minecraft:egg",
+/// 	  "amount": 3
+///   	}
+/// }
+/// ```
+/// 
+/// This example gives the entity 3 Eggs.
+/// <br>
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:give",
+///     "stack": {
+///         "item": "minecraft:iron_axe"
+///     },
+///     "item_action": {
+///         "type": "origins:damage",
+///         "amount": 20,
+///         "ignore_unbreaking": true
+///     },
+///     "preferred_slot": "offhand"
+/// }
+/// ```
+/// 
+/// This example will give the entity an Iron Axe that has a `Damage` value of `20` that will be preferably put in the offhand equipment slot.
+dispatch origins:entity_action["origins:give", "apoli:give"] to struct Give {
+	/// The item stack to give to the entity.
+	stack: ItemStack,
+	/// If specified, the specified item action type will be executed on the item stack before it's given to the player.
+	item_action?: ItemAction,
+	/// If specified, this will prioritize the action to put the item in the specified slot. Accepts `"chest"`, `"feet"`, `"head"`, `"legs"`, `"mainhand"` or `"offhand"`.
+	preferred_slot?: string,
+}
+
+/// # Grant Advancement
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Grants an advancement to the player.
+/// 
+/// Type ID: `origins:grant_advancement`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:grant_advancement",
+///     "advancement": "minecraft:adventure/arbalistic"
+/// }
+/// ```
+/// 
+/// This example will grant the player the Arbalistic advancement.
+dispatch origins:entity_action["origins:grant_advancement", "apoli:grant_advancement"] to struct GrantAdvancement {
+	/// The namespace and ID of the advancement to be granted to the player.
+	advancement: Identifier,
+	/// If specified, determines the criteria to grant to the specified advancement.
+	criteria?: Array,
+	/// If specified, determines the criterion to grant to the specified advancement.
+	criterion?: string,
+	/// Determines how to select the parent advancement(s) or child(ren) advancement(s) of the specified advancement. Can be one of: `"only"`, `"through"`, `"from"`, `"until"`, `"everything"`
+	selection?: string,
+}
+
+/// # Grant Power
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Grants a power to the entity from a specified power source.
+/// 
+/// Type ID: `origins:grant_power`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:grant_power",
+///     "power": "origins:burn_in_daylight",
+///     "source": "example:power_source"
+/// }
+/// ```
+/// 
+/// This example will grant the entity the `origins:burn_in_daylight` power from the `example:power_source` source.
+dispatch origins:entity_action["origins:grant_power", "apoli:grant_power"] to struct GrantPower {
+	/// The namespace and ID of the power to be granted to the entity.
+	power: #[id="origins:power"] string,
+	/// The namespace and ID of the source of the granted power.
+	source: Identifier,
+}
+
+/// # Heal
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Restores a specified amount of health to the entity.
+/// 
+/// Type ID: `origins:heal`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:heal",
+///     "amount": 6
+/// }
+/// ```
+/// 
+/// This example will restore about 3 hearts to the entity.
+dispatch origins:entity_action["origins:heal", "apoli:heal"] to struct Heal {
+	/// The amount of health to restore.
+	amount: float,
+}
+
+/// #   Modify Death Ticks
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Modifies how long the entity has been dead for.
+/// 
+/// Type ID: `origins:modify_death_ticks`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:modify_death_ticks",
+///     "modifier": {
+///         "operation": "set_total",
+///         "value": 0
+///     }
+/// }
+/// ```
+/// 
+/// This example will make the corpse of the entity remain in the world forever.
+dispatch origins:entity_action["origins:modify_death_ticks", "apoli:modify_death_ticks"] to struct ModifyDeathTicks {
+	/// This modifier will be applied to the current death ticks value of the entity.
+	modifier: AttributeModifier,
+}
+
+/// #   Modify Inventory
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Modifies the items from either the entity's inventory or a power that uses the [Inventory (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/inventory).
+/// 
+/// Type ID: `origins:modify_inventory`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:modify_inventory",
+///     "inventory_type": "power",
+///     "power": "origins:extra_inventory",
+///     "item_action": {
+///         "type": "origins:consume"
+///     }
+/// }
+/// ```
+/// 
+/// This example will consume each item in the inventory of the `origins:extra_inventory` power, decreasing their count by 1.
+/// <br>
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:modify_inventory",
+///     "item_condition": {
+///         "type": "origins:armor_value",
+///         "comparison": ">",
+///         "compare_to": 0
+///     },
+///     "item_action": {
+///         "type": "origins:damage",
+///         "amount": 1,
+///         "ignore_unbreaking": true
+///     }
+/// }
+/// ```
+/// 
+/// This example will slightly damage all items with an armor value.
+dispatch origins:entity_action["origins:modify_inventory", "apoli:modify_inventory"] to struct ModifyInventory {
+	/// Determines whether to modify the items in the inventory of the entity or the inventory of a power present in the entity.
+	inventory_type?: Inventory,
+	/// If specified, this action will be executed on the entity **before** the items are modified.
+	entity_action?: EntityAction,
+	/// The action to be executed on the affected items.
+	item_action: ItemAction,
+	/// If specified, only items which fulfill this condition will be affected by specified action.
+	item_condition?: ItemCondition,
+	/// If specified, only items in the designated slot will be modified.
+	slot?: ItemSlot,
+	/// If specified, only items in the designated slots will be modified.
+	slots?: Array,
+	/// If specified, the items in the inventory of this power will be modified instead of the items in the entity's inventory if `inventory_type` is set to `"power"`.
+	power?: Identifier,
+	/// Determines how the affected item stacks in the specified inventory are modified.
+	process_mode?: ProcessMode,
+	/// Determines the max amount of times the action should modify item stacks in the inventory. If the specified value is <= `0`, then there will be no limit.
+	limit?: int,
+}
+
+/// #   Modify Resource
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Modifies the value of a certain resource with [Attribute Modifiers](https://origins.readthedocs.io/en/latest/types/data_types/attribute_modifier).
+/// 
+/// Type ID: `origins:modify_resource`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:modify_resource",
+///     "modifier": {
+///         "operation": "add_base_early",
+///         "value": 1
+///     },
+///     "resource": "example:1st_resource"
+/// }
+/// ```
+/// 
+/// This example will add 1 to the `example:1st_resource` *(`data/example/powers/1st_resource.json`)* power.
+/// <br>
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:modify_resource",
+///     "modifier": {
+///         "operation": "set_total",
+///         "value": 0,
+///         "resource": "example:2nd_resource"
+///     },
+///     "resource": "example:1st_resource"
+/// }
+/// ```
+/// 
+/// This example will set the value of the `example:1st_resource` *(`data/example/powers/1st_resource.json`)* power as the value of the `example:2nd_resource` *(`data/example/powers/2nd_resource.json`)* power.
+dispatch origins:entity_action["origins:modify_resource", "apoli:modify_resource"] to struct ModifyResource {
+	/// This modifier will be applied to the current value of the target power.
+	modifier: AttributeModifier,
+	/// This power will have its value modified; as long as the power is using the [Resource (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/resource) or the [Cooldown (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/cooldown).
+	resource: Identifier,
+}
+
+/// #   Modify Stat
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Modifies the value of a certain statistic with [Attribute Modifiers](https://origins.readthedocs.io/en/latest/types/data_types/attribute_modifier).
+/// 
+/// Type ID: `origins:modify_stat`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:modify_stat",
+///     "stat": {
+///         "type": "minecraft:custom",
+///         "id": "minecraft:time_since_rest"
+///     },
+///     "modifier": {
+///         "operation": "add_base_early",
+///         "value": 24000
+///     }
+/// }
+/// ```
+/// 
+/// This example will add 24000 to the value of the player's `minecraft.custom:minecraft.time_since_rest` statistic.
+/// <br>
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:modify_stat",
+///     "stat": {
+///         "type": "minecraft:used",
+///         "id": "origins:orb_of_origin"
+///     },
+///     "modifier": {
+///         "operation": "add_base_early",
+///         "value": 1
+///     }
+/// }
+/// ```
+/// 
+/// This example will add 1 to the value of the player's `minecraft.used:origins.orb_of_origin` statistic.
+dispatch origins:entity_action["origins:modify_stat", "apoli:modify_stat"] to struct ModifyStat {
+	/// The type and name of the statistic to be modified.
+	stat: Stat,
+	/// This modifier will be applied to the current value of the statistic specified.
+	modifier: AttributeModifier,
+}
+
+/// # Passenger Action
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Executes an action on the passengers of the entity.
+/// 
+/// Type ID: `origins:passenger_action`
+/// 
+/// !!! note
+/// 
+///     Not to be confused with [Riding Action](./riding_action)
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:passenger_action",
+///     "action": {
+///         "type": "origins:heal",
+///         "amount": 2
+///     },
+///     "recursive": true
+/// }
+/// ```
+/// 
+/// This example will heal all entities that are currently riding the entity that executed this entity action type.
+dispatch origins:entity_action["origins:passenger_action", "apoli:passenger_action"] to struct PassengerAction {
+	/// If specified, this action will be executed on the passenger entity.
+	action?: EntityAction,
+	/// If specified, this action will be executed on either the 'actor' (the entity being ridden) or the 'target' (the passenger entity) or both.
+	bientity_action?: BientityAction,
+	/// If specified, the specified actions will only be executed if this condition is fulfilled by either the 'actor' (the entity being ridden) or the 'target' (the passenger entity) or both.
+	bientity_condition?: BientityCondition,
+	/// If set to `true`, the specified action(s) will be executed on all the passenger entities.
+	recursive?: boolean,
+}
+
+/// # Play Sound
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Plays a sound event at the entity's position.
+/// 
+/// Type ID: `origins:play_sound`
+/// 
+/// 
+/// !!! note
+/// 
+///     The value of the `volume` field is used to multiply the base distance of the sound event, which is 16 blocks (`1.0`).
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:play_sound",
+///     "sound": "minecraft:entity.chicken.egg"
+/// }
+/// ```
+/// 
+/// This example will play the `minecraft:entity.chicken.egg` sound event that can be heard within a 16 blocks distance. (`16 * 1.0 = 16`)
+/// <br>
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:play_sound",
+///     "sound": "minecraft:entity.enderman.death",
+///     "volume": 1.5
+/// }
+/// ```
+/// 
+/// This example will play the `minecraft:entity.enderman.death` sound event that can be heard within a 24 blocks distance. (`16 * 1.5 = 24`)
+dispatch origins:entity_action["origins:play_sound", "apoli:play_sound"] to struct PlaySound {
+	/// The ID of the sound event to play.
+	sound: Identifier,
+	/// If specified, this specifies the category and options the sound event falls under. Otherwise, uses the category specified in the entity that invoked this action. Accepts `"master"`, `"music"`, `"record"`, `"weather"`, `"block"`, `"hostile"`, `"neutral"`, `"players"`, `"ambient"` or `"voice"`.
+	category?: string,
+	/// The volume of the sound event.
+	volume?: float,
+	/// The pitch of the sound event.
+	pitch?: float,
+}
+
+/// #	Random Teleport
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Teleports the entity to a random location within the specified area.
+/// 
+/// Type ID: `origins:random_teleport`
+/// 
+/// !!! note
+/// 
+///     The actual width and height of the available teleportation area is double the respective provided value, +1 for the block the player stands on in the very center.
+/// 
+/// 
+/// ###	Fields
+/// 
+/// Field | Type | Default | Description
+/// ------|------|---------|------------
+/// `area_width` | [Float](https://origins.readthedocs.io/en/latest/types/data_types/float) | `8.0` | Determines the width of the area.
+/// `area_height` | [Float](https://origins.readthedocs.io/en/latest/types/data_types/float) | `8.0` | Determines the height of the area.
+/// `heightmap` | [Heightmap Type](https://origins.readthedocs.io/en/latest/types/data_types/heightmap_type) | *optional* | If specified, the location will be anchored above the highest Y level of the world determined by this heightmap type.
+/// `attempts` | [Integer](https://origins.readthedocs.io/en/latest/types/data_types/integer) | *optional* | Determines how many attempts the entity should be teleported to a random location. Defaults to `area_width` * 2 + `area_height` * 2.
+/// `landing_block_condition` | [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types) | *optional* | If specified, the entity will only be teleported on top of a block that fulfills this block condition. Otherwise, the entity will only be teleported on blocks that blocks movement/have solid collision.
+/// `landing_condition` | [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types) | *optional* | If specified, the entity will only be teleported to a location if the entity fulfills this entity condition. Otherwise, the entity will only be teleported to a location that is empty (e.g: no blocks and fluids.)
+/// `landing_offset` | [Vector](https://origins.readthedocs.io/en/latest/types/data_types/vector) | `{"x": 0, "y": 0, "z": 0}` | Determines the offset of the location of where the entity will be teleported. If the X and Z offsets are specified, the X and Z coordinates of the location will be divided (floored) before applying the offset.
+/// `loaded_chunks_only` | [Boolean](https://origins.readthedocs.io/en/latest/types/data_types/boolean) | `true` | Determines whether the entity should only be teleported in loaded chunks. **It is recommended to keep this set to `true` for performance reasons.**
+/// `success_action` | [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) | *optional* | If specified, this entity action will be executed on the entity after it's been successfully teleported to a random location.
+/// `fail_action` | [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) | *optional* | If specified, this entity action will be executed on the entity upon failing to be teleported on a random location.
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "entity_action": {
+/// 	"type": "origins:random_teleport",
+/// 	"area_width": 8,
+/// 	"area_height": 8,
+/// 	"success_action": {
+/// 		"type": "origins:spawn_particles",
+/// 		"particle": "minecraft:poof",
+/// 		"count": 8
+/// 	},
+/// 	"fail_action": {
+/// 		"type": "origins:execute_command",
+/// 		"command": "title @s actionbar {\"text\": \"Cannot teleport!\", \"color\": \"red\"}"
+/// 	}
+/// }
+/// ```
+/// 
+/// This example will teleport the entity to a random location within a 17x17x17 area. If the entity has been successfully teleported to a random location, the entity will emit a poof particle, otherwise, a message will pop-up that indicates the entity cannot be teleported.
+/// <br>
+/// 
+/// ```json
+/// "entity_action": {
+/// 	"type": "origins:random_teleport",
+/// 	"area_width": 4,
+/// 	"area_height": 8,
+/// 	"landing_block_condition": {
+/// 		"type": "origins:in_tag",
+/// 		"tag": "minecraft:wool"
+/// 	},
+/// 	"landing_offset": {
+/// 		"x": 0.5,
+/// 		"z": 0.5
+/// 	}
+/// }
+/// ```
+/// 
+/// This example will teleport the entity on top of the center of a random block included in the `minecraft:wools` block tag within a 9x17x9 area.
+dispatch origins:entity_action["origins:random_teleport", "apoli:random_teleport"] to struct RandomTeleport {}
+
+/// # Raycast
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Casts a ray to the direction where the entity is looking.
+/// 
+/// Type ID: `origins:raycast`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:raycast",
+///     "distance": 16,
+///     "block": true,
+///     "entity": true,
+///     "shape_type": "visual",
+///     "fluid_handling": "any",
+///     "bientity_action": {
+///         "type": "origins:target_action",
+///         "action": {
+///             "type": "origins:execute_command",
+///             "command": "say I've been hit!"
+///         }
+///     },
+///     "before_action": {
+///         "type": "origins:execute_command",
+///         "command": "say Before"
+///     },
+///     "hit_action": {
+///         "type": "origins:execute_command",
+///         "command": "say After (hit)"
+///     },
+///     "miss_action": {
+///         "type": "origins:execute_command",
+///         "command": "say After (miss)"
+///     },
+///     "command_at_hit": "particle minecraft:block_marker minecraft:emerald_block ~ ~ ~ 0 0 0 0.0 1 normal @a",
+///     "command_along_ray": "particle minecraft:soul_fire_flame",
+///     "command_step": 1,
+///     "command_along_ray_only_on_hit": true
+/// }
+/// ```
+/// 
+/// This example will cast a ray that can go through Glass blocks (or any blocks that are transparent and see-through) that will only display the Soul Fire Flame particle if the ray has hit a block/entity.
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:raycast",
+///     "block": true,
+///     "entity": true,
+///     "space": "local_horizontal_normalized",
+///     "direction": {
+///         "x": 0,
+///         "y": -0.5,
+///         "z": 1
+///     },
+///     "entity_distance": 2,
+///     "shape_type": "collider",
+///     "fluid_handling": "none",
+///     "bientity_action": {
+///         "type": "origins:target_action",
+///         "action": {
+///             "type": "origins:execute_command",
+///             "command": "say I've been hit!"
+///         }
+///     },
+///     "block_action": {
+///         "type": "apoli:execute_command",
+///         "command": "say A block has been hit"
+///     },
+///     "command_along_ray": "particle minecraft:soul_fire_flame"
+/// }
+/// ```
+/// 
+/// This example will cast a ray that will travel in the direction that your body is facing towards but slightly down, and will travel the same distance as your block reach for blocks, and two blocks for entities.
+dispatch origins:entity_action["origins:raycast", "apoli:raycast"] to struct Raycast {
+	/// Determines the maximum distance the ray-cast will travel.
+	distance?: float,
+	/// Determines whether the ray-cast should include blocks.
+	block?: boolean,
+	/// Determines whether the ray-cast should include entities.
+	entity?: boolean,
+	/// Determines how the ray-cast will handle blocks.
+	shape_type?: Shape,
+	/// Determines how the ray-cast will handle fluids.
+	fluid_handling?: FluidHandling,
+	/// Determines how the direction will be calculated. <span style="color: goldenrod;"><b>Only used if <code>direction</code> is specified.</b></span>
+	space?: Space,
+	/// If specified, determines the direction of the raycast. Otherwise, defaults to the direction at the entity is facing (as if `space` is `"local"`.)
+	direction?: Vector,
+	/// If specified, the specified bientity action type will only be executed if the specified bientity condition type is fulfilled by either or both the 'actor' (the entity that has the power) or 'target' (the entity that was hit by the ray-cast).
+	bientity_condition?: BientityCondition,
+	/// If specified, this bientity action type will be executed on either or both the 'actor' (the entity that has the power) or 'target' (the entity that was hit by the ray-cast).
+	bientity_action?: BientityAction,
+	/// Determines the distance of the raycast for entities if `entity` is set to `true`. If absent, it will use the higher value between the entity's attack range (with Reach Entity Attributes compatibility) or the `distance` field.
+	entity_distance?: float,
+	/// If specified, this block action type will be executed on the block the ray-cast has hit.
+	block_action?: BlockAction,
+	/// Determines the distance of the raycast for blocks if `block` is set to `true`. If absent, it will use the higher value between the entity's block reach (with Reach Entity Attributes compatibility) or the `distance` field.
+	block_distance?: float,
+	/// If specified, execute this entity action type *before* casting a ray.
+	before_action?: EntityAction,
+	/// If specified, execute this entity action on the entity that executed the ray-cast if the ray-cast has hit an entity/block.
+	hit_action?: EntityAction,
+	/// If specified, execute this entity action on the entity that executed the ray-cast if the ray-cast did not hit an entity/block.
+	miss_action?: EntityAction,
+	/// The command to execute upon the block/entity the ray-cast has hit.
+	command_at_hit?: string,
+	/// Determines the offset of the command specified in the `command_at_hit` field.
+	command_hit_offset?: float,
+	/// The command to execute for each step of the ray-cast.
+	command_along_ray?: string,
+	/// Determines the size of the step of the ray-cast (in blocks).
+	command_step?: float,
+	/// Determines if the command specified in the `command_along_ray` field should be executed only if the ray-cast has hit a block/entity.
+	command_along_ray_only_on_hit?: boolean,
+}
+
+/// #	Remove Power
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Removes a power from the entity, regardless of its source.
+/// 
+/// Type ID: `origins:remove_power`
+/// 
+/// 
+/// ###	Fields
+/// 
+/// Field | Type | Default | Description
+/// ------|------|---------|------------
+/// `power` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the power to remove from the entity.
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "entity_action": {
+/// 	"type": "origins:remove_power",
+/// 	"power": "origins:arcane_skin"
+/// }
+/// ```
+/// 
+/// This example will remove the `origins:arcane_skin` power from the entity.
+/// <br>
+/// 
+/// 
+/// ```json
+/// "entity_action": {
+/// 	"type": "origins:remove_power",
+/// 	"power": "*:*"
+/// }
+/// ```
+/// 
+/// This example will remove the power itself from the entity.
+dispatch origins:entity_action["origins:remove_power", "apoli:remove_power"] to struct RemovePower {}
+
+/// #   Replace Inventory
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Replaces the items from either the entity's inventory or a power that uses the [Inventory (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/inventory).
+/// 
+/// Type ID: `origins:replace_inventory`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:replace_inventory",
+///     "slot": "weapon.offhand",
+///     "stack": {
+///         "item": "minecraft:barrier"
+///     }
+/// }
+/// ```
+/// 
+/// This example will replace the item in the entity's offhand with a Barrier item.
+/// <br>
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:replace_inventory",
+///     "inventory_type": "power",
+///     "power": "origins:extra_inventory",
+///     "stack": {
+///         "item": "minecraft:air"
+///     }
+/// }
+/// ```
+/// 
+/// This example will clear the contents of the `origins:extra_inventory` power by replacing all the items with Air.
+dispatch origins:entity_action["origins:replace_inventory", "apoli:replace_inventory"] to struct ReplaceInventory {
+	/// Determines whether to replace the items from the inventory of the entity or the inventory of a power present in the entity.
+	inventory_type?: Inventory,
+	/// If specified, this action will be executed on the entity **before** the items are replaced.
+	entity_action?: EntityAction,
+	/// If specified, this action will be executed on the affected items **after** the affected items are replaced.
+	item_action?: ItemAction,
+	/// If specified, only items which fulfill this condition will be replaced.
+	item_condition?: ItemCondition,
+	/// If specified, only items in the designated slot will be replaced.
+	slot?: ItemSlot,
+	/// If specified, only items in the designated slots will be replaced.
+	slots?: Array,
+	/// If specified, the items in the inventory of this power will be replaced instead of the items in the entity's inventory if `inventory_type` is set to `"power"`.
+	power?: Identifier,
+	/// The item to use as a replacement for the affected items.
+	stack: ItemStack,
+	/// Determines whether to merge the NBTs of the item that will be replaced and the NBTs of the item that will be used as a replacement.
+	merge_nbt?: boolean,
+}
+
+/// # Revoke Advancement
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Revokes an advancement from the player.
+/// 
+/// Type ID: `origins:revoke_advancement`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:revoke_advancement",
+///     "advancement": "minecraft:adventure/arbalistic"
+/// }
+/// ```
+/// 
+/// This example will revoke the Arbalistic advancement from the player, if they have it.
+dispatch origins:entity_action["origins:revoke_advancement", "apoli:revoke_advancement"] to struct RevokeAdvancement {
+	/// The namespace and ID of the advancement to be revoked from the player.
+	advancement?: Identifier,
+	/// If specified, determines the criteria to revoke from the specified advancement.
+	criteria?: Array,
+	/// If specified, determines the criterion to revoke from the specified advancement.
+	criterion?: string,
+	/// Determines how to select the parent advancement(s) or child(ren) advancement(s) of the specified advancement. Can be one of: `"only"`, `"through"`, `"from"`, `"until"`, `"everything"`
+	selection?: string,
+}
+
+/// #	Revoke All Powers
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Revoke all powers from the specified source.
+/// 
+/// Type ID: `origins:revoke_all_powers`
+/// 
+/// 
+/// ###	Fields
+/// 
+/// Field | Type | Default | Description
+/// ------|------|---------|------------
+/// `source` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the source to revoke powers from.
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "entity_action": {
+/// 	"type": "origins:revoke_all_powers",
+/// 	"source": "origins:blazeborn"
+/// }
+/// ```
+/// 
+/// This example will revoke all powers granted by the Blazeborn origin.
+dispatch origins:entity_action["origins:revoke_all_powers", "apoli:revoke_all_powers"] to struct RevokeAllPowers {}
+
+/// # Revoke Power
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Revokes a power from the entity from a specified power source.
+/// 
+/// Type ID: `origins:revoke_power`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:revoke_power",
+///     "power": "origins:elytra",
+///     "source": "origins:elytrian"
+/// }
+/// ```
+/// 
+/// This example will revoke the `origins:elytra` power from the `origins:elytrian` source from the entity.
+dispatch origins:entity_action["origins:revoke_power", "apoli:revoke_power"] to struct RevokePower {
+	/// The namespace and ID of the power to be revoked from the entity.
+	power: Identifier,
+	/// The namespace and ID of the source of the power.
+	source: Identifier,
+}
+
+/// # Riding Action
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Executes an action on the entity/entities that's being ridden by the entity.
+/// 
+/// Type ID: `origins:riding_action`
+/// 
+/// !!! note
+/// 
+///     Not to be confused with [Passenger Action](./passenger_action).
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:riding_action",
+///     "action": {
+///         "type": "origins:apply_effect",
+///         "effect": {
+///             "effect": "minecraft:speed",
+///             "duration": 100,
+///             "amplifier": 1
+///         }
+///     }
+/// }
+/// ```
+/// 
+/// This example will apply a Speed II status effect to the entity that is currently being ridden by the entity that executed the entity action type.
+dispatch origins:entity_action["origins:riding_action", "apoli:riding_action"] to struct RidingAction {
+	/// If specified, this action will be executed on the entity being ridden.
+	action?: EntityAction,
+	/// If specified, this action will be executed on either the 'actor' (the passenger entity) or the 'target' (the entity being ridden) or both.
+	bientity_action?: BientityAction,
+	/// If specified, only execute the specified actions if this condition is fulfilled by either the 'actor' (the passenger entity) or the 'target' (entity being ridden) or both.
+	bientity_condition?: BientityCondition,
+	/// If set to `true`, the specified action(s) will be executed on all entities that are being ridden.
+	recursive?: boolean,
+}
+
+/// # Selector Action
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Executes an action on entities selected by a target selector.
+/// 
+/// Type ID: `origins:selector_action`
+/// 
+/// 
+/// !!! note
+/// 
+///     See [Minecraft Wiki: Target selectors](https://minecraft.wiki/w/Target_selectors) for more information about target selectors.
+/// 
+/// !!! note
+/// 
+///     This entity action type has a bientity action context, where the '**actor**' entity is the entity that invoked the entity action while the '**target**' entities are the entities that were selected by the specified `selector`.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:selector_action",
+///     "selector": "Steve",
+///     "bientity_action": {
+///         "type": "origins:damage",
+///         "amount": 5,
+///         "damage_type": "minecraft:generic"
+///     }
+/// }
+/// ```
+/// 
+/// This example will deal 2 and a half hearts of damage to the player named Steve.
+/// <br>
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:selector_action",
+///     "selector": "@e[type = minecraft:armor_stand, tag = some_tag]",
+///     "bientity_action": {
+///         "type": "origins:target_action",
+///         "action": {
+///             "type": "origins:execute_command",
+///             "command": "kill @s"
+///         }
+///     }
+/// }
+/// ```
+/// 
+/// This example will kill armor stands that have the `some_tag` tag *(added via the `/tag` command)*
+dispatch origins:entity_action["origins:selector_action", "apoli:selector_action"] to struct SelectorAction {
+	/// The selector to use for selecting entities. It can be the username of a player, the UUID of the entity or a target selector.
+	selector: string,
+	/// If specified, this action will be executed on either or both the '**actor**' and '**target**' entities.
+	bientity_action?: BientityAction,
+	/// If specified, the specified action will only be executed if this condition is fulfilled by either or both the '**actor**' and '**target**' entities.
+	bientity_condition?: BientityCondition,
+}
+
+/// # Set Fall Distance
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Sets the fall distance of the entity to the specified amount. The fall distance value keeps track of how many blocks the entity has fallen and is used to calculate the amount of fall damage the entity takes. By setting it to 0 while falling, the entity essentially takes fall damage as if it had only fallen from the current position.
+/// 
+/// Type ID: `origins:set_fall_distance`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:set_fall_distance",
+///     "fall_distance": 0
+/// }
+/// ```
+/// 
+/// This example will reset the entity's fall distance so that the fall damage is now calculated from that point.
+dispatch origins:entity_action["origins:set_fall_distance", "apoli:set_fall_distance"] to struct SetFallDistance {
+	/// The desired fall distance value.
+	fall_distance: float,
+}
+
+/// # Set On Fire
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Sets the entity on fire for the specified amount of time in seconds.
+/// 
+/// Type ID: `origins:set_on_fire`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:set_on_fire",
+///     "duration": 5
+/// }
+/// ```
+/// 
+/// This example will set the entity on fire for 5 seconds.
+dispatch origins:entity_action["origins:set_on_fire", "apoli:set_on_fire"] to struct SetOnFire {
+	/// The amount of seconds the entity should burn.
+	duration: int,
+}
+
+/// # Spawn Effect Cloud
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Spawns an area effect cloud (as from a lingering potion) at the position of the entity.
+/// 
+/// Type ID: `origins:spawn_effect_cloud`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:spawn_effect_cloud",
+///     "radius": 10.0,
+///     "wait_time": 40,
+///     "effect": {
+///         "effect": "minecraft:resistance",
+///         "amplifier": 3,
+///         "duration": 100
+///     }
+/// }
+/// ```
+/// 
+/// This example will spawn a large Area Effect Cloud, which provides the Resistance IV status effect that will last for 5 seconds at the entity's position.
+dispatch origins:entity_action["origins:spawn_effect_cloud", "apoli:spawn_effect_cloud"] to struct SpawnEffectCloud {
+	/// The radius of the cloud.
+	radius?: float,
+	/// How much the radius should change when an effect is applied.
+	radius_on_use?: float,
+	/// How many ticks to wait until the cloud takes effect.
+	wait_time?: int,
+	/// If specified, this status effect will be applied by the cloud to entities inside of it.
+	effect?: StatusEffectInstance,
+	/// If specified, these status effects will be applied by the cloud to entities inside of it.
+	effects?: Array,
+}
+
+/// # Spawn Entity
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Spawns another entity at the position of the target entity.
+/// 
+/// Type ID: `origins:spawn_entity`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:spawn_entity",
+///     "entity_type": "minecraft:zombie",
+///     "tag": "{NoAI:1b,IsBaby:1,HandItems:[{id:\"minecraft:gold_block\",Count:1},{}]}"
+/// }
+/// ```
+/// 
+/// This example will spawn a baby Zombie holding a Gold Block that has no AI at the position of the entity.
+dispatch origins:entity_action["origins:spawn_entity", "apoli:spawn_entity"] to struct SpawnEntity {
+	/// The namespace and ID of the entity type that will be spawned.
+	entity_type: Identifier,
+	/// If specified, this NBT data will be applied to the entity that will be spawned.
+	tag?: NBT,
+	/// If specified, the specified entity action type will be executed on the entity that will be spawned when it is spawned.
+	entity_action?: EntityAction,
+	/// If specified, this bientity action will be executed on either or both the actor (the entity that invoked the entity action) and the target (the spawned entity).
+	bientity_action?: BientityAction,
+}
+
+/// # Spawn Particles
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Spawns particles on the body of the entity that has the power for visual effects.
+/// 
+/// Type ID: `origins:spawn_particles`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:spawn_particles",
+///     "particle": {
+///         "type": "minecraft:block",
+///         "params": "minecraft:redstone_block"
+///     },
+///     "count": 16,
+///     "speed": 0.0,
+///     "force": true,
+///     "spread": {
+///         "x": 3.0,
+///         "y": 0.0,
+///         "z": 3.0
+///     }
+/// }
+/// ```
+/// 
+/// This example will spawn a particle cuboid that is about 5x0x5 in size that will use the Redstone Block texture.
+dispatch origins:entity_action["origins:spawn_particles", "apoli:spawn_particles"] to struct SpawnParticles {
+	/// The particle type that will be spawned.
+	particle: ParticleEffect,
+	/// If specified, the particle will only be visible if this bientity condition is fulfilled by either or both the entity that has the power and the entity looking at the entity that has the power.
+	bientity_condition?: BientityCondition,
+	/// How much of the specified particle type will be spawned.
+	count: int,
+	/// Determines the speed of the specified particle type.
+	speed?: float,
+	/// If set to `true`, the specified particle type that will be spawned can be seen from a far distance.
+	force?: boolean,
+	/// Determines the size of the three-dimensional cuboid volume to spawn the specified particle type in.
+	spread?: Vector,
+	/// The offset of where the particle will be centered in the X axis.
+	offset_x?: float,
+	/// The offset of where the particle will be centered in the Y axis.
+	offset_y?: float,
+	/// The offset of where the particle will be centered in the Z axis.
+	offset_z?: float,
+}
+
+/// # Swing Hand
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Swings the specified hand.
+/// 
+/// Type ID: `origins:swing_hand`
+/// 
+/// !!! note
+/// 
+///     This action is purely cosmetic, and will not interact with the world in any way. This means you can't use this to break, or place blocks, hit or use entities, or any other action that involves swinging your hand.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:swing_hand",
+///     "hand": "OFF_HAND"
+/// }
+/// ```
+/// 
+/// This example will swing the entity's off hand.
+dispatch origins:entity_action["origins:swing_hand", "apoli:swing_hand"] to struct SwingHand {
+	/// Determines which hand is swung. Accepts either `"MAIN_HAND"`, `"OFF_HAND"`
+	hand?: string,
+}
+
+/// # Toggle
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Toggles the state of a power that uses the [Toggle (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/toggle).
+/// 
+/// Type ID: `origins:toggle`
+/// 
+/// !!! note
+/// 
+///     Not to be confused with [Toggle (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/toggle).
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///     "type": "origins:toggle",
+///     "power": "origins:phantomize"
+/// }
+/// ```
+/// 
+/// This example will toggle the state of the [`origins:phantomize`](https://github.com/apace100/origins-fabric/blob/1.17/src/main/resources/data/origins/powers/phantomize.json) (`data/origins/powers/phantomize.json`) power (e.g: ON --> OFF, OFF --> ON).
+dispatch origins:entity_action["origins:toggle", "apoli:toggle"] to struct Toggle {
+	/// The namespace and ID of the power that uses the [Toggle (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/toggle).
+	power: Identifier,
+}
+
+/// # Trigger Cooldown
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Starts the cooldown of a power that uses a [Power Type](https://origins.readthedocs.io/en/latest/types/power_types) that has a built-in cooldown, as if that power has just been used.
+/// 
+/// Type ID: `origins:trigger_cooldown`
+/// 
+/// !!! note
+/// 
+///     Here's a list of power types that have built-in cooldowns:
+/// 
+///     * [Action On Hit](https://origins.readthedocs.io/en/latest/types/power_types/action_on_hit)
+///     * [Action When Damage Taken](https://origins.readthedocs.io/en/latest/types/power_types/action_when_damage_taken)
+///     * [Action When Hit](https://origins.readthedocs.io/en/latest/types/power_types/action_when_hit)
+///     * [Active Self](https://origins.readthedocs.io/en/latest/types/power_types/active_self)
+///     * [Attacker Action When Hit](https://origins.readthedocs.io/en/latest/types/power_types/attacker_action_when_hit)
+///     * [Cooldown](https://origins.readthedocs.io/en/latest/types/power_types/cooldown)
+///     * [Fire Projectile](https://origins.readthedocs.io/en/latest/types/power_types/fire_projectile)
+///     * [Launch](https://origins.readthedocs.io/en/latest/types/power_types/launch)
+///     * [Self Action On Hit](https://origins.readthedocs.io/en/latest/types/power_types/self_action_on_hit)
+///     * [Self Action On Kill](https://origins.readthedocs.io/en/latest/types/power_types/self_action_on_kill)
+///     * [Self Action When Hit](https://origins.readthedocs.io/en/latest/types/power_types/self_action_when_hit)
+///     * [Target Action On Hit](https://origins.readthedocs.io/en/latest/types/power_types/target_action_on_hit)
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "entity_action": {
+///   	"type": "origins:trigger_cooldown",
+///   	"power": "origins:launch_into_air"
+/// }
+/// ```
+/// 
+/// This example will trigger the cooldown of the 'Gift of the Winds' (`origins:launch_into_air` (`data/origins/powers/launch_into_air.json`)) power as if the entity had used that ability.
+dispatch origins:entity_action["origins:trigger_cooldown", "apoli:trigger_cooldown"] to struct TriggerCooldown {
+	/// The namespace and ID of the power that will be triggered.
+	power: Identifier,
 }

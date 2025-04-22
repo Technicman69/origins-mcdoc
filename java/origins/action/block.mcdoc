@@ -1,0 +1,341 @@
+use super::super::condition::BlockCondition
+
+struct BlockAction {
+	type: #[id] #[dispatcher_key="origins:block_action"] string,
+	...origins:block_action[[type]],
+}
+
+/// # Add Block
+/// 
+/// [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types)
+/// 
+/// Adds a block at the specified action position. Adding means setting the block at the position, offset by the direction of the action.
+/// 
+/// Type ID: `origins:add_block`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_action": {
+///     "type": "origins:add_block",
+///     "block": "minecraft:coal_ore"
+/// }
+/// ```
+/// 
+/// This example will add a Coal Ore block at the position of the block action type.
+/// <br>
+/// 
+/// ```json
+/// "block_action": {
+///     "type": "origins:add_block",
+///     "block": "minecraft:chest[facing=north]"
+/// }
+/// ```
+/// 
+/// This example will add a Chest block facing north at the position of the block action type.
+dispatch origins:block_action["origins:add_block", "apoli:add_block"] to struct AddBlock {
+	/// The namespace and ID of the block to place.
+	block: Identifier,
+}
+
+/// # Area of Effect
+/// 
+/// [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types)
+/// 
+/// Executes the provided [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types) on all blocks within the specified radius and shape.
+/// 
+/// Type ID: `origins:area_of_effect`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_action": {
+///     "type": "origins:area_of_effect",
+///     "radius": 16,
+///     "shape": "cube",
+///     "block_action": {
+///         "type": "origins:modify_block_state",
+///         "property": "waterlogged",
+///         "value": false
+///     }
+/// }
+/// ```
+/// 
+/// This example will make all waterloggable blocks not waterlogged within 16 blocks radius with a shape of a cube.
+/// <br>
+/// 
+/// ```json
+/// "block_action": {
+///     "type": "origins:area_of_effect",
+///     "radius": 4,
+///     "shape": "star",
+///     "block_action": {
+///         "type": "origins:set_block",
+///         "block": "minecraft:air"
+///     },
+///     "block_condition": {
+///         "type": "origins:in_tag",
+///         "tag": "minecraft:dragon_immune",
+///         "inverted": true
+///     }
+/// }
+/// ```
+/// 
+/// This example will replace all blocks that aren't included in the `#minecraft:dragon_immune` block tag with air within a 4 blocks radius with a shape of a diamond.
+dispatch origins:block_action["origins:area_of_effect", "apoli:area_of_effect"] to struct AreaOfEffect {
+	/// Determines the radius of the area.
+	radius?: int,
+	/// Determines the shape of the area.
+	shape?: Shape,
+	/// The block action to execute on the blocks within the specified radius.
+	block_action: BlockAction,
+	/// If specified, the specified block action will only be executed on blocks that fulfill this block condition.
+	block_condition?: BlockCondition,
+}
+
+/// # Bonemeal
+/// 
+/// [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types)
+/// 
+/// Applies bone meal to the target block as if a dispenser or a player used a Bone Meal item to it.
+/// 
+/// Type ID: `origins:bonemeal`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_action": {
+///     "type": "origins:bonemeal",
+///     "effects": false
+/// }
+/// ```
+/// 
+/// This example will apply bonemeal to the target block of the block action without the visual effects.
+dispatch origins:block_action["origins:bonemeal", "apoli:bonemeal"] to struct Bonemeal {
+	/// Determines if the particle and other visual effects of the bonemeal-ing action should appear.
+	effects?: boolean,
+}
+
+/// # Execute Command
+/// 
+/// [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types)
+/// 
+/// Executes a command at the position of the block.
+/// 
+/// Type ID: `origins:execute_command`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_action": {
+///     "type": "origins:execute_command",
+///     "command": "summon minecraft:item ~ ~ ~ {Item:{id:\"minecraft:wheat\",Count:1}}"
+/// }
+/// ```
+/// 
+/// This example will summon a Wheat item entity at the position of the block action type.
+dispatch origins:block_action["origins:execute_command", "apoli:execute_command"] to struct ExecuteCommand {
+	/// The command to execute.
+	command: string,
+}
+
+/// # Explode
+/// 
+/// [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types)
+/// 
+/// Summons an explosion with a specific explosion power.
+/// 
+/// Type ID: `origins:explode`
+/// 
+/// !!! note
+/// 
+///     See [Minecraft Wiki: Explosion (Causes)](https://minecraft.wiki/w/Explosion#Causes) for a list of power values that are used in vanilla.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_action": {
+///     "type": "origins:explode",
+///     "power": 5,
+///     "destruction_type": "none",
+///     "create_fire": false
+/// }
+/// ```
+/// 
+/// This example will summon an explosion at the position of where the block action was invoked that would not destroy the terrain nor spread fire.
+/// <br>
+/// 
+/// 
+/// ```json
+/// "block_action": {
+///     "type": "origins:explode",
+///     "power": 5,
+///     "destruction_type": "break",
+///     "destructible": {
+///         "type": "apoli:in_tag",
+///         "tag": "minecraft:impermeable"
+///     },
+///     "create_fire": false
+/// }
+/// ```
+/// 
+/// This example will summon an explosion at the position of where the block action was invoked that would only destroy blocks that are in the `#minecraft:impermeable` (`data/minecraft/tags/blocks/impermeable.json`) block tag.
+dispatch origins:block_action["origins:explode", "apoli:explode"] to struct Explode {
+	/// Determines the power of the explosion.
+	power: float,
+	/// Determines the effect of the explosion to the terrain.
+	destruction_type?: Destruction,
+	/// If specified, the blocks that fulfill this condition will not be destroyed by the summoned explosion.
+	indestructible?: BlockCondition,
+	/// If specified, only the blocks that fulfill this condition will be destroyed by the summoned explosion.
+	destructible?: BlockCondition,
+	/// Determines if the summoned explosion should create fire.
+	create_fire?: boolean,
+}
+
+/// # Modify Block State
+/// 
+/// [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types)
+/// 
+/// Modifies the block state property of the block. Depending on the property type, different values are expected: boolean properties use `value`, enumeration properties use `enum`, and integer properties use `operation` and `change`.
+/// 
+/// Type ID: `origins:modify_block_state`
+/// 
+/// !!! note
+/// 
+///     If none of the expected fields are specified, this action will do nothing.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_action": {
+/// 	"type": "origins:modify_block_state",
+/// 	"property": "facing",
+/// 	"cycle": true
+/// }
+/// ```
+/// 
+/// This example will cycle through the values of the `facing` property if available.
+dispatch origins:block_action["origins:modify_block_state", "apoli:modify_block_state"] to struct ModifyBlockState {
+	/// The name of the property that will be modified. Examples are `facing` or `age`. See [Minecraft Wiki: Block States (List of block states)](https://minecraft.wiki/w/Block_states#List_of_block_states) for possible values.
+	property: string,
+	/// Determines how the value specified in the `change` field is operated on the specified property. Accepts `"add"` or `"set"`.
+	operation?: string,
+	/// If specified, the value to add, remove or set to/from the specified property if the specified property is an integer.
+	change?: int,
+	/// If specified, the boolean to use as the new value for the specified property if the specified property is a boolean.
+	value?: boolean,
+	/// If specified, the string to use as the new value for the specified property if the specified property is a string.
+	"enum"?: string,
+	/// If set to true, changes the property to the next state in the cycle, ignoring all other optional fields. All property types can use this operation.
+	cycle?: boolean,
+}
+
+/// # Offset
+/// 
+/// [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types)
+/// 
+/// Executes the provided [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types) at the position offset from the current position.
+/// 
+/// Type ID: `origins:offset`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_action": {
+///     "type": "origins:offset",
+///     "action": {
+///         "type": "origins:add_block",
+///         "block": "minecraft:gravel"
+///     },
+///     "y": 1
+/// }
+/// ```
+/// 
+/// This example will offset the position of the [Add Block (Block Action Type)](https://origins.readthedocs.io/en/latest/types/block_action_types/add_block) in the positive Y axis, raising the positional context of the block action to be 1 block above to where it initially was.
+dispatch origins:block_action["origins:offset", "apoli:offset"] to struct Offset {
+	/// The action to apply with the given offset.
+	action: BlockAction,
+	/// How much to offset the position on the x-axis.
+	x?: int,
+	/// How much to offset the position on the y-axis.
+	y?: int,
+	/// How much to offset the position on the z-axis.
+	z?: int,
+}
+
+/// # Set Block
+/// 
+/// [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types)
+/// 
+/// Overwrites the block at the targeted position with the default state of another one.
+/// 
+/// Type ID: `origins:set_block`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_action": {
+///     "type": "origins:set_block",
+///     "block": "minecraft:coal_ore"
+/// }
+/// ```
+/// 
+/// This example will set a Coal Ore block at the position of the block action type.
+/// <br>
+/// 
+/// ```json
+/// "block_action": {
+///     "type": "origins:set_block",
+///     "block": "minecraft:redstone_lamp[lit=true]"
+/// }
+/// ```
+/// 
+/// This example will set a Lit Redstone Lamp at the position of the block action type.
+dispatch origins:block_action["origins:set_block", "apoli:set_block"] to struct SetBlock {
+	/// The namespace and ID of the block to place.
+	block: Identifier,
+}
+
+/// #	Spawn Entity
+/// 
+/// [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types)
+/// 
+/// Spawns an entity at the position of the block.
+/// 
+/// Type ID: `origins:spawn_entity`
+/// 
+/// 
+/// ###	Fields
+/// 
+/// Field | Type | Default | Description
+/// ------|------|---------|------------
+/// `entity_type` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the type of entity that will be spawned.
+/// `tag` | [NBT](https://origins.readthedocs.io/en/latest/types/data_types/nbt) | *optional* | If specified, this NBT data will be applied to the entity that will be spawned.
+/// `entity_action` | [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) | *optional* | If specified, this entity action will be executed on the spawned entity.
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "block_action": {
+/// 	"type": "origins:spawn_entity",
+/// 	"entity_type": "minecraft:vex",
+/// 	"entity_action": {
+/// 		"type": "origins:grant_power",
+/// 		"power": "origins:arcane_skin",
+/// 		"source": "*:*"
+/// 	}
+/// }
+/// ```
+/// 
+/// This example will summon a Vex with the power `origins:arcane_skin` power with the source as the ID of the example power at the position of the block.
+dispatch origins:block_action["origins:spawn_entity", "apoli:spawn_entity"] to struct SpawnEntity {}

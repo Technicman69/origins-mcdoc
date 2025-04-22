@@ -1,0 +1,433 @@
+use super::EntityCondition
+use super::entity::Comparison
+
+struct BientityCondition {
+	type: #[id] #[dispatcher_key="origins:bientity_condition"] string,
+    /// If true, the condition acts inverted.
+    inverted?: boolean,
+	...origins:bientity_condition[[type]],
+}
+
+/// # Actor Condition
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks for an [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types) on the actor entity.
+/// 
+/// Type ID: `origins:actor_condition`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+///     "type": "origins:actor_condition",
+///     "condition": {
+///        "type": "origins:tamed"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the actor entity is a tamable and tamed mob.
+dispatch origins:bientity_condition["origins:actor_condition", "apoli:actor_condition"] to struct ActorCondition {
+	/// The entity condition type to check for on the acting entity.
+	condition: EntityCondition,
+}
+
+/// # Attacker
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks if the actor entity has attacked the target entity within the last 5 seconds, and still exists.
+/// 
+/// Type ID: `origins:attacker`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+///     "type": "origins:attacker"
+/// }
+/// ```
+dispatch origins:bientity_condition["origins:attacker", "apoli:attacker"] to struct Attacker {}
+
+/// # Attack Target
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks if the actor entity is currently aggressive to the target entity.
+/// 
+/// Type ID: `origins:attack_target`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+///     "type": "origins:attack_target"
+/// }
+/// ```
+dispatch origins:bientity_condition["origins:attack_target", "apoli:attack_target"] to struct AttackTarget {}
+
+/// # Both
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks for an entity condition on both the actor and target entities.
+/// 
+/// Type ID: `origins:both`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+///     "type": "origins:both",
+///     "condition": {
+///         "type": "origins:entity_type",
+///         "entity_type": "minecraft:player"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if both the actor entity and the target entity is a player.
+dispatch origins:bientity_condition["origins:both", "apoli:both"] to struct Both {
+	/// The entity condition type to check on both the actor and target entity.
+	condition: EntityCondition,
+}
+
+/// # Can See
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks whether the straight path from the actor entity's eyes to the target entity's eyes is unobstructed.
+/// 
+/// Type ID: `origins:can_see`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+///     "type": "origins:can_see"
+/// }
+/// ```
+/// 
+/// This example will check if the straight path from the actor entity's eyes to the target entity's eyes is unobstructed. If the actor/target is behind a source/flowing fluid, is submerged in any kind of fluids, or behind a block that is not see-through (like Glass), the condition will return false.
+dispatch origins:bientity_condition["origins:can_see", "apoli:can_see"] to struct CanSee {
+	/// Determines how the ray-cast will handle blocks.
+	shape_type?: Shape,
+	/// Determines how the ray-cast will handle fluids.
+	fluid_handling?: FluidHandling,
+}
+
+/// # Distance
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks the distance between the target entity and the actor entity.
+/// 
+/// Type ID: `origins:distance`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+///     "type": "origins:distance",
+///     "comparison": "<=",
+///     "compare_to": 30
+/// }
+/// ```
+/// 
+/// This example will check if the target entity is within 30 blocks radius relative from the actor entity.
+dispatch origins:bientity_condition["origins:distance", "apoli:distance"] to struct Distance {
+	/// Determines how the distance (in blocks) between the actor and target entities should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the distance (in blocks) between the actor and target entities will be compared to.
+	compare_to: float,
+}
+
+/// # Either
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks for an entity condition on either the actor or the target entities.
+/// 
+/// Type ID: `origins:either`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+///     "type": "origins:either",
+///     "condition": {
+///         "type": "origins:in_rain"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if either the actor or target entities are in rain.
+dispatch origins:bientity_condition["origins:either", "apoli:either"] to struct Either {
+	/// The entity condition type to check on either actor or target entities.
+	condition: EntityCondition,
+}
+
+/// #	Equal
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks if the actor entity is the target entity.
+/// 
+/// Type ID: `origins:equal`
+/// 
+/// 
+/// ###	Fields
+/// 
+/// _None._
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+/// 	"type": "origins:equal"
+/// }
+/// ```
+dispatch origins:bientity_condition["origins:equal", "apoli:equal"] to struct Equal {}
+
+/// # Invert
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Swaps the context of the target entity and the actor entity.
+/// 
+/// Type ID: `origins:invert`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+///     "type": "origins:invert",
+///     "condition": {
+///         "type": "origins:can_see"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the target entity can see the actor entity, as the roles are now swapped.
+dispatch origins:bientity_condition["origins:invert", "apoli:invert"] to struct Invert {
+	/// The bientity condition type to check which will have its 'target' and 'actor' contexts swapped.
+	condition: BientityCondition,
+}
+
+/// #	In Set
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks whether the target entity is within a power that uses the [Entity Set (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/entity_set) of the actor entity.
+/// 
+/// Type ID: `origins:in_set`
+/// 
+/// 
+/// ###	Fields
+/// 
+/// Field | Type | Default | Description
+/// ------|------|---------|------------
+/// `set` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the power to check whether the target entity is in.
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+/// 	"type": "origins:or",
+/// 	"conditions": [
+/// 		{
+/// 			"type": "origins:owner"
+/// 		},
+/// 		{
+/// 			"type": "origins:in_set",
+/// 			"set": "example:special_pets"
+/// 		}
+/// 	]
+/// }
+/// ```
+/// 
+/// This example will check whether the target entity is either owned by the actor entity or if the target entity is within the `example:special_pets` (`data/example/powers/special_pets.json`) power.
+dispatch origins:bientity_condition["origins:in_set", "apoli:in_set"] to struct InSet {}
+
+/// # Owner
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks whether the actor entity is the owner of the tamable target entity.
+/// 
+/// Type ID: `origins:owner`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+///     "type": "origins:owner"
+/// }
+/// ```
+dispatch origins:bientity_condition["origins:owner", "apoli:owner"] to struct Owner {}
+
+/// # Relative Rotation
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Compares the rotation angle of the 'actor' to the 'target'.
+/// 
+/// Type ID: `origins:relative_rotation`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+///     "type": "origins:relative_rotation",
+///     "actor_rotation": "head",
+///     "target_rotation": "body",
+///     "comparison": ">=",
+///     "compare_to": -0.8
+/// }
+/// ```
+/// 
+/// This example will check if the actor and target are essentially facing each other.
+/// <br>
+/// 
+/// ```json
+/// "bientity_condition": {
+///     "type": "origins:relative_rotation",
+///     "actor_rotation": "head",
+///     "target_rotation": "body",
+///     "comparison": ">=",
+///     "compare_to": 0.4
+/// }
+/// ```
+/// 
+/// This example will check if the actor's head is essentially facing the same way as the target's body.
+dispatch origins:bientity_condition["origins:relative_rotation", "apoli:relative_rotation"] to struct RelativeRotation {
+	/// The axes to get the angle values to calculate, and compare to.
+	axes?: Array,
+	/// Determines the initial point of the rotation for the actor. Accepts `"head"` or `"body"`.
+	actor_rotation?: string,
+	/// Determines the initial point of the rotation for the target. Accepts `"head"` or `"body"`.
+	target_rotation?: string,
+	/// Determines how the calculated angle value should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the calculated angle value will be compared to.
+	compare_to: float,
+}
+
+/// # Riding
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks if the actor entity is currently riding the target entity.
+/// 
+/// Type ID: `origins:riding`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+/// 	"type": "origins:riding"
+/// }
+/// ```
+dispatch origins:bientity_condition["origins:riding", "apoli:riding"] to struct Riding {}
+
+/// # Riding Recursive
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks if the actor entity is riding the target entity, regardless of where the target entity is in the riding chain. 
+/// 
+/// Type ID: `origins:riding_recursive`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+/// 	"type": "origins:riding_recursive"
+/// }
+/// ```
+dispatch origins:bientity_condition["origins:riding_recursive", "apoli:riding_recursive"] to struct RidingRecursive {}
+
+/// # Riding Root
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks if the actor entity is riding the target entity from the very end of the riding chain.
+/// 
+/// Type ID: `origins:riding_root`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+/// 	"type": "origins:riding_root"
+/// }
+/// ```
+dispatch origins:bientity_condition["origins:riding_root", "apoli:riding_root"] to struct RidingRoot {}
+
+/// # Target Condition
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks for an [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types) on the target entity.
+/// 
+/// Type ID: `origins:target_condition`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+///     "type": "origins:target_condition",
+///     "condition": {
+///        "type": "origins:tamed"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the target entity is a tamable and a tamed mob.
+dispatch origins:bientity_condition["origins:target_condition", "apoli:target_condition"] to struct TargetCondition {
+	/// The entity condition type to check for on the target entity.
+	condition: EntityCondition,
+}
+
+/// # Undirected
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks if the specified bientity condition is true before or after swapping the actor and target context.
+/// 
+/// Type ID: `origins:undirected`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+/// 	"type": "origins:undirected",
+/// 	"condition": {
+/// 		"type": "origins:owner"
+/// 	}
+/// }
+/// ```
+/// 
+/// This example will check if the actor entity is the owner of the target entity, or if the target entity is the owner of the actor entity.
+dispatch origins:bientity_condition["origins:undirected", "apoli:undirected"] to struct Undirected {
+	/// The bientity condition type to check for.
+	condition: BientityCondition,
+}

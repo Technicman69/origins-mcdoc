@@ -1,20 +1,26 @@
-use super::entity::EntityCondition
+use super::BientityCondition
+use super::BiomeCondition
+use super::BlockCondition
+use super::DamageCondition
+use super::EntityCondition
+use super::FluidCondition
+use super::ItemCondition
 
-dispatch origins:bi-entity_condition["origins:and", "apoli:and"] to struct BiEntityConditionAnd {
+dispatch origins:bientity_condition["origins:and", "apoli:and"] to struct BientityConditionAnd {
 	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
- 	conditions: [BiEntityCondition],
+ 	conditions: [BientityCondition],
 }
-dispatch origins:bi-entity_condition["origins:chance", "apoli:chance"] to struct BiEntityConditionChance {
+dispatch origins:bientity_condition["origins:chance", "apoli:chance"] to struct BientityConditionChance {
 	/// The value to compare the randomly generated number to.
  	chance: float @ 0.0..1.0,
 }
-dispatch origins:bi-entity_condition["origins:constant", "apoli:constant"] to struct BiEntityConditionConstant {
+dispatch origins:bientity_condition["origins:constant", "apoli:constant"] to struct BientityConditionConstant {
 	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
  	value: boolean,
 }
-dispatch origins:bi-entity_condition["origins:or", "apoli:or"] to struct BiEntityConditionOr {
+dispatch origins:bientity_condition["origins:or", "apoli:or"] to struct BientityConditionOr {
 	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
- 	conditions: [BiEntityCondition],
+ 	conditions: [BientityCondition],
 }
 
 dispatch origins:biome_condition["origins:and", "apoli:and"] to struct BiomeConditionAnd {

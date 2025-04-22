@@ -1,0 +1,18 @@
+{
+    "type": "apoli:multiple",
+    "simple": {
+        "type": "apoli:simple"
+    },
+    "toggle": {
+        "type": "origins:toggle"
+    },
+    "tick": {
+        "type": "apoli:action_over_time",
+        "interval": 20,
+        "entity_action": {
+            "type": "origins:execute_command",
+            "command": "tellraw @a HelloWorld"
+        }
+    },
+    "hidden": true
+}

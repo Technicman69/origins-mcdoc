@@ -1,0 +1,185 @@
+struct ItemAction {
+	type: #[id] #[dispatcher_key="origins:item_action"] string,
+	...origins:item_action[[type]],
+}
+
+/// # Consume
+/// 
+/// [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types)
+/// 
+/// Removes a provided amount of items from the item stack.
+/// 
+/// Type ID: `origins:consume`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_action": {
+///     "type": "origins:consume",
+///     "amount": 1
+/// }
+/// ```
+/// 
+/// This example will "consume" (remove) 1 item from the item stack.
+dispatch origins:item_action["origins:consume", "apoli:consume"] to struct Consume {
+	/// The amount of items to remove.
+	amount?: int,
+}
+
+/// # Damage
+/// 
+/// [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types)
+/// 
+/// Damages the item stack with a specified amount.
+/// 
+/// Type ID: `origins:damage`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_action": {
+///     "type": "origins:damage",
+///     "amount": 10,
+///     "ignore_unbreaking": true
+/// }
+/// ```
+/// 
+/// This example will damage the item stack by 10, ignoring the Unbreaking enchantment.
+dispatch origins:item_action["origins:damage", "apoli:damage"] to struct Damage {
+	/// The amount of damage it should do to the item stack.
+	amount?: int,
+	/// Determines if this action should ignore the Unbreaking enchantment.
+	ignore_unbreaking?: boolean,
+}
+
+/// #	Holder Action
+/// 
+/// [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types)
+/// 
+/// Executes an entity action on the holder of the item stack.
+/// 
+/// Type ID: `origins:holder_action`
+/// 
+/// Aliases: `origins:holder`
+/// 
+/// 
+/// ###	Fields
+/// 
+/// Field | Type | Default | Description
+/// ------|------|---------|------------
+/// `action` | [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) | *optional* | The entity action to execute on the holder of the item stack.
+/// `entity_action` | [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) | *optional* | The same as the `action` field, but with a different name.
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "item_action": {
+/// 	"type": "origins:holder_action",
+/// 	"action": {
+/// 		"type": "apoli:heal",
+/// 		"amount": 4.0
+/// 	}
+/// }
+/// ```
+/// 
+/// This example will recover 2 hearts (4 health points) of the holder of the item stack.
+dispatch origins:item_action["origins:holder_action", "apoli:holder_action", "origins:holder", "apoli:holder"] to struct HolderAction {}
+
+/// #   Merge NBT
+/// 
+/// [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types)
+/// 
+/// Merges the specified NBT to the item's NBT.
+/// 
+/// Type ID: `origins:merge_nbt`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_action": {
+///     "type": "origins:merge_nbt",
+///     "nbt": "{custom_stuff: 1b}"
+/// }
+/// ```
+/// 
+/// This example will merge the `{custom_stuff: 1b}` NBT to the item's NBT.
+dispatch origins:item_action["origins:merge_nbt", "apoli:merge_nbt"] to struct MergeNbt {
+	/// The NBT to merge to the item's NBT.
+	nbt: NBT,
+}
+
+/// # Modify
+/// 
+/// [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types)
+/// 
+/// Applies an [Item Modifier](https://minecraft.wiki/w/Item_modifier) to the item stack.
+/// 
+/// Type ID: `origins:modify`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_action": {
+///     "type": "origins:modify",
+///     "modifier": "example:stuff"
+/// }
+/// ```
+/// 
+/// This example will apply the `example:stuff` (`data/example/item_modifiers/stuff.json`) item modifier to the item stack.
+/// <br>
+/// 
+/// ```json
+/// {
+///     "function": "minecraft:set_lore",
+///     "entity": "this",
+///     "lore": [
+///         {
+///             "text": "Hello, I'm a custom lore line for your item :]",
+///             "color": "light_purple",
+///             "italic": false
+///         }
+///     ]
+/// }
+/// ```
+/// 
+/// This being the contents of the `example:stuff` (`data/example/item_modifiers/stuff.json`) item modifier.
+dispatch origins:item_action["origins:modify", "apoli:modify"] to struct Modify {
+	/// The ID of an item modifier.
+	modifier: Identifier,
+}
+
+/// #   Remove Enchantment
+/// 
+/// [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types)
+/// 
+/// Removes certain enchantments from the item.
+/// 
+/// Type ID: `origins:remove_enchantment`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_action": {
+///     "type": "origins:remove_enchantment",
+///     "enchantment": "minecraft:mending",
+///     "reset_repair_cost": true
+/// }
+/// ```
+/// 
+/// This example will remove the Mending enchantment from the item whilst resetting its 'repair cost'.
+dispatch origins:item_action["origins:remove_enchantment", "apoli:remove_enchantment"] to struct RemoveEnchantment {
+	/// If specified, this enchantment will be removed from the item.
+	enchantment?: Identifier,
+	/// If specified, these enchantments will be removed from the item.
+	enchantments?: Array,
+	/// If specified, only the enchantments that has the specified level will be removed from the item.
+	levels?: int,
+	/// Determines whether the 'repair cost' of the item should be reset.
+	reset_repair_cost?: boolean,
+}

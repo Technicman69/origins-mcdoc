@@ -1,0 +1,544 @@
+struct ItemCondition {
+	type: #[id] #[dispatcher_key="origins:item_condition"] string,
+    /// If true, the condition acts inverted.
+    inverted?: boolean,
+	...origins:item_condition[[type]],
+}
+
+/// # Amount
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks the amount of the item in the item stack.
+/// 
+/// Type ID: `origins:amount`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:amount",
+///     "comparison": ">=",
+///     "compare_to": 10
+/// }
+/// ```
+/// 
+/// This example will check if there are 10 or more items in the item stack.
+dispatch origins:item_condition["origins:amount", "apoli:amount"] to struct Amount {
+	/// Determines how the amount of the item in the item stack should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the amount of the item in the item stack will be compared to.
+	compare_to: int,
+}
+
+/// # Armor Value
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks whether the item has a certain armor value. Non-armor items are considered as having an armor value of 0.
+/// 
+/// Type ID: `origins:armor_value`
+/// 
+/// !!! note
+/// 
+///     You can visit these pages to get the armor values for each armor item piece:
+/// 
+///     * [Helmet](https://minecraft.wiki/w/Helmet#Defense_points)
+///     * [Chestplate](https://minecraft.wiki/w/Chestplate#Defense_points)
+///     * [Leggings](https://minecraft.wiki/w/Leggings#Defense_points)
+///     * [Boots](https://minecraft.wiki/w/Boots#Defense_points)
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:armor_value",
+///     "comparison": ">",
+///     "compare_to": 3
+/// }
+/// ```
+/// 
+/// This example will check if the armor item (in this context, a chestplate) has a higher armor value than 3, which is the armor value for the leather chestplate armor item.
+dispatch origins:item_condition["origins:armor_value", "apoli:armor_value"] to struct ArmorValue {
+	/// Determines how the armor value of the item should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the armor value of the item will be compared to.
+	compare_to: int,
+}
+
+/// #   Durability
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks the current durability of the item.
+/// 
+/// Type ID: `origins:durability`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:durability",
+///     "comparison": "<=",
+///     "compare_to": 100
+/// }
+/// ```
+/// 
+/// This example will check if the item has a durability value of 100 or less.
+dispatch origins:item_condition["origins:durability", "apoli:durability"] to struct Durability {
+	/// Determines how the durability value of the item should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the durability value of the item will be compared to.
+	compare_to: int,
+}
+
+/// # Empty
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks if there is no item.
+/// 
+/// Type ID: `origins:empty`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:empty"
+/// }
+/// ```
+dispatch origins:item_condition["origins:empty", "apoli:empty"] to struct Empty {}
+
+/// #   Enchantable
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks if the item is enchantable.
+/// 
+/// Type ID: `origins:enchantable`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:enchantable"
+/// }
+/// ```
+dispatch origins:item_condition["origins:enchantable", "apoli:enchantable"] to struct Enchantable {}
+
+/// # Enchantment
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks the level of a certain enchantment, or the amount of individual enchantments on the item.
+/// 
+/// Type ID: `origins:enchantment`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:enchantment",
+///     "enchantment": "minecraft:fortune",
+///     "comparison": "==",
+///     "compare_to": 3
+/// }
+/// ```
+/// 
+/// This example will check if the item has the Fortune III enchantment.
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:enchantment",
+///     "comparison": ">=",
+///     "compare_to": 3
+/// }
+/// ```
+/// 
+/// This example will check if the item has 3 or more enchantments.
+dispatch origins:item_condition["origins:enchantment", "apoli:enchantment"] to struct Enchantment {
+	/// If specified, the level of the enchantment that corresponds to this identifier will be compared. Otherwise, the amount of enchantments in the item stack will be compared instead.
+	enchantment?: Identifier,
+	/// Determines whether to account for enchantments that were added/modified by unnatural means (e.g: via the [Modify Enchantment Level (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/modify_enchantment_level).)
+	use_modifications?: boolean,
+	/// Determines how the level of the specified enchantment, or the amount of enchantments in the item stack, should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the level of the specified enchantment, or the amount of the enchantments in the item stack, will be compared to.
+	compare_to: int,
+}
+
+/// # Fireproof
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks if the item stack is fireproof.
+/// 
+/// Type ID: `origins:fireproof`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:fireproof"
+/// }
+/// ```
+dispatch origins:item_condition["origins:fireproof", "apoli:fireproof"] to struct Fireproof {}
+
+/// # Food
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks whether the item is a food component.
+/// 
+/// Type ID: `origins:food`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:food"
+/// }
+/// ```
+/// 
+/// This example will check if the item is considered a food item.
+dispatch origins:item_condition["origins:food", "apoli:food"] to struct Food {}
+
+/// # Fuel
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks whether the item is considered as fuel.
+/// 
+/// Type ID: `origins:fuel`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:fuel",
+///     "comparison": ">=",
+///     "compare_to": 10
+/// }
+/// ```
+/// 
+/// This example will check if the item fuel time value of 10 or more.
+dispatch origins:item_condition["origins:fuel", "apoli:fuel"] to struct Fuel {
+	/// Determines how the fuel time value (in ticks) of the item stack should be compared to a specific value.
+	comparison?: Comparison,
+	/// The value at which the fuel time value (in ticks) of the item stack will be compared to.
+	compare_to?: int,
+}
+
+/// # Harvest Level
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks whether the material of the item has a certain harvest level value. Refer to [Minecraft Wiki: Tiers](https://minecraft.wiki/w/Tiers) for the harvest level of the materials (there it's called "mining level"). Items without a material are considered to have a harvest level of 0.
+/// 
+/// Type ID: `origins:harvest_level`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:harvest_level",
+///     "comparison": ">",
+///     "compare_to": 1
+/// }
+/// ```
+/// 
+/// This example checks if the item has a harvest level higher than 1, which is the value for stone tools.
+dispatch origins:item_condition["origins:harvest_level", "apoli:harvest_level"] to struct HarvestLevel {
+	/// Determines how the harvest level of the material from the item stack should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the harvest level of the material from the item stack will be compared to.
+	compare_to: int,
+}
+
+/// #   Has Power
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks if the item has a power embedded to it.
+/// 
+/// Type ID: `origins:has_power`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:has_power",
+///     "power": "origins:water_breathing"
+/// }
+/// ```
+/// 
+/// This example will check if the item has Merling's Gills *(`origins:water_breathing`)* power embedded to it.
+/// <br>
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:has_power",
+///     "power": "origins:elytra",
+///     "slot": "chest"
+/// }
+/// ```
+/// 
+/// This example will check if the item has Elytrian's Winged *(`origins:elytra`)* power embedded to it.
+dispatch origins:item_condition["origins:has_power", "apoli:has_power"] to struct HasPower {
+	/// The ID of the power to check for.
+	power: Identifier,
+	/// If specified, this will check if the power embedded to the item is assigned to this equipment slot. Accepts one of `"head"`, `"chest"`, `"legs"`, `"feet"`, `"mainhand"` or `"offhand"`.
+	slot?: string,
+}
+
+/// # Ingredient
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks whether the item matches the specified [ingredient](https://origins.readthedocs.io/en/latest/types/data_types/ingredient). Essentially, checking either for the item ID or whether the item is in a specified tag.
+/// 
+/// Type ID: `origins:ingredient`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:ingredient",
+///     "ingredient": {
+///         "item": "minecraft:egg"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the item is a `minecraft:egg` item.
+/// <br>
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:ingredient",
+///     "ingredient": {
+///         "tag": "minecraft:flowers"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the item is included in the `#minecraft:flowers` (`data/minecraft/tags/items/flowers.json`) item tag.
+/// <br>
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:ingredient",
+///     "ingredient": [
+///         {
+///             "tag": "minecraft:planks"
+///         },
+///         {
+///             "item": "minecraft:oak_log"
+///         }
+///     ]
+/// }
+/// ```
+/// 
+/// This example will check if the item is included in the `#minecraft:planks` (`data/minecraft/tags/items/planks.json`) item tag or if the item is a `minecraft:oak_log` item.
+dispatch origins:item_condition["origins:ingredient", "apoli:ingredient"] to struct Ingredient {
+	/// The ingredient this item must match to pass the check.
+	ingredient: Ingredient,
+}
+
+/// #   Is Damageable
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks if the item is damageable.
+/// 
+/// Type ID: `origins:is_damageable`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:is_damageable"
+/// }
+/// ```
+dispatch origins:item_condition["origins:is_damageable", "apoli:is_damageable"] to struct IsDamageable {}
+
+/// #   Is Equippable
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks if the item is equippable.
+/// 
+/// Type ID: [`origins:is_equippable`](## "Aliases: ["origins:equippable"]")
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:is_equippable"
+/// }
+/// ```
+/// 
+/// This example will check if the item is generally equippable.
+/// <br>
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:is_equippable",
+///     "equipment_slot": "chest"
+/// }
+/// ```
+/// 
+/// This example will check if the item can be equipped in the chest equipment slot.
+dispatch origins:item_condition["origins:is_equippable", "apoli:is_equippable", "origins:equippable", "apoli:equippable"] to struct IsEquippable {
+	/// If specified, checks if the item is equippable in the specified equipment slot. Accepts `"head"`, `"chest"`, `"legs"`, `"feet"`, or `"offhand"`.
+	quipment_slo?: string,
+}
+
+/// # Meat
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks whether the item is considered meat by Minecraft (usable for breeding wolves).
+/// 
+/// Type ID: `origins:meat`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:meat"
+/// }
+/// ```
+/// 
+/// This example will check if the item is considered meat by Minecraft.
+dispatch origins:item_condition["origins:meat", "apoli:meat"] to struct Meat {}
+
+/// # NBT
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks the item's NBT.
+/// 
+/// Type ID: `origins:nbt`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:nbt",
+///     "nbt": "{exampleCustomTag: 1b}"
+/// }
+/// ```
+/// 
+/// This example will check if the item stack has the `exampleCustomTag: 1b` NBT.
+dispatch origins:item_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
+	/// The NBT data to check for.
+	nbt: NBT,
+}
+
+/// #   Power Count
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks how many powers are embedded in the item.
+/// 
+/// Type ID: `origins:power_count`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:power_count",
+///     "comparison": ">",
+///     "compare_to": 0
+/// }
+/// ```
+/// 
+/// This example will check if the item has more than 0 powers embedded in it.
+/// <br>
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:power_count",
+///     "slot": "mainhand",
+///     "comparison": "<",
+///     "compare_to": 10
+/// }
+/// ```
+/// 
+/// This example will check if the item has less than 10 powers embedded in it.
+dispatch origins:item_condition["origins:power_count", "apoli:power_count"] to struct PowerCount {
+	/// If specified, this will check how many powers are assigned to this equipment slot. Accepts one of `"head"`, `"chest"`, `"legs"`, `"feet"`, `"mainhand"` or `"offhand"`.
+	slot?: string,
+	/// Determines how the amount of powers embedded in the item stack should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the amount of powers embedded in the item stack will be compared to.
+	compare_to: int,
+}
+
+/// #   Relative Durability
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks the current durability of the item relative to its max durability (in percentage.)
+/// 
+/// Type ID: `origins:relative_durability`
+/// 
+/// 
+/// !!! note
+/// 
+///     The relative durability value of an item can be calculated with the `currentDurability / maxDurability` formula.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:relative_durability",
+///     "comparison": ">=",
+///     "compare_to": 0.9
+/// }
+/// ```
+/// 
+/// This example will check if the item has a 90% durability or greater.
+dispatch origins:item_condition["origins:relative_durability", "apoli:relative_durability"] to struct RelativeDurability {
+	/// Determines how the relative durability value of the item from the item stack should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the relative durability value of the item from the item stack will be compared to.
+	compare_to: float,
+}
+
+/// # Smeltable
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks if the item stack is an ingredient used in a smelting recipe.
+/// 
+/// Type ID: `origins:smeltable`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:smeltable"
+/// }
+/// ```
+dispatch origins:item_condition["origins:smeltable", "apoli:smeltable"] to struct Smeltable {}

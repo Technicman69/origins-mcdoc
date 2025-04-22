@@ -5,15 +5,2161 @@ struct EntityCondition {
 	...origins:entity_condition[[type]],
 }
 
+/// # Command
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Compares the result of the specified command to the specified value.
+/// 
+/// Type ID: `origins:command`
+/// 
+/// !!! caution
+/// 
+///     This entity condition type only operates on the <span style="color:goldenrod"><b>server-side</b></span>, meaning that it cannot be used in fields that are evaluated on the client-side.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:command",
+///     "command": "execute if score @s objective1 = @s objective2",
+///     "comparison": "==",
+///     "compare_to": 1
+/// }
+/// ```
+/// This example will check if the entity has the same score in the `objective1` and `objective2` scoreboard objectives.
+/// <br>
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:command",
+///     "command": "execute if entity @e[type = #minecraft:skeletons, distance = ..64]",
+///     "comparison": ">=",
+///     "compare_to": 4
+/// }
+/// ```
+/// 
+/// This example will check if there are 4 or more entities that are included in the `#minecraft:skeletons` (`data/minecraft/tags/entity_types/skeletons.json`) entity type tag within a 64 blocks spherical radius relative to the entity.
 dispatch origins:entity_condition["origins:command", "apoli:command"] to struct Command {
-	// /// Compares the result of the specified command to the specified value.
-    // /// !Caution
-    // /// This entity condition type only operates on the server-side, meaning that it cannot be used in fields that are evaluated on the client-side.
-    // type: #[id] ("origins:command" | "apoli:command"),
-    /// The command to execute on the entity with entity's command context (position, rotation, etc.).
+	/// The command to execute on the entity with entity's command context (position, rotation, etc.).
     command: #[command(slash="allowed")] string,
     ...Comparable
 }
+
+/// # Ability
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks if the player has the specified ability enabled.
+/// 
+/// Type ID: `origins:ability`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:ability",
+///     "ability": "minecraft:mayfly"
+/// }
+/// ```
+/// 
+/// This example will check if the player can fly in a Creative Mode-like fashion.
+dispatch origins:entity_condition["origins:ability", "apoli:ability"] to struct Ability {
+	/// The namespace and ID of the ability to check for.
+	ability: PlayerAbility,
+}
+
+/// # Advancement
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity has completed a specified advancement.
+/// 
+/// Type ID: `origins:advancement`
+/// 
+/// !!! note
+/// 
+///     **This entity condition type will only work on players.**
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:advancement",
+///     "advancement": "minecraft:story/smelt_iron"
+/// }
+/// ```
+/// 
+/// This example will check if the player has the `minecraft:story/smelt_iron` advancement, which can be obtained by smelting or obtaining their first Iron Ingot.
+dispatch origins:entity_condition["origins:advancement", "apoli:advancement"] to struct Advancement {
+	/// The namespace and ID of the advancement the player needs to have completed in order for this condition to evaluate to true.
+	advancement: Identifier,
+}
+
+/// # Air
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks how much breath / air / bubble the entity has at the moment.
+/// 
+/// Type ID: `origins:air`
+/// 
+/// !!! note
+/// 
+///     Players (and most mobs) have a max value of 300 ticks, whilst dolphins have a max value of 4800 ticks. Axolotls, on the other hand, have a max value of 6000 ticks.
+/// 
+///     In order to get the value of a single bubble, you can divide the max value by 10. (`max / 10 = value`)
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:air",
+///     "comparison": "==",
+///     "compare_to": 0
+/// }
+/// ```
+/// 
+/// This example will check if the player has no breath / air / bubbles left.
+dispatch origins:entity_condition["origins:air", "apoli:air"] to struct Air {
+	/// Determines how the breath / air / bubble (in ticks) the entity has should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the breath / air / bubble (in ticks) the entity has will be compared to.
+	compare_to: int,
+}
+
+/// # Attribute
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Applies a check towards a specific attribute value of the entity.
+/// 
+/// Type ID: `origins:attribute`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:attribute",
+///     "attribute": "minecraft:generic.armor",
+///     "comparison": ">=",
+///     "compare_to": 10.0
+/// }
+/// ```
+/// 
+/// This example will check if the value of the entity's `minecraft:generic.armor` attribute is 10 or more.
+dispatch origins:entity_condition["origins:attribute", "apoli:attribute"] to struct Attribute {
+	/// ID of the attribute of which the value should be checked. See [Minecraft Wiki: Attribute (Attributes)](https://minecraft.wiki/w/Attribute#Attributes) for a list of vanilla attributes that can be checked for.
+	attribute: Identifier,
+	/// Determines how the attribute's total value should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the attribute's total value will be compared to.
+	compare_to: float,
+}
+
+/// # Biome
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is in a specified biome.
+/// 
+/// Type ID: `origins:biome`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:biome",
+///     "biome": "minecraft:plains"
+/// }
+/// ```
+/// 
+/// This example will check if the entity is currently in a Plains biome.
+/// <br>
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:biome",
+///     "condition": {
+///         "type": "origins:category",
+///         "category": "forest"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the entity is currently in a Forest-like biome.
+dispatch origins:entity_condition["origins:biome", "apoli:biome"] to struct Biome {
+	/// If specified, only evaluate the condition to true if the biome the entity is in matches the specified namespace and ID.
+	biome?: Identifier,
+	/// If specified, only evaluate the condition to true if the biome the entity is in matches one of the specified namespace and IDs.
+	biomes?: Array,
+	/// If specified, only evaluate the condition to true if the biome the entity is in fulfills the specified biome condition type.
+	condition?: BiomeCondition,
+}
+
+/// # Block Collision
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the bounding box of the entity collides with a block.
+/// 
+/// Type ID: `origins:block_collision`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:block_collision",
+///     "offset_x": 0.1,
+///     "offset_y": 0,
+///     "offset_z": 0.1
+/// }
+/// ```
+/// 
+/// This example will check if the entity is colliding with the positive X or Z faces of a block.
+/// <br>
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:or",
+///     "conditions": [
+///         {
+///             "type": "origins:block_collision",
+///             "block_condition": {
+///                 "type": "origins:block",
+///                 "block": "minecraft:slime_block"
+///             },
+///             "offset_x": 0.1,
+///             "offset_z": 0.1
+///         },
+///         {
+///             "type": "origins:block_collision",
+///             "block_condition": {
+///                 "type": "origins:block",
+///                 "block": "minecraft:slime_block"
+///             },
+///             "offset_x": -0.1,
+///             "offset_z": -0.1
+///         }
+///     ]
+/// }
+/// ```
+/// 
+/// This example will check if the entity is colliding with the X and Z faces of a Slime block.
+dispatch origins:entity_condition["origins:block_collision", "apoli:block_collision"] to struct BlockCollision {
+	/// If specified, the condition type will only evaluate to true if the bounding box of the entity is colliding with a block that fulfills this condition.
+	block_condition?: BlockCondition,
+	/// By how much of the bounding box size should the box be offset in the X direction (e.g.: 0 = no offset, 1 = offset of exact width, 2 = offset of twice the width of the bounding box)
+	offset_x?: float,
+	/// By how much of the bounding box size should the box be offset in the Y direction (e.g.: 0 = no offset, 1 = offset of exact height, 2 = offset of twice the height of the bounding box)
+	offset_y?: float,
+	/// By how much of the bounding box size should the box be offset in the Z direction (e.g.: 0 = no offset, 1 = offset of exact depth, 2 = offset of twice the depth of the bounding box)
+	offset_z?: float,
+}
+
+/// # Block In Radius
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether there is a specified number of blocks that fulfills the specified [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types) within a specified radius relative to the entity's feet.
+/// 
+/// Type ID: `origins:block_in_radius`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:block_in_radius",
+///     "block_condition": {
+///         "type": "origins:in_tag",
+///         "tag": "origins:natural_stone"
+///     },
+///     "radius": 1,
+///     "shape": "cube",
+///     "comparison": ">=",
+///     "compare_to": 4
+/// }
+/// ```
+/// 
+/// This example will check if 4 or more blocks that is included in the [`origins:natural_stone`](https://github.com/apace100/origins-fabric/blob/master/src/main/resources/data/origins/tags/blocks/natural_stone.json) (`data/origins/tags/blocks/natural_stone.json`) block tag is within a 1 block radius relative from the entity.
+dispatch origins:entity_condition["origins:block_in_radius", "apoli:block_in_radius"] to struct BlockInRadius {
+	/// The block condition type to check for.
+	block_condition: BlockCondition,
+	/// The radius of the area to check how many blocks fulfill the `block_condition`.
+	radius: int,
+	/// Determines the shape of the radius. Accepts `"cube"`, `"star"` or `"sphere"`.
+	shape?: string,
+	/// Determines how the amount of blocks which fulfill `block_condition` block condition should be compared to the specified value.
+	comparison?: Comparison,
+	/// The value at which the amount of blocks which fulfill `block_condition` will be compared to.
+	compare_to?: int,
+}
+
+/// # Brightness
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks the brightness level at the entity's eyes, which ranges from 0 to 1.
+/// 
+/// Type ID: `origins:brightness`
+/// 
+/// !!! note
+/// 
+///     To calculate brightness at the player's eyes, the game first gathers the light level of the block the eyes are inside of. This light level is the highest between the block and sky light levels of the block. Then it calculates brightness with the following formula: `brightness = ambientLight + (1 - ambientLight) * lightLevel / (60 - 3 * lightLevel)`, with `ambientLight` as the dimension's ambient light, which is 0 in the overworld and the End, and 0.1 in the Nether. Thus the formula simplifies to `brightness = lightLevel / (60 - 3 * lightLevel)` for the overworld and the End. The calculated values, however, are slightly off due to [the imprecision of floating point calculations](https://0.30000000000000004.com/).
+/// 
+///     Here's a table of light levels to brightness levels:
+/// 
+///     Light level | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15
+///     ------------|---|---|---|---|---|---|---|---|---|---|----|----|----|----|----|----
+///     Overworld brightness | 0.0 | 0.017543862 | 0.03703704 | 0.05882353 | 0.08333334 | 0.11111111 | 0.14285715 | 0.17948718 | 0.22222225 | 0.2727273 | 0.33333334 | 0.40740743 | 0.50000006 | 0.6190476 | 0.77777773 | 1.0
+///     Nether brightness | 0.1 | 0.11578947 | 0.13333334 | 0.15294118 | 0.17500001 | 0.2 | 0.22857144 | 0.26153848 | 0.3 | 0.34545457 | 0.4 | 0.4666667 | 0.5500001 | 0.6571428 | 0.79999995 | 1.0
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:brightness",
+///     "comparison": "<=",
+///     "compare_to": 0.5
+/// }
+/// ```
+/// 
+/// This example will check if the brightness level at the player's eyes is 0.5 or lower, which corresponds to a light level of 11 or below in any of the three default dimensions.
+dispatch origins:entity_condition["origins:brightness", "apoli:brightness"] to struct Brightness {
+	/// Determines how the calculated brightness value should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the calculated brightness value will be compared to.
+	compare_to: float,
+}
+
+/// # Climbing
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is currently climbing.
+/// 
+/// Type ID: `origins:climbing`
+/// 
+/// 
+/// ### Examples
+/// ```json
+/// "condition": {
+///     "type": "origins:climbing"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:climbing", "apoli:climbing"] to struct Climbing {}
+
+/// # Collided Horizontally
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is colliding horizontally (walking against a block).
+/// 
+/// Type ID: `origins:collided_horizontally`
+/// 
+/// 
+/// ### Examples
+/// ```json
+/// "condition": {
+///     "type": "origins:collided_horizontally"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:collided_horizontally", "apoli:collided_horizontally"] to struct CollidedHorizontally {}
+
+/// # Creative Flying
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks if the player is Creative Mode flying.
+/// 
+/// Type ID: `origins:creative_flying`
+/// 
+/// 
+/// ### Examples
+/// ```json
+/// "condition": {
+///     "type": "origins:creative_flying"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:creative_flying", "apoli:creative_flying"] to struct CreativeFlying {}
+
+/// # Daytime
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether it is daytime in the world.
+/// 
+/// Type ID: `origins:daytime`
+/// 
+/// 
+/// ### Examples
+/// ```json
+/// "condition": {
+///     "type": "origins:daytime"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:daytime", "apoli:daytime"] to struct Daytime {}
+
+/// # Dimension
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is in a specified dimension.
+/// 
+/// Type ID: `origins:dimension`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:dimension",
+///     "dimension": "minecraft:overworld",
+///     "inverted": true
+/// }
+/// ```
+/// 
+/// This example will check if the player is **not** in the Overworld dimension.
+dispatch origins:entity_condition["origins:dimension", "apoli:dimension"] to struct Dimension {
+	/// The namespace and ID of the dimension the player needs to be in for this condition to evaluate to true. Vanilla dimensions are `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end`, but namespace and IDs of custom/modded dimensions should also work.
+	dimension: Identifier,
+}
+
+/// # Distance From Coordinates
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Compares the distance of the entity's current position to the specified coordinates.
+/// 
+/// Type ID: `origins:distance_from_coordinates`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:distance_from_coordinates",
+///     "offset": {
+///         "x": 256,
+///         "y": 64,
+///         "z": 32
+///     },
+///     "shape": "sphere",
+///     "comparison": "<",
+///     "compare_to": 8
+/// }
+/// ```
+/// 
+/// This example will check if the entity is within an 8 blocks radius relative to the specified coordinates (X: 256, Y: 64, Z: 32).
+/// <br>
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:distance_from_coordinates",
+///     "reference": "world_spawn",
+///     "shape": "cube",
+///     "ignore_y": true,
+///     "comparison": "<",
+///     "compare_to": 4
+/// }
+/// ```
+/// 
+/// This example will check if the player is within a 4 blocks radius relative to the world spawn.
+dispatch origins:entity_condition["origins:distance_from_coordinates", "apoli:distance_from_coordinates"] to struct DistanceFromCoordinates {
+	/// The point to compare the distance to. Accepts `"world_origin"` or `"world_spawn"`.
+	reference?: string,
+	/// If specified, determines how much the reference point should be offset.
+	offset?: Vector,
+	/// Determines whether to consider the X axis to be 0.
+	ignore_x?: boolean,
+	/// Determines whether to consider the Y axis to be 0.
+	ignore_y?: boolean,
+	/// Determines whether to consider the Z axis to be 0.
+	ignore_z?: boolean,
+	/// Determines the shape of the check. Accepts `"cube"`, `"star"` or `"sphere"`.
+	shape?: string,
+	/// Determines whether to check for the reference point whilst considering the coordinate scale of the dimension.
+	scale_reference_to_dimension?: boolean,
+	/// If specified, this value will override the result of the comparison if the entity being tested is not in the reference's dimension.
+	result_on_the_wrong_dimension?: boolean,
+	/// If specified, rounds the result to the closest number with the specified amount of digits after the comma. Negative numbers also work (e.g: `-2` rounds to multiples of 100).
+	round_to_digit?: int,
+	/// Determines how the calculated distance should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the calculated distance is compared to.
+	compare_to: float,
+}
+
+/// # Elytra Flight Possible
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks if the entity can fly with either an Elytra item or a power that uses the [Elytra Flight (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/elytra_flight).
+/// 
+/// Type ID: `origins:elytra_flight_possible`
+/// 
+/// 
+/// !!! note
+/// 
+///     If both `check_state` and `check_abilities` boolean fields are set to `true`, the entity condition type will check if the player can activate elytra flight at the very moment.
+/// 
+/// !!! warning
+/// 
+///     If both `check_state` and `check_abilities` boolean fields are set to `false`, the entity condition type will evaluate to true.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:elytra_flight_possible",
+///     "check_state": true,
+///     "check_abilities": true
+/// }
+/// ```
+/// 
+/// This example will check if the player can activate elytra flight.
+dispatch origins:entity_condition["origins:elytra_flight_possible", "apoli:elytra_flight_possible"] to struct ElytraFlightPossible {
+	/// If set to `true`, the entity condition type will check if pressing the `key.jump` keybind would activate elytra flight if the player had the ability to.
+	check_state?: boolean,
+	/// If set to `true`, the entity condition type will check whether the player has the ability to activate elytra flight. (e.g: wearing an elytra or have a power that uses the [Elytra Flight (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/elytra_flight))
+	check_abilities?: boolean,
+}
+
+/// # Enchantment
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks the level of an enchantment on the entity's equipment.
+/// 
+/// Type ID: `origins:enchantment`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:enchantment",
+///     "enchantment": "minecraft:protection",
+///     "calculation": "sum",
+///     "comparison": ">=",
+///     "compare_to": 16
+/// }
+/// ```
+/// 
+/// This condition will check whether the entity is wearing a full set of Protection IV armor (or better, which might be possible with mods).
+dispatch origins:entity_condition["origins:enchantment", "apoli:enchantment"] to struct Enchantment {
+	/// The namespace and ID of the enchantment of interest.
+	enchantment: Identifier,
+	/// Which number to compare - either the `sum` of levels of this enchantment on all of the player's equipment, or the `max` level of this enchantment on any of the player's equipment.
+	calculation?: string,
+	/// Determines how the level of the specified enchantment should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the level of the specified enchantment will be compared to.
+	compare_to: int,
+}
+
+/// # Entity Group
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is of a specific entity group.
+/// 
+/// Type ID: `origins:entity_group`
+/// 
+/// !!! note
+/// 
+///     See [Minecraft Wiki: Mob (Classification)](https://minecraft.wiki/w/Mob#Classification) for more information about entity groups.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:entity_group",
+///     "group": "undead"
+/// }
+/// ```
+/// 
+/// This example will check if the entity is included in the `undead` entity group.
+dispatch origins:entity_condition["origins:entity_group", "apoli:entity_group"] to struct EntityGroup {
+	/// Entity group required for the entity to pass the check. One of `default`, `undead`, `arthropod`, `illager` and `aquatic`.
+	group: string,
+}
+
+/// # Entity Type
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is of a specific entity type.
+/// 
+/// Type ID: `origins:entity_type`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:entity_type",
+///     "entity_type": "minecraft:creeper"
+/// }
+/// ```
+/// 
+/// This example will check if the entity is a Creeper.
+dispatch origins:entity_condition["origins:entity_type", "apoli:entity_type"] to struct EntityType {
+	/// The namespace and ID of the entity type the entity needs to have to pass the check.
+	entity_type: Identifier,
+}
+
+/// # Equipped Item
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity has an item equipped in the specified equipment slot that fulfills the specified [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types).
+/// 
+/// Type ID: `origins:equipped_item`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:equipped_item",
+///     "equipment_slot": "mainhand",
+///     "item_condition": {
+///         "type": "origins:harvest_level",
+///         "comparison": ">=",
+///         "compare_to": 2
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the item in the entity's mainhand has a harvest level of 2 or more.
+dispatch origins:entity_condition["origins:equipped_item", "apoli:equipped_item"] to struct EquippedItem {
+	/// Determines which equipment slot to check for the item. Accepts `"mainhand"`, `"offhand"`, `"head"`, `"chest"`, `"legs"`, `"feet"`.
+	equipment_slot: string,
+	/// The item condition type to check for on the item in the specified equipment slot.
+	item_condition: ItemCondition,
+}
+
+/// # Exists
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks if the entity exists.
+/// 
+/// Type ID: `origins:exists`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:exists"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:exists", "apoli:exists"] to struct Exists {}
+
+/// # Exposed to Sky
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is currently exposed to the sky, meaning that the sky is currently visible in the entity's position.
+/// 
+/// Type ID: `origins:exposed_to_sky`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:exposed_to_sky"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:exposed_to_sky", "apoli:exposed_to_sky"] to struct ExposedToSky {}
+
+/// # Exposed to Sun
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is currently exposed to the sun, which is essentially a mix of [Brightness (Entity Condition Type)](brightness) that checks if the brightness level at the entity's eyes is greather than 0.5 and [Exposed to Sky (Entity Condition Type)](exposed_to_sky).
+/// 
+/// Type ID: `origins:exposed_to_sun`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:exposed_to_sun"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:exposed_to_sun", "apoli:exposed_to_sun"] to struct ExposedToSun {}
+
+/// # Fall Distance
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks how much blocks the entity has been falling.
+/// 
+/// Type ID: `origins:fall_distance`
+/// 
+/// !!! note
+/// 
+///     This entity condition type will return `0` if the entity has the Slow Falling status effect.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:fall_distance",
+///     "comparison": ">=",
+///     "compare_to": 4
+/// }
+/// ```
+/// 
+/// This example will check if the entity has been falling for 4 or more blocks.
+dispatch origins:entity_condition["origins:fall_distance", "apoli:fall_distance"] to struct FallDistance {
+	/// Determines how the fall distance of the entity should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the fall distance of the entity will be compared to.
+	compare_to: float,
+}
+
+/// # Fall Flying
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is currently fall flying (with an Elytra, an Elytra power, or similar).
+/// 
+/// Type ID: `origins:fall_flying`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:fall_flying"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:fall_flying", "apoli:fall_flying"] to struct FallFlying {}
+
+/// # Fluid Height
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks how high a specific fluid is at the entity. A fluid height of 0 means the entity is not touching the fluid.
+/// 
+/// Type ID: `origins:fluid_height`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:fluid_height",
+///     "fluid": "minecraft:lava",
+///     "comparison": "==",
+///     "compare_to": 0
+/// }
+/// ```
+/// 
+/// This example will check if the entity is not touching a lava fluid.
+dispatch origins:entity_condition["origins:fluid_height", "apoli:fluid_height"] to struct FluidHeight {
+	/// The namespace and ID of the fluid tag of which the height should be checked. Most important examples: `minecraft:water` and `minecraft:lava`.
+	fluid: Identifier,
+	/// Determines how the height of the fluid should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the height of the fluid will be compared to.
+	compare_to: float,
+}
+
+/// # Food Level
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks the entity's food level (chicken legs / hunger meter / whatever you wanna call it). The food level is in the range of 0 to 20.
+/// 
+/// Type ID: `origins:food_level`
+/// 
+/// !!! note
+/// 
+///     **This entity condition type will only work on players.**
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:food_level",
+///     "comparison": "==",
+///     "compare_to": 0
+/// }
+/// ```
+/// 
+/// This example will check if the player have 0 hunger shanks (or 0 food points).
+dispatch origins:entity_condition["origins:food_level", "apoli:food_level"] to struct FoodLevel {
+	/// Determines how the food level of the player should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the food level of the player will be compared to.
+	compare_to: float,
+}
+
+/// # Gamemode
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks the gamemode of the entity.
+/// 
+/// Type ID: `origins:gamemode`
+/// 
+/// !!! note
+/// 
+///     **This entity condition type will only work on players.**
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///   "type": "origins:gamemode",
+///   "gamemode": "creative"
+/// }
+/// ```
+/// 
+/// This example will check if the player is in Creative Mode.
+dispatch origins:entity_condition["origins:gamemode", "apoli:gamemode"] to struct Gamemode {
+	/// Name of the gamemode the player should have in order for this condition to evaluate to true.
+	gamemode: string,
+}
+
+/// #   Glowing
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks if the entity is glowing either via the Glowing status effect, [Entity Glow (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/entity_glow) or [Self Glow (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/self_glow).
+/// 
+/// Type ID: `origins:glowing`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:glowing"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:glowing", "apoli:glowing"] to struct Glowing {}
+
+/// # Health
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks the current health value of the entity.
+/// 
+/// Type ID: `origins:health`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:health",
+///     "comparison": "<",
+///     "compare_to": 20
+/// }
+/// ```
+/// 
+/// This example will check if the entity's health is less than 10 hearts (or 20 health points).
+dispatch origins:entity_condition["origins:health", "apoli:health"] to struct Health {
+	/// Determines how the current health of the entity should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the current health of the entity will be compared to.
+	compare_to: float,
+}
+
+/// #   Inventory
+/// 
+/// Entity Condition Type
+/// 
+/// Checks if the inventory of the entity is occupied.
+/// 
+/// Type ID: `origins:inventory`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:inventory",
+///     "process_mode": "stacks",
+///     "comparison": ">=",
+///     "compare_to": 10
+/// }
+/// ```
+/// 
+/// This example will check if 10 or more slots are occupied by any items in the entity's inventory.
+/// <br>
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:inventory",
+///     "process_mode": "items",
+///     "item_condition": {
+///         "type": "origins:ingredient",
+///         "ingredient": {
+///             "tag": "minecraft:flowers"
+///         }
+///     },
+///     "comparison": "<",
+///     "compare_to": 16
+/// }
+/// ```
+/// 
+/// This example will check if 15 or less individual items that are included in the `#minecraft:flowers` (`data/minecraft/tags/items/flowers.json`) item tag are in the inventory of the entity.
+dispatch origins:entity_condition["origins:inventory", "apoli:inventory"] to struct Inventory {
+	/// Determines whether to check for items in the entity's inventory, inventories of powers present in the entity, or both.
+	inventory_types?: Array,
+	/// Determines how the item stacks in the specified inventory/inventories are evaluated.
+	process_mode?: ProcessMode,
+	/// If specified, only account for items from the specified inventory/inventories that fulfill this condition.
+	item_condition?: ItemCondition,
+	/// If specified, only items from these specified item slots are evaluated.
+	slots?: Array,
+	/// If specified, only the item from this specified item slot is evaluated.
+	slot?: ItemSlot,
+	/// If specified and if `inventory_type` is `"power"`, the items in the inventory of this power will be evaluated instead.
+	power?: Identifier,
+	/// Determines how the amount of items/stacks that were evaluated should be compared to the specified value.
+	comparison?: Comparison,
+	/// The value at which the amount of items/stacks that were evaluated will be compared to.
+	compare_to?: int,
+}
+
+/// # Invisible
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is currently invisible.
+/// 
+/// Type ID: `origins:invisible`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:invisible"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:invisible", "apoli:invisible"] to struct Invisible {}
+
+/// # In Block
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether a block that fulfills the specified [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types) is overlapping with the entity's feet.
+/// 
+/// Type ID: `origins:in_block`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:in_block",
+///     "block_condition": {
+///         "type": "origins:block",
+///         "block": "minecraft:grass"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if Grass (foliage) is currently overlapping the entity's feet.
+/// <br>
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:in_block",
+///     "block_condition": {
+///         "type": "origins:and",
+///         "conditions": [
+///             {
+///                 "type": "origins:block",
+///                 "block": "minecraft:sand"
+///             },
+///             {
+///                 "type": "origins:offset",
+///                 "condition": {
+///                     "type": "origins:block",
+///                     "block": "minecraft:sand"
+///                 },
+///                 "y": 1
+///             }
+///         ]
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if there are Sand blocks at the entity's feet and eyes, essentially checking if the entity is buried in sand.
+dispatch origins:entity_condition["origins:in_block", "apoli:in_block"] to struct InBlock {
+	/// The block condition type to check for on the block that is overlapping with the entity's feet.
+	block_condition: BlockCondition,
+}
+
+/// # In Block Anywhere
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks how many blocks are overlapping with the entity's eyes or feet.
+/// 
+/// Type ID: `origins:in_block_anywhere`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:in_block_anywhere",
+///     "block_condition": {
+///         "type": "origins:in_tag",
+///         "tag": "minecraft:flowers"
+///     },
+///     "comparison": ">",
+///     "compare_to": 1
+/// }
+/// ```
+/// 
+/// This example will check if the entity is currently inside a two-block tall foliage block that belongs in the `#minecraft:flowers` (`data\minecraft\tags\blocks\flowers.json`) block tag. An example is the rose bush block.
+dispatch origins:entity_condition["origins:in_block_anywhere", "apoli:in_block_anywhere"] to struct InBlockAnywhere {
+	/// The block condition type which blocks need to fulfill in order to count for this condition.
+	block_condition: BlockCondition,
+	/// Determines how the amount of blocks which overlap and fulfill `block_condition` should be compared to the specified value.
+	comparison?: Comparison,
+	/// The value at which the amount of blocks which overlap and fulfill `block_condition` will be compared to.
+	compare_to?: int,
+}
+
+/// # In Rain
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks if it's raining at the entity's position.
+/// 
+/// Type ID: `origins:in_rain`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:in_rain"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:in_rain", "apoli:in_rain"] to struct InRain {}
+
+/// # In Snow
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks if it's snowing at the entity's position.
+/// 
+/// Type ID: `origins:in_snow`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:in_snow"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:in_snow", "apoli:in_snow"] to struct InSnow {}
+
+/// # In Tag
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity's entity type is in a specific tag.
+/// 
+/// Type ID: `origins:in_tag`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:in_tag",
+///     "tag": "minecraft:skeletons"
+/// }
+/// ```
+/// 
+/// This example will check if the entity is inside the `#minecraft:skeletons` entity type tag. (`data/minecraft/tags/entity_types/skeletons.json`)
+dispatch origins:entity_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
+	/// The namespace and ID of the entity type tag the entity type needs to be in to pass the check.
+	tag: Identifier,
+}
+
+/// # In Thunderstorm
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks if it's thundering at the entity's position.
+/// 
+/// Type ID: `origins:in_thunderstorm`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:in_thunderstorm"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:in_thunderstorm", "apoli:in_thunderstorm"] to struct InThunderstorm {}
+
+/// # Living
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks if the entity is an instance of [`LivingEntity`](https://maven.fabricmc.net/docs/yarn-1.19+build.4/net/minecraft/entity/LivingEntity.html), or in simple terms, a mob or a player.
+/// 
+/// Type ID: `origins:living`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:living"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:living", "apoli:living"] to struct Living {}
+
+/// # Moving
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is currently moving.
+/// 
+/// Type ID: `origins:moving`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:moving"
+/// }
+/// ```
+/// 
+/// This example will check if the entity is moving either horizontally or vertically.
+/// <br>
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:moving",
+///     "horizontally": false
+/// }
+/// ```
+/// 
+/// This example will check if the entity is only moving vertically.
+dispatch origins:entity_condition["origins:moving", "apoli:moving"] to struct Moving {
+	/// Determines whether to check if the entity is moving horizontally.
+	horizontally?: boolean,
+	/// Determines whether to check if the entity is moving vertically.
+	vertically?: boolean,
+}
+
+/// # NBT
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks the entity's NBT.
+/// 
+/// Type ID: `origins:nbt`
+/// 
+/// !!! caution
+/// 
+///     Be cautious of using this entity condition type, as some NBT data *(e.g: tags added via `/tag`)* from the server are not synchronized to the client.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:nbt",
+///     "nbt": "{Tags: ['example_tag']}"
+/// }
+/// ```
+/// 
+/// This example will check if the entity has the `example_tag` added via `/tag` or by modifying the entity's `Tags` NBT string list.
+dispatch origins:entity_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
+	/// The NBT data to check for.
+	nbt: NBT,
+}
+
+/// # On Block
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks if a block underneath the entity's feet fulfills the specified [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types).
+/// 
+/// Type ID: `origins:on_block`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:on_block"
+/// }
+/// ```
+/// 
+/// This example will check if the entity is currently on the ground.
+/// <br>
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:on_block",
+///     "block_condition": {
+///         "type": "origins:block",
+///         "block": "minecraft:grass_block"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the entity is currently on a Grass Block.
+dispatch origins:entity_condition["origins:on_block", "apoli:on_block"] to struct OnBlock {
+	/// If specified, the condition will evaluate to true if the block underneath the entity's feet fulfills the specified block condition type. Otherwise, only check if the entity is on the ground.
+	block_condition?: BlockCondition,
+}
+
+/// # On Fire
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks if the entity is currently burning.
+/// 
+/// Type ID: `origins:on_fire`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:on_fire"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:on_fire", "apoli:on_fire"] to struct OnFire {}
+
+/// # Origin
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity has a certain origin (optionally from a certain layer).
+/// 
+/// Type ID: `origins:origin`
+/// 
+/// 
+/// !!! note
+/// 
+///     This condition will evaluate to false if the entity is not a player.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:origin",
+///     "origin": "origins:human",
+///     "layer": "origins:origin"
+/// }
+/// ```
+/// 
+/// This example will check if the player has the `origins:human` origin that is provided by the `origins:origin` origin layer.
+dispatch origins:entity_condition["origins:origin", "apoli:origin"] to struct Origin {
+	/// The namespace and ID of the origin the entity needs to have to pass the check.
+	origin: Identifier,
+	/// If specified, the condition will check if the origin is from the specified origin layer.
+	layer?: Identifier,
+}
+
+/// # Passenger
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks how many passengers are currently riding the entity.
+/// 
+/// Type ID: `origins:passenger`
+/// 
+/// 
+/// !!! note
+/// 
+///     In the context of this entity condition type, the '**actor**' entity/entities is/are the passenger(s) and the '**target**' is the entity that invoked the condition.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:passenger",
+///     "bientity_condition": {
+///         "type": "origins:actor_condition",
+///         "condition": {
+///             "type": "origins:entity_type",
+///             "entity_type": "minecraft:player"
+///         }
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the target entity is being ridden by a player (actor entity).
+dispatch origins:entity_condition["origins:passenger", "apoli:passenger"] to struct Passenger {
+	/// If specified, only increase the amount of passengers if either or both the '**actor**' entity/entities and the '**target**' entity fulfills this bientity condition.
+	bientity_condition?: BientityCondition,
+	/// How the amount of passengers of the entity should be compared to the specified value.
+	comparison?: Comparison,
+	/// The value at which the amount of passengers of the entity will be compared to.
+	compare_to?: int,
+}
+
+/// # Passenger Recursive
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks how many passengers (including the passengers' passengers) are currently riding the entity.
+/// 
+/// Type ID: `origins:passenger_recursive`
+/// 
+/// 
+/// !!! note
+/// 
+///     In the context of this entity condition type, the '**actor**' entity/entities is/are the passenger(s) (and its passengers' passengers) and the '**target**' is the entity that invoked the condition.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:passenger_recursive",
+///     "bientity_condition": {
+///         "type": "origins:actor_condition",
+///         "condition": {
+///             "type": "origins:entity_type",
+///             "entity_type": "minecraft:armor_stand"
+///         }
+///     },
+///     "comparison": ">=",
+///     "compare_to": 2
+/// }
+/// ```
+/// 
+/// This example will check if the target entity is being ridden by an armor stand that is also being ridden by an armor stand (and so on).
+dispatch origins:entity_condition["origins:passenger_recursive", "apoli:passenger_recursive"] to struct PassengerRecursive {
+	/// If specified, only increase the amount of passengers if either or both the '**actor**' entity/entities and the '**target**' entity fulfills this bientity condition.
+	bientity_condition?: BientityCondition,
+	/// Determines how the amount of passengers (including the passengers' passengers) of the entity should be compared to the specified value.
+	comparison?: Comparison,
+	/// The value at which the amount of passengers (including the passengers' passengers) of the entity will be compared to.
+	compare_to?: int,
+}
+
+/// # Power
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity has a specified power. Mostly used for [Origin conditions in layers](https://origins.readthedocs.io/en/latest/types/../guides/data/origin_conditions_in_layers)
+/// 
+/// Type ID: `origins:power`
+/// 
+/// !!! caution
+/// 
+///     Make sure to use the [Living (Entity Condition Type)](living) to check if the entity is a "living entity", otherwise, the game will crash since only living entities can have powers.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:power",
+///     "power": "origins:damage_from_potions"
+/// }
+/// ```
+/// 
+/// This example will check if the player has the [`origins:damage_from_potions`](https://github.com/apace100/origins-fabric/blob/master/src/main/resources/data/origins/powers/damage_from_potions.json) power in its origin.
+dispatch origins:entity_condition["origins:power", "apoli:power"] to struct Power {
+	/// The namespace and ID of the power the entity needs to have to pass the check.
+	power: Identifier,
+	/// If specified, the condition will check if the power is from the specified power source.
+	source?: Identifier,
+}
+
+/// # Power Active
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the specified power is "active", meaning that the entity has the power and the power has all its conditions fulfilled.
+/// 
+/// Type ID: `origins:power_active`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:power_active",
+///     "power": "origins:phantomize"
+/// }
+/// ```
+/// 
+/// This example will check if the [`origins:phantomize`](https://github.com/apace100/origins-fabric/blob/master/src/main/resources/data/origins/powers/phantomize.json) power is toggled on.
+dispatch origins:entity_condition["origins:power_active", "apoli:power_active"] to struct PowerActive {
+	/// The namespace and ID of the power which will be checked for being active.
+	power: Identifier,
+}
+
+/// # Power Type
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks if the entity has a power that uses the specified [Power Type](https://origins.readthedocs.io/en/latest/types/power_types).
+/// 
+/// Type ID: `origins:power_type`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:power_type",
+///     "power_type": "origins:active_self"
+/// }
+/// ```
+/// 
+/// This example will check if the entity has a power that uses the [Active Self (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/active_self).
+dispatch origins:entity_condition["origins:power_type", "apoli:power_type"] to struct PowerType {
+	/// The namespace and ID of the [Power Type](https://origins.readthedocs.io/en/latest/types/power_types) of a power the entity has.
+	power_type: Identifier,
+}
+
+/// # Predicate
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity fulfills a specified [Predicate](https://minecraft.wiki/w/Predicate).
+/// 
+/// Type ID: `origins:predicate`
+/// 
+/// !!! caution
+/// 
+///     This entity condition type only operates on the <span style="color:goldenrod"><b>server-side</b></span>, meaning that it cannot be used in fields that are evaluated on the client-side.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:predicate",
+///     "predicate": "example:weather/is_thunderstorm"
+/// }
+/// ```
+/// 
+/// This example will check if the `example:check_if_thunderstorm` predicate (`data\example\predicates\weather\is_thunderstorm.json`) is true.
+/// <br>
+/// 
+/// ```json
+/// {
+///     "condition": "minecraft:weather_check",
+///     "raining": true,
+///     "thundering": true
+/// }
+/// ```
+/// 
+/// This being the contents of the `example:check_if_thunderstorm` predicate. (`data\example\predicates\weather\is_thunderstorm.json`)
+dispatch origins:entity_condition["origins:predicate", "apoli:predicate"] to struct Predicate {
+	/// The namespace and ID of the predicate the entity needs to pass.
+	predicate: Identifier,
+}
+
+/// # Raycast
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Casts a ray to the direction where the entity is looking.
+/// 
+/// Type ID: `origins:raycast`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:raycast",
+///     "distance": 6,
+///     "block": true,
+///     "entity": true,
+///     "shape_type": "visual",
+///     "fluid_handling": "any",
+///     "match_bientity_condition": {
+///         "type": "origins:target_condition",
+///         "condition": {
+///             "type": "origins:entity_type",
+///             "entity_type": "minecraft:wolf"
+///         }
+///     },
+///     "hit_bientity_condition": {
+///         "type": "origins:owner"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if a wolf mob is tamed by the entity that has fired the ray-cast. The ray-cast will ignore tamable mobs other than wolves.
+dispatch origins:entity_condition["origins:raycast", "apoli:raycast"] to struct Raycast {
+	/// Determines the maximum distance the ray-cast will travel.
+	distance?: float,
+	/// Determines whether the ray-cast should include blocks.
+	block?: boolean,
+	/// Determines whether the ray-cast should include entities.
+	entity?: boolean,
+	/// Determines how the ray-cast will handle blocks.
+	shape_type?: Shape,
+	/// Determines how the ray-cast will handle fluids.
+	fluid_handling?: FluidHandling,
+	/// Determines how the direction will be calculated. <span style="color: goldenrod;"><b>Only used if <code>direction</code> is specified.</b></span>
+	space?: Space,
+	/// If specified, determines the direction of the raycast. Otherwise, defaults to the direction at the entity is facing (as if `space` is `"local"`.)
+	direction?: Vector,
+	/// If specified, the entity condition type will check if this bientity condition type is fulfilled by either or both the 'actor' (the entity being checked by the entity condition type) and 'target' (entity that the ray-cast has gone through). If not, the entity will be ignored.
+	match_bientity_condition?: BientityCondition,
+	/// If specified, the entity condition type will check if this bientity condition type is fulfilled by either or both the 'actor' (the entity being checked by the entity condition type) and 'target' (the entity that has hit by the ray-cast).
+	hit_bientity_condition?: BientityCondition,
+	/// Determines the distance of the raycast for entities if `entity` is set to `true`. If absent, it will use the higher value between the entity's attack range (with Reach Entity Attributes compatibility) or the `distance` field.
+	entity_distance?: float,
+	/// If specified, the entity condition type will check if the block that was hit by the ray-cast fulfills this block condition type.
+	block_condition?: BlockCondition,
+	/// Determines the distance of the raycast for blocks if `block` is set to `true`. If absent, it will use the higher value between the entity's block reach (with Reach Entity Attributes compatibility) or the `distance` field.
+	block_distance?: float,
+}
+
+/// # Relative Health
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks the current (and the percentage) health value of the entity.
+/// 
+/// Type ID: `origins:relative_health`
+/// 
+/// !!! note
+/// 
+///     The percentage of the health value can be calculated with the `currentHealth / maxHealth` formula.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:relative_health",
+///     "comparison": "<=",
+///     "compare_to": 0.5
+/// }
+/// ```
+/// 
+/// This example will check if the player has half or less of their max health.
+dispatch origins:entity_condition["origins:relative_health", "apoli:relative_health"] to struct RelativeHealth {
+	/// Determines how the relative health of the entity should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the relative health of the entity will be compared to.
+	compare_to: float,
+}
+
+/// # Resource
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks the value of a power that uses the [Resource (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/resource) or a power type that has a built-in cooldown (using remaining ticks as the value).
+/// 
+/// Type ID: `origins:resource`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:resource",
+///     "resource": "example:a_simple_resource",
+///     "comparison": "==",
+///     "compare_to": 1
+/// }
+/// ```
+/// 
+/// This example will check if the player has a value of 1 in the `example:a_simple_resource` resource power. (`data\example\powers\a_simple_resource.json`)
+/// <br>
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:resource",
+///     "resource": "example:a_multiple_power_with_resource_subpower",
+///     "comparison": ">",
+///     "compare_to": 50
+/// }
+/// ```
+/// 
+/// This example will check if the player has a value of more than 50 in the `with_resource_subpower` sub-power of `example:a_multiple_power` power. (`data\example\powers\a_multiple_power.json`)
+dispatch origins:entity_condition["origins:resource", "apoli:resource"] to struct Resource {
+	/// The namespace and ID of a power that will be evaluated.
+	resource: Identifier,
+	/// Determines how the value of the specified power should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the value of the specified power will be compared to.
+	compare_to: int,
+}
+
+/// # Riding
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the '**actor**' entity is directly riding the '**target**' entity.
+/// 
+/// Type ID: `origins:riding`
+/// 
+/// 
+/// !!! note
+/// 
+///     In the context for this entity condition type, the '**actor**' entity is the passenger and the entity that invoked the condition while the '**target**' entity is the entity that is being ridden.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:riding"
+/// }
+/// ```
+/// 
+/// This example will check if the '**actor**' entity is riding an entity.
+/// <br>
+/// 
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:riding",
+///     "bientity_condition": {
+///         "type": "origins:target_condition",
+///         "condition": {
+///             "type": "origins:entity_type",
+///             "entity_type": "minecraft:minecart"
+///         }
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the '**actor**' entity is currently riding a minecart ('**target**' entity).
+dispatch origins:entity_condition["origins:riding", "apoli:riding"] to struct Riding {
+	/// If specified, this condition type will only evaluate to true if this condition is fulfilled by either or both the '**actor**' and '**target**' entities.
+	bientity_condition?: BientityCondition,
+}
+
+/// # Riding Recursive
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the '**actor**' entity is directly riding the '**target**' entity or the passenger(s) of the '**target**' entity.
+/// 
+/// Type ID: `origins:riding_recursive`
+/// 
+/// 
+/// !!! note
+/// 
+///     In the context of this entity condition type, the '**actor**' entity is the passenger and the entity that invoked the condition whilst the '**target**' entities are the entity that is being directly ridden and the passenger(s) of the said entity.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:riding_recursive",
+///     "comparison": ">=",
+///     "compare_to": 2
+/// }
+/// ```
+/// 
+/// This example will check if the '**actor**' entity is currently riding an entity directly or an entity that has one or multiple passengers, regardless of their entity type.
+/// <br>
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:riding_recursive",
+///     "bientity_condition": {
+///         "type": "origins:target_condition",
+///         "condition": {
+///             "type": "origins:entity_type",
+///             "entity_type": "minecraft:strider"
+///         }
+///     },
+///     "comparison": ">=",
+///     "compare_to": 2
+/// }
+/// ```
+/// 
+/// This example will check if the '**actor**' entity is currently riding a Strider directly or an entity that has Striders as its passengers.
+dispatch origins:entity_condition["origins:riding_recursive", "apoli:riding_recursive"] to struct RidingRecursive {
+	/// If specified, this condition type will only evaluate to true if this condition is fulfilled by either or both the '**actor**' and '**target**' entities.
+	bientity_condition?: BientityCondition,
+	/// Determines how the amount of entities currently being ridden should be compared to the specified value.
+	comparison?: Comparison,
+	/// The value at which the amoutn of entities currently being ridden will be compared to.
+	compare_to?: int,
+}
+
+/// # Riding Root
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the '**actor**' entity is indirectly riding the '**target**' entity.
+/// 
+/// Type ID: `origins:riding_root`
+/// 
+/// 
+/// !!! note
+/// 
+///     In the context for this entity condition type, the '**actor**' entity is the passenger and the entity that invoked the condition while the '**target**' is the entity that is being indirectly ridden (at the start of the riding chain).
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:riding_root"
+/// }
+/// ```
+/// 
+/// This example will check if the '**actor**' entity is riding an entity.
+/// <br>
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:riding_root",
+///     "bientity_condition": {
+///         "type": "origins:target_condition",
+///         "condition": {
+///             "type": "origins:entity_type",
+///             "entity_type": "minecraft:pig"
+///         }
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the '**actor**' entity is riding a pig. This will also check if the '**actor**' entity is riding the passenger(s) of a pig.
+dispatch origins:entity_condition["origins:riding_root", "apoli:riding_root"] to struct RidingRoot {
+	/// If specified, this condition type will only evaluate to true if this condition is fulfilled by either or both the '**actor**' and '**target**' entities.
+	bientity_condition?: BientityCondition,
+}
+
+/// # Saturation Level
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks the entity's saturation level, which is the invisible value that determines how "full" the entity is, which then determines how long it takes before the hunger level of the entity will go down.
+/// 
+/// Type ID: `origins:saturation_level`
+/// 
+/// !!! note
+/// 
+///     **This entity condition type will only work on players.**
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:saturation_level",
+///     "comparison": "==",
+///     "compare_to": 0
+/// }
+/// ```
+/// 
+/// This example will check if the player's saturation level reaches 0.
+dispatch origins:entity_condition["origins:saturation_level", "apoli:saturation_level"] to struct SaturationLevel {
+	/// Determines how the saturation level of the player should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the saturation level of the player will be compared to.
+	compare_to: float,
+}
+
+/// # Scoreboard
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Compares the score of the entity from a specified scoreboard objective to a specified value.
+/// 
+/// Type ID: `origins:scoreboard`
+/// 
+/// 
+/// !!! note
+/// 
+///     If the player does not have the scoreboard objective, this condition would always return false (even if `"!="` is used). You can then use the `"!="` comparison in combination with the `"=="` comparison to test if the player does not have this objective set (for example, if a player has newly joined a world or had their objectives reset).
+/// 
+/// 
+/// !!! caution
+/// 
+///     This entity condition type only operates on the <span style="color:goldenrod"><b>server-side</b></span>, meaning that it cannot be used in fields that are evaluated on the client-side.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:scoreboard",
+///     "objective": "obj",
+///     "comparison": ">",
+///     "compare_to": 3
+/// }
+/// ```
+/// 
+/// This example will check if the score of the player in the `obj` scoreboard objective is greater than 3.
+dispatch origins:entity_condition["origins:scoreboard", "apoli:scoreboard"] to struct Scoreboard {
+	/// If specified, the condition will check for the score of this score holder.
+	name?: string,
+	/// The name of the scoreboard objective to retrieve the value from and compare.
+	objective: string,
+	/// Determines how the score of the specified score holder should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the score of the specified score holder will be compared to.
+	compare_to: int,
+}
+
+/// #	Set Size
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Compares the amount of entities stored in a power that uses the [Entity Set (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/entity_set) to a certain value.
+/// 
+/// Type ID: `origins:set_size`
+/// 
+/// 
+/// ###	Fields
+/// 
+/// Field | Type | Default | Description
+/// ------|------|---------|------------
+/// `set` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the power.
+/// `comparison` | [Comparison](https://origins.readthedocs.io/en/latest/types/data_types/comparison) | | Determines how the amount of referenced entities in the specified power should be compared to the specified value.
+/// `compare_to` | [Integer](https://origins.readthedocs.io/en/latest/types/data_types/integer) | | The value at which the amount of referenced entities in the specified power will be compared to.
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "condition": {
+/// 	"type": "origins:set_size",
+/// 	"set": "example:special_pets",
+/// 	"comparison": ">",
+/// 	"compare_to": 0
+/// }
+/// ```
+/// 
+/// This example will check if the amount of entities stored in the `example:special_pets` (`data/example/powers/special_pets.json`) power is non-zero (e.g: if it's not empty).
+dispatch origins:entity_condition["origins:set_size", "apoli:set_size"] to struct SetSize {}
+
+/// # Sneaking
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is currently sneaking.
+/// 
+/// Type ID: `origins:sneaking`
+/// 
+/// !!! note
+/// 
+///     **This entity condition type will only work on players.**
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:sneaking"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:sneaking", "apoli:sneaking"] to struct Sneaking {}
+
+/// # Sprinting
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is currently sprinting.
+/// 
+/// Type ID: `origins:sprinting`
+/// 
+/// !!! note
+/// 
+///     **This entity condition type will only work on players.**
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:sprinting"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:sprinting", "apoli:sprinting"] to struct Sprinting {}
+
+/// # Status Effect
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity has a specified status effect with a specified amplifier, and/or duration range.
+/// 
+/// Type ID: `origins:status_effect`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:status_effect",
+///     "effect": "minecraft:speed",
+///     "min_amplifier": 1
+/// }
+/// ```
+/// 
+/// This example will check if the entity has the Speed II status effect.
+dispatch origins:entity_condition["origins:status_effect", "apoli:status_effect"] to struct StatusEffect {
+	/// The namespace and ID of the status effect to check for.
+	effect: Identifier,
+	/// The minimum amplifier the status effect should have in order to pass the check.
+	min_amplifier?: int,
+	/// The maximum amplifier the status effect should have in order to pass the check.
+	max_amplifier?: int,
+	/// The minimum duration in ticks the status effect should have left in order to pass the check.
+	min_duration?: int,
+	/// The maximum duration in ticks the status effect should have left in order to pass the check.
+	max_duration?: int,
+}
+
+/// # Submerged In
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity's eyes are in a fluid that is included in the specified fluid tag.
+/// 
+/// Type ID: `origins:submerged_in`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:submerged_in",
+///     "fluid": "minecraft:water"
+/// }
+/// ```
+/// 
+/// This example will check if the player is submerged in water.
+dispatch origins:entity_condition["origins:submerged_in", "apoli:submerged_in"] to struct SubmergedIn {
+	/// The namespace and ID of the fluid tag that should be checked. Most important examples: `minecraft:water` and `minecraft:lava`.
+	fluid: Identifier,
+}
+
+/// # Swimming
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is currently swimming (in the swimming pose).
+/// 
+/// Type ID: `origins:swimming`
+/// 
+/// !!! note
+/// 
+///     **This entity condition type will only work on players.**
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:swimming"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:swimming", "apoli:swimming"] to struct Swimming {}
+
+/// # Tamed
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether a tamable entity is tamed. Will always return false if the entity is not tamable.
+/// 
+/// Type ID: `origins:tamed`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:tamed"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:tamed", "apoli:tamed"] to struct Tamed {}
+
+/// # Time Of Day
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks the current day time ticks of the world.
+/// 
+/// Type ID: `origins:time_of_day`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:and",
+///     "conditions": [
+///         {
+///             "type": "origins:time_of_day",
+///             "comparison": ">=",
+///             "compare_to": 12000
+///         },
+///         {
+///             "type": "origins:time_of_day",
+///             "comparison": "<=",
+///             "compare_to": 13000
+///         }
+///     ]
+/// }
+/// ```
+/// 
+/// This example will check if it's the sun is currently setting.
+dispatch origins:entity_condition["origins:time_of_day", "apoli:time_of_day"] to struct TimeOfDay {
+	/// Determines how the current day time ticks of the world should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the current day time ticks of the world will be compared to.
+	compare_to: int,
+}
+
+/// # Using Effective Tool
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is currently using the effective tool of the block they're mining.
+/// 
+/// Type ID: `origins:using_effective_tool`
+/// 
+/// !!! note
+/// 
+///     **This entity condition type will only work on players.**
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:using_effective_tool"
+/// }
+/// ```
+dispatch origins:entity_condition["origins:using_effective_tool", "apoli:using_effective_tool"] to struct UsingEffectiveTool {}
+
+/// # Using Item
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks whether the entity is currently using an item (eating a food item, using a shield, drawing a bow, etc.) that fulfills the specified [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types).
+/// 
+/// Type ID: `origins:using_item`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:using_item",
+///     "item_condition": {
+///         "type": "origins:food"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the entity is currently eating a food item.
+dispatch origins:entity_condition["origins:using_item", "apoli:using_item"] to struct UsingItem {
+	/// If specified, the condition will only evaluate to true if the item that is being used fulfills the specified item condition type.
+	item_condition?: ItemCondition,
+}
+
+/// # XP Levels
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks the current experience level of the entity.
+/// 
+/// Type ID: `origins:xp_levels`
+/// 
+/// !!! note
+/// 
+///     **This entity condition type will only work on players.**
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:xp_levels",
+///     "comparison": "<=",
+///     "compare_to": 5
+/// }
+/// ```
+/// 
+/// This example will check if the player has 5 levels or less.
+dispatch origins:entity_condition["origins:xp_levels", "apoli:xp_levels"] to struct XpLevels {
+	/// Determines how the experience level of the player should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the experience level of the player will be compared to.
+	compare_to: int,
+}
+
+/// # XP Points
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// Checks the experience points of the entity.
+/// 
+/// Type ID: `origins:xp_points`
+/// 
+/// !!! note
+/// 
+///     **This entity condition type will only work on players.**
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:xp_points",
+///     "comparison": ">=",
+///     "compare_to": 90
+/// }
+/// ```
+/// 
+/// This example will check if the player has 90 or more experience points, which is only achieveable if the player have at least 7 levels.
+dispatch origins:entity_condition["origins:xp_points", "apoli:xp_points"] to struct XpPoints {
+	/// Determines how the experience points of the player should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the experience points of the player will be compared to.
+	compare_to: int,
+}
+
+
 
 struct Comparable {
     /// Determines how the result value (an integer) of the executed command should be compared to the specified value.

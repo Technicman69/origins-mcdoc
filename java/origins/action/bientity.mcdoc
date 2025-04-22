@@ -1,0 +1,323 @@
+use super::EntityAction
+use super::super::condition::EntityCondition
+
+struct BientityAction {
+	type: #[id] #[dispatcher_key="origins:bientity_action"] string,
+	...origins:bientity_action[[type]],
+}
+
+/// # Actor Action
+/// 
+/// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
+/// 
+/// Executes an [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) on the actor entity.
+/// 
+/// Type ID: `origins:actor_action`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_action": {
+///     "type": "origins:actor_action",
+///     "action": {
+///         "type": "origins:set_on_fire",
+///         "duration": 5
+///     }
+/// }
+/// ```
+/// 
+/// This example will set the actor entity on fire for 5 seconds.
+dispatch origins:bientity_action["origins:actor_action", "apoli:actor_action"] to struct ActorAction {
+	/// The entity action type to execute on the actor entity.
+	action: EntityAction,
+}
+
+/// #	Add to Set
+/// 
+/// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
+/// 
+/// Add the target entity to the power that uses the [Entity Set (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/entity_set) of the actor entity.
+/// 
+/// Type ID: `origins:add_to_set`
+/// 
+/// 
+/// ###	Fields
+/// 
+/// Field | Type | Default | Description
+/// ------|------|---------|------------
+/// `set` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the power to add the target entity into.
+/// `time_limit` | [Integer](https://origins.readthedocs.io/en/latest/types/data_types/integer) | *optional* | If specified, this will determine how long the target entity will be stored in the specified power in ticks.
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "bientity_action": {
+/// 	"type": "origins:add_to_set",
+/// 	"set": "example:entities_to_exclude"
+/// }
+/// ```
+/// 
+/// This example will add the target entity to the `example:entities_to_exclude` (`data/example/powers/entities_to_exclude.json`) power permanently.
+/// <br>
+/// 
+/// ```json
+/// "bientity_action": {
+/// 	"type": "origins:add_to_set",
+/// 	"set": "example:make_em_glow",
+/// 	"time_limit": 200
+/// }
+/// ```
+/// 
+/// This example will add the target entity to the `example:make_em_glow` (`data/example/powers/make_em_glow.json`) power temporarily for 10 seconds, after which the target entity will be removed.
+dispatch origins:bientity_action["origins:add_to_set", "apoli:add_to_set"] to struct AddToSet {}
+
+/// # Add Velocity
+/// 
+/// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
+/// 
+/// Adds or sets the velocity of the target entity, based on the direction from the actor entity to the target entity.
+/// 
+/// Type ID: `origins:add_velocity`
+/// 
+/// !!! note
+/// 
+///     If the action behaves unexpectedly, try setting either the `client` (should always work) or `server` (might not work) boolean fields to `false`. [Here are some examples.](https://github.com/apace100/apoli/blob/3115c41ea4390ad9ced3ae5be86151131accc36f/testdata/apoli/powers/add_velocity.json)
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_action": {
+///     "type": "origins:add_velocity",
+///     "z": -2
+/// }
+/// ```
+/// 
+/// This example will "pull" the target entity to the actor entity.
+dispatch origins:bientity_action["origins:add_velocity", "apoli:add_velocity"] to struct AddVelocity {
+	/// The amount of velocity to add on the x-axis.
+	x?: float,
+	/// The amount of velocity to add on the y-axis.
+	y?: float,
+	/// The amount of velocity to add on the z-axis.
+	z?: float,
+	/// Determines whether to use the target entity's `"position"` or `"rotation"` when calculating the velocity that will be applied to the target entity.
+	reference?: string,
+	/// If this is false, the action will not execute on the client.
+	client?: boolean,
+	/// If this is false, the action will not execute on the server.
+	server?: boolean,
+	/// If this is true, the action will act as a "set" velocity action, overriding the entity's current velocity instead of adding to it.
+	set?: boolean,
+}
+
+/// # Damage
+/// 
+/// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
+/// 
+/// Applies damage to the target entity as if the actor entity has attacked it.
+/// 
+/// Type ID: `origins:damage`
+/// 
+/// 
+/// !!! info
+/// 
+///     The max health of the target entity will be used as the base value for the modifier(s).
+/// 
+/// 
+/// !!! info
+/// 
+///     See [Minecraft Wiki: Damage type](https://minecraft.wiki/w/Damage_type) and [Minecraft Wiki: Damage type tag (Java Edition)](https://minecraft.wiki/w/Damage_type_tag_(Java_Edition)) for more information about vanilla damage types and damage type tags.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_action": {
+///     "type": "origins:damage",
+///     "amount": 10,
+///     "damage_type": "minecraft:cramming"
+/// }
+/// ```
+/// 
+/// This example will deal 5 hearts of `cramming` damage to the target as if the actor has hit them, and that, if killed, will display a *"`<targetName>` was squashed by `<actorName>`",* where `<targetName>` is the name of the target and `<actorName>` is the name of the actor.
+/// <br>
+/// 
+/// ```json
+/// "bientity_action": {
+///     "type": "origins:damage",
+///     "damage_type": "minecraft:generic",
+///     "modifier": {
+///         "operation": "multiply_total_multiplicative",
+///         "value": -0.75
+///     }
+/// }
+/// ```
+/// 
+/// This example will deal 25% `generic` damage to the target entity. If the max health of the target entity is 20, this will deal 5 (2 and a half hearts of) `generic` damage (`20 * 0.25 = 5`.)
+/// <br>
+/// 
+/// ```json
+/// "bientity_action": {
+///     "type": "origins:damage",
+///     "damage_type": "minecraft:magic",
+///     "modifier": {
+///         "operation": "set_total",
+///         "resource": "example:magic_damage",
+///         "value": 0
+///     }
+/// }
+/// ```
+/// 
+/// This example will deal `minecraft:magic` damage to the target entity, with its damage value depending on the value of the `example:magic_damage` (`data/example/powers/magic_damage.json`) power from the actor entity.
+dispatch origins:bientity_action["origins:damage", "apoli:damage"] to struct Damage {
+	/// The amount of damage to deal.
+	amount: float,
+	/// Use `damage_type` instead. See [Damage Source (Data Type)](https://origins.readthedocs.io/en/latest/types/data_types/damage_source) for more details.
+	source?: DamageSource,
+	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
+	damage_type: Identifier,
+	/// If specified, this modifier will be applied to the damage taken by the '**target**' entity.
+	modifier?: AttributeModifier,
+	/// If specified, these modifiers will be applied to the damage taken by the '**target**' entity.
+	modifiers?: Array,
+}
+
+/// # Invert
+/// 
+/// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
+/// 
+/// Swaps the context of the target entity and the actor entity.
+/// 
+/// Type ID: `origins:invert`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_action": {
+///     "type": "origins:invert",
+///     "action": {
+///         "type": "origins:mount"
+///     }
+/// }
+/// ```
+/// 
+/// This example will mount the target entity onto the actor entity, as their roles are now swapped.
+dispatch origins:bientity_action["origins:invert", "apoli:invert"] to struct Invert {
+	/// The bientity action to execute which will have its 'target' and 'actor' contexts swapped.
+	action: BientityAction,
+}
+
+/// # Mount
+/// 
+/// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
+/// 
+/// Mounts the actor entity onto the target entity.
+/// 
+/// Type ID: `origins:mount`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_action": {
+///     "type": "origins:mount"
+/// }
+/// ```
+dispatch origins:bientity_action["origins:mount", "apoli:mount"] to struct Mount {}
+
+/// #	Remove from Set
+/// 
+/// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
+/// 
+/// Removes the target entity from the power that uses the [Entity Set (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types) of the actor entity.
+/// 
+/// Type ID: `origins:remove_from_set`
+/// 
+/// 
+/// ###	Fields
+/// 
+/// Field | Type | Default | Description
+/// ------|------|---------|------------
+/// `set` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the power to remove the target entity from.
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "bientity_action": {
+/// 	"type": "origins:remove_from_set",
+/// 	"set": "example:entities_to_exclude"
+/// }
+/// ```
+/// 
+/// This example will remove the target entity from the `example:entities_to_exclude` (`data/example/powers/entities_to_exclude.json`) power.
+dispatch origins:bientity_action["origins:remove_from_set", "apoli:remove_from_set"] to struct RemoveFromSet {}
+
+/// # Set In Love
+/// 
+/// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
+/// 
+/// Sets the target entity into "love mode", where they will seek out other animals to breed with. Note that this only works on animals that can breed, such as Cows or Pigs.
+/// 
+/// Type ID: `origins:set_in_love`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_action": {
+///     "type": "origins:set_in_love"
+/// }
+/// ```
+/// 
+/// [//]: <> (flushed)
+dispatch origins:bientity_action["origins:set_in_love", "apoli:set_in_love"] to struct SetInLove {}
+
+/// # Tame
+/// 
+/// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
+/// 
+/// Tames the target entity with the actor entity as the owner. Only works on tameable entities such as wolves or cats.
+/// 
+/// Type ID: `origins:tame`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_action": {
+///     "type": "origins:tame"
+/// }
+/// ```
+dispatch origins:bientity_action["origins:tame", "apoli:tame"] to struct Tame {}
+
+/// # Target Action
+/// 
+/// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
+/// 
+/// Executes an [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) on the target entity.
+/// 
+/// Type ID: `origins:target_action`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "bientity_action": {
+///     "type": "origins:target_action",
+///     "action": {
+///         "type": "origins:set_on_fire",
+///         "duration": 5
+///     }
+/// }
+/// ```
+/// 
+/// This example will set the target entity on fire for 5 seconds.
+dispatch origins:bientity_action["origins:target_action", "apoli:target_action"] to struct TargetAction {
+	/// The entity action type to execute on the target entity.
+	action: EntityAction,
+}

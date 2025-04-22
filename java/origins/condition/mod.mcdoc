@@ -1,1 +1,7 @@
+type BientityCondition = bientity::BientityCondition
+type BiomeCondition = biome::BiomeCondition
+type BlockCondition = block::BlockCondition
+type DamageCondition = damage::DamageCondition
 type EntityCondition = entity::EntityCondition
+type FluidCondition = fluid::FluidCondition
+type ItemCondition = item::ItemCondition

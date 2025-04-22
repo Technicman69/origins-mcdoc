@@ -1,0 +1,646 @@
+struct BlockCondition {
+	type: #[id] #[dispatcher_key="origins:block_condition"] string,
+    /// If true, the condition acts inverted.
+    inverted?: boolean,
+	...origins:block_condition[[type]],
+}
+
+/// # Adjacent
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks whether a specified amount of blocks adjacent to the block in question fulfills a specified [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types).
+/// 
+/// Type ID: `origins:adjacent`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:adjacent",
+///     "adjacent_condition": {
+///         "type": "origins:block",
+///         "block": "minecraft:iron_ore"
+///     },
+///     "comparison": ">=",
+///     "compare_to": 4
+/// }
+/// ```
+/// 
+/// This example will check if there are four or more Iron Ore blocks next to the block in question.
+dispatch origins:block_condition["origins:adjacent", "apoli:adjacent"] to struct Adjacent {
+	/// The block condition that needs to be fulfilled by adjacent blocks to count towards this condition.
+	adjacent_condition: BlockCondition,
+	/// Determines how the number of adjacent blocks which fulfill the `adjacent_condition` block condition should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the number of adjacent blocks which fulfill `adjacent_condition` will be compared to.
+	compare_to: float,
+}
+
+/// # Attachable
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks whether the block is in a place where a supported block can be attached (i.e. checks whether any of the adjacent blocks' sides towards this block position are solid).
+/// 
+/// Type ID: `origins:attachable`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:attachable"
+/// }
+/// ```
+dispatch origins:block_condition["origins:attachable", "apoli:attachable"] to struct Attachable {}
+
+/// # Blast Resistance
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks the blast resistance value of the block.
+/// 
+/// Type ID: `origins:blast_resistance`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:blast_resistance",
+///     "comparison": ">=",
+///     "compare_to": 1200
+/// }
+/// ```
+/// 
+/// This example will check if the blast resistance value of the block is that of an Obsidian block or greater.
+dispatch origins:block_condition["origins:blast_resistance", "apoli:blast_resistance"] to struct BlastResistance {
+	/// Determines how the blast resistance of the block should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the blast resistance value of the block will be compared to.
+	compare_to: float,
+}
+
+/// # Block
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks whether the block is a certain block (by ID).
+/// 
+/// Type ID: `origins:block`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:block",
+///     "block": "minecraft:diamond_block"
+/// }
+/// ```
+/// 
+/// This example checks if the block is a Diamond Block.
+/// <br>
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:or",
+///     "conditions": [
+///         {
+///             "type": "origins:block",
+///             "block": "minecraft:diamond_block"
+///         },
+///         {
+///             "type": "origins:block",
+///             "block": "minecraft:emerald_block"
+///         }
+///     ]
+/// }
+/// ```
+/// 
+/// This example will check if the block is either a Diamond Block or an Emerald Block.
+dispatch origins:block_condition["origins:block", "apoli:block"] to struct Block {
+	/// The namespace and ID of the block that this block needs to be to pass the check.
+	block: Identifier,
+}
+
+/// #   Block Entity
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks if the block has a block entity.
+/// 
+/// Type ID: `origins:block_entity`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:block_entity"
+/// }
+/// ```
+dispatch origins:block_condition["origins:block_entity", "apoli:block_entity"] to struct BlockEntity {}
+
+/// # Block State
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks a block state property of the block.
+/// 
+/// Type ID: `origins:block_state`
+/// 
+/// 
+/// !!! note
+/// 
+///     If none of the expected fields are specified, this condition will just check if the block has the specified property.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:and",
+///     "conditions": [
+///         {
+///             "type": "origins:block",
+///             "block": "minecraft:chest"
+///         },
+///         {
+///             "type": "origins:block_state",
+///             "property": "facing",
+///             "enum": "north"
+///         }
+///     ]
+/// }
+/// ```
+/// 
+/// This example will check if a Chest block is facing north.
+/// 
+/// ```json
+/// "block_condition": {
+/// 	"type": "origins:block_state",
+/// 	"property": "age"
+/// }
+/// ```
+/// 
+/// This example will check if the specified block has the `age` Block State property.
+dispatch origins:block_condition["origins:block_state", "apoli:block_state"] to struct BlockState {
+	/// The name of the property that will be checked. Examples are `facing` or `age`. See: [Minecraft Wiki: Block States (List of block states)](https://minecraft.wiki/w/Block_states#List_of_block_states)
+	property: string,
+	/// If specified and if the property uses an integer, determines how the integer value of the specified property should be compared to the specified value. <span style="color: goldenrod;"><b>Only used if the specified property has an [integer](https://origins.readthedocs.io/en/latest/types/data_types/integer) value.</b></span>
+	comparison?: Comparison,
+	/// If specified, the itneger at which the integer value of the specified property will be compared to. <span style="color: goldenrod;"><b>Only used if the specified property has an [integer](https://origins.readthedocs.io/en/latest/types/data_types/integer) value.</b></span>
+	compare_to?: int,
+	/// If specified, the boolean to compare to the boolean value of the specified property. <span style="color: goldenrod;"><b>Only used if the specified property has a [boolean](https://origins.readthedocs.io/en/latest/types/data_types/boolean) value.</b></span>
+	value?: boolean,
+	/// If specified, the string at which the string value of the specified property will be compared to. <span style="color: goldenrod;"><b>Only used if the specified property has a [string](https://origins.readthedocs.io/en/latest/types/data_types/string) value.</b></span>
+	"enum"?: string,
+}
+
+/// # Command
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Compares the result of the specified command to the specified value at the position of the block.
+/// 
+/// Type ID: `origins:command`
+/// 
+/// 
+/// !!! caution
+/// 
+///     This block condition type only operates on the <span style="color:goldenrod"><b>server-side</b></span>, meaning that it cannot be used in fields that are evaluated on the client-side.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:command",
+///     "command": "execute align xyz if entity @e[dy=0,dx=0,dz=0]",
+///     "comparison": ">=",
+///     "compare_to": 1
+/// }
+/// ```
+/// 
+/// This example will check if there is an entity inside the block.
+dispatch origins:block_condition["origins:command", "apoli:command"] to struct Command {
+	/// The command to execute.
+	command: string,
+	/// Determines how the result value (an integer) of the executed command should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the result value (an integer) of the executed command will be compared to.
+	compare_to: int,
+}
+
+/// # Distance From Coordinates
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Compares the distance of the block's current position to the specified coordinates.
+/// 
+/// Type ID: `origins:distance_from_coordinates`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:distance_from_coordinates",
+///     "offset": {
+///         "x": 1024,
+///         "z": 512
+///     },
+///     "ignore_y": true,
+///     "comparison": "<",
+///     "compare_to": 8
+/// }
+/// ```
+/// 
+/// This example will check if the block is within an 8 blocks radius relative to the specified coordinates (X: 1024, Z: 512).
+dispatch origins:block_condition["origins:distance_from_coordinates", "apoli:distance_from_coordinates"] to struct DistanceFromCoordinates {
+	/// The point to compare the distance to. Accepts `"world_origin"` or `"world_spawn"`.
+	reference?: string,
+	/// If specified, determines how much the reference point should be offset.
+	offset?: Vector,
+	/// Determines whether to consider the X axis to be 0.
+	ignore_x?: boolean,
+	/// Determines whether to consider the Y axis to be 0.
+	ignore_y?: boolean,
+	/// Determines whether to consider the Z axis to be 0.
+	ignore_z?: boolean,
+	/// Determines the shape of the check. Accepts `"cube"`, `"star"` or `"sphere"`.
+	shape?: string,
+	/// Determines whether to check for the reference point whilst considering the coordinate scale of the dimension.
+	scale_reference_to_dimension?: boolean,
+	/// If specified, this value will override the result of the comparison if the block being tested is not in the reference's dimension.
+	result_on_the_wrong_dimension?: boolean,
+	/// If specified, rounds the result to the closest number with the specified amount of digits after the comma. Negative numbers also work (e.g: `-2` rounds to multiples of 100).
+	round_to_digit?: int,
+	/// Determines how the calculated distance (in blocks) should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the calculated distance (in blocks) will be compared to.
+	compare_to: float,
+}
+
+/// # Exposed To Sky
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks whether the block is exposed to the sky.
+/// 
+/// Type ID: `origins:exposed_to_sky`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:exposed_to_sky"
+/// }
+/// ```
+dispatch origins:block_condition["origins:exposed_to_sky", "apoli:exposed_to_sky"] to struct ExposedToSky {}
+
+/// # Fluid
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks the fluid state of the current position with a [Fluid Condition Type](https://origins.readthedocs.io/en/latest/types/fluid_condition_types).
+/// 
+/// Type ID: `origins:fluid`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:fluid",
+///     "fluid_condition": {
+///         "type": "origins:still"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the block is a source fluid.
+dispatch origins:block_condition["origins:fluid", "apoli:fluid"] to struct Fluid {
+	/// The fluid condition type to check the fluid state at the position.
+	fluid_condition: FluidCondition,
+}
+
+/// # Hardness
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks the hardness value of the block.
+/// 
+/// Type ID: `origins:hardness`
+/// 
+/// 
+/// !!! note
+/// 
+///     A block's hardness value is used for determining how long it takes to break the block. If you want to see the hardness values of each block, you can refer to [Minecraft Wiki: Breaking (Blocks by hardness)](https://minecraft.wiki/w/Breaking#Blocks_by_hardness) page.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:hardness",
+///     "comparison": "==",
+///     "compare_to": 1.5
+/// }
+/// ```
+/// 
+/// This example will check if the block is as hard as Stone.
+dispatch origins:block_condition["origins:hardness", "apoli:hardness"] to struct Hardness {
+	/// Determines how the hardness value of the block should compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the hardness value of the block will be compared to.
+	compare_to: float,
+}
+
+/// # Height
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Compares the Y position of the block to a value.
+/// 
+/// Type ID: `origins:height`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:height",
+///     "comparison": "<=",
+///     "compare_to": 11
+/// }
+/// ```
+/// 
+/// This example will check if the block is within Y=11 or lower.
+dispatch origins:block_condition["origins:height", "apoli:height"] to struct Height {
+	/// Determines how the Y position of the block should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the Y position of the block will be compared to.
+	compare_to: float,
+}
+
+/// # In Tag
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks whether the block is in a specified tag.
+/// 
+/// Type ID: `origins:in_tag`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:in_tag",
+///     "tag": "minecraft:base_stone_overworld"
+/// }
+/// ```
+/// 
+/// This example will check if the block is included in the `#minecraft:base_stone_overworld` (`data/minecraft/tags/blocks/base_stone_overworld.json`) block tag.
+dispatch origins:block_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
+	/// The namespace and ID of the tag which the block should be in to pass the check.
+	tag: Identifier,
+}
+
+/// # Light Blocking
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks whether the block is marked in code as blocking light. Glass for example would not fulfill this condition.
+/// 
+/// Type ID: `origins:light_blocking`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:light_blocking"
+/// }
+/// ```
+dispatch origins:block_condition["origins:light_blocking", "apoli:light_blocking"] to struct LightBlocking {}
+
+/// # Light Level
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Allows checking the light level at the block's position.
+/// 
+/// Type ID: `origins:light_level`
+/// 
+/// 
+/// !!! note
+/// 
+///     If no light type is specified in the `light_type` field, the highest light level between the block light level and **internal** sky light level will be used as the "resulting" light level of the position of the block.
+/// 
+///     See [Minecraft Wiki: Light (Internal light level)](https://minecraft.wiki/w/Light#Internal_light_level) for more information about internal sky light levels.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:light_level",
+///     "light_type": "block",
+///     "comparison": ">",
+///     "compare_to": 10
+/// }
+/// ```
+/// 
+/// This example will check if the light level at the specified position is more than 10, and is emitted by a block.
+dispatch origins:block_condition["origins:light_level", "apoli:light_level"] to struct LightLevel {
+	/// If specified, determines the type of light level to compare. Accepts `"sky"` or `"block"`.
+	light_type?: string,
+	/// Determines how the light level should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the light level will be compared to.
+	compare_to: int,
+}
+
+/// # Material
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks if the block is classified as the specified material.
+/// 
+/// Type ID: `origins:material`
+/// 
+/// !!! danger
+/// 
+///     This block condition type has been <span style="color:darkred"><b>deprecated</b></span> and may be removed in a future version. Please use the [In Tag (Block Condition Type)](in_tag) instead.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:material",
+///     "material": "wood"
+/// }
+/// ```
+/// 
+/// This example will check if the block classifies as "wood".
+dispatch origins:block_condition["origins:material", "apoli:material"] to struct Material {
+	/// If specified, checks if the block classifies as this material.
+	material?: Material,
+	/// If specified, checks if the block classifies as one of these materials.
+	materials?: Array,
+}
+
+/// # Movement Blocking
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks whether the block is marked in code as blocking movement and doesn't have an empty collision shape.
+/// 
+/// Type ID: `origins:movement_blocking`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:movement_blocking"
+/// }
+/// ```
+dispatch origins:block_condition["origins:movement_blocking", "apoli:movement_blocking"] to struct MovementBlocking {}
+
+/// # NBT
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks the NBT of the block entity.
+/// 
+/// Type ID: `origins:nbt`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:and",
+///     "conditions": [
+///         {
+///             "type": "origins:block",
+///             "block": "minecraft:beacon"
+///         },
+///         {
+///             "type": "origins:nbt",
+///             "nbt": "{Levels: 1}"
+///         }
+///     ]
+/// }
+/// ```
+/// 
+/// This example will check if Beacon block has a `Level` value of 1.
+dispatch origins:block_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
+	/// The NBT data to check for.
+	nbt: NBT,
+}
+
+/// # Offset
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks the provided [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types) at a position offset from the current position.
+/// 
+/// Type ID: `origins:offset`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:offset",
+///     "condition": {
+///         "type": "origins:block",
+///         "block": "minecraft:grass_block"
+///     },
+///     "y": 1
+/// }
+/// ```
+/// 
+/// This example will check if the block above the block is a Grass Block.
+dispatch origins:block_condition["origins:offset", "apoli:offset"] to struct Offset {
+	/// The condition to check with the given offset.
+	condition: BlockCondition,
+	/// How much to offset the position on the x-axis.
+	x?: int,
+	/// How much to offset the position on the y-axis.
+	y?: int,
+	/// How much to offset the position on the z-axis.
+	z?: int,
+}
+
+/// # Replacable
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks whether the block is a replaceable material (e.g. tall grass, water, ...).
+/// 
+/// Type ID: `origins:replacable`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:replacable"
+/// }
+/// ```
+dispatch origins:block_condition["origins:replacable", "apoli:replacable"] to struct Replacable {}
+
+/// # Slipperiness
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks the slipperiness value of the block.
+/// 
+/// Type ID: `origins:slipperiness`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:slipperiness",
+///     "comparison": "==",
+///     "compare_to": 0.98
+/// }
+/// ```
+/// 
+/// This example will check if the block has the same slipperiness of an Ice (or Packed Ice) block.
+dispatch origins:block_condition["origins:slipperiness", "apoli:slipperiness"] to struct Slipperiness {
+	/// Determines how the slipperiness value of the block should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the slipperiness value of the block will be compared to.
+	compare_to: float,
+}
+
+/// # Water Loggable
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks whether the block is waterloggable, meaning that there can be fluid in the same block space (e.g. stairs).
+/// 
+/// Type ID: `origins:water_loggable`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:water_loggable"
+/// }
+/// ```
+dispatch origins:block_condition["origins:water_loggable", "apoli:water_loggable"] to struct WaterLoggable {}

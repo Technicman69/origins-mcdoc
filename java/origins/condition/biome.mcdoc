@@ -1,0 +1,156 @@
+struct BiomeCondition {
+	type: #[id] #[dispatcher_key="origins:biome_condition"] string,
+    /// If true, the condition acts inverted.
+    inverted?: boolean,
+	...origins:biome_condition[[type]],
+}
+
+/// # Category
+/// 
+/// [Biome Condition Type](https://origins.readthedocs.io/en/latest/types/biome_condition_types)
+/// 
+/// Checks for the category of a biome.
+/// 
+/// Type ID: `origins:category`
+/// 
+/// 
+/// !!! danger
+/// 
+///     This biome condition type has been <span style="color:darkred"><b>deprecated</b></span> and may be removed in a future version. Please use [In Tag (Biome Condition Type)](in_tag) instead.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:biome",
+///     "condition": {
+///         "type": "origins:category",
+///         "category": "forest"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the player is inside a Forest-like biome.
+dispatch origins:biome_condition["origins:category", "apoli:category"] to struct Category {
+	/// Which category the biome must be in order to succeed the check.
+	category: BiomeCategory,
+}
+
+/// # High Humidity
+/// 
+/// [Biome Condition Type](https://origins.readthedocs.io/en/latest/types/biome_condition_types)
+/// 
+/// Checks whether the biome counts as an area with high humidity (downfall value of > 0.85).
+/// 
+/// !!! note
+///     
+///     If you want functional equality to fire burning out quicker (which was defined via this value in previous Minecraft versions), you should check for the biome tag `minecraft:increased_fire_burnout` with an [In Tag (Biome Condition Type](in_tag) instead.
+/// 
+/// Type ID: `origins:high_humidity`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "biome_condition": {
+///     "type": "origins:high_humidity"
+/// }
+/// ```
+dispatch origins:biome_condition["origins:high_humidity", "apoli:high_humidity"] to struct HighHumidity {}
+
+/// #   In Tag
+/// 
+/// [Biome Condition Type](https://origins.readthedocs.io/en/latest/types/biome_condition_types)
+/// 
+/// Checks whether the biome is in a specified tag.
+/// 
+/// Type ID: `origins:in_tag`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:in_tag",
+///     "tag": "minecraft:allows_surface_slime_spawn"
+/// }
+/// ```
+/// 
+/// This example will check if the biome is included in the `#minecraft:allows_surface_slime_spawn` (`data/minecraft/tags/worldgen/biome/allows_surface_slime_spawn.json`) biome tag.
+/// <br>
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:in_tag",
+///     "tag": "minecraft:is_forest",
+///     "inverted": true
+/// }
+/// ```
+/// 
+/// This example will check if the biome is **not** included in the `#minecraft:is_forest` (`data/minecraft/tags/worldgen/biome/is_forest.json`) biome tag.
+dispatch origins:biome_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
+	/// The namespace and ID of the tag which the biome should be in to pass the check.
+	tag: Identifier,
+}
+
+/// # Precipitation
+/// 
+/// [Biome Condition Type](https://origins.readthedocs.io/en/latest/types/biome_condition_types)
+/// 
+/// Checks for the precipitation type of the biome the entity is currently in.
+/// 
+/// Type ID: `origins:precipitation`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:biome",
+///     "condition": {
+///         "type": "origins:precipitation",
+///         "precipitation": "snow"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the biome the entity is currently in has a snowy precipitation. (e.g: `minecraft:snowy_taiga`, `minecraft:ice_spikes`, etc.)
+dispatch origins:biome_condition["origins:precipitation", "apoli:precipitation"] to struct Precipitation {
+	/// Which precipitation the biome has to have in order to succeed the check. Accepts `"none"`, `"rain"` or `"snow"`. Due to limitations with the system, this will check precipitation at a world height of 64.
+	precipitation: string,
+}
+
+/// # Temperature
+/// 
+/// [Biome Condition Type](https://origins.readthedocs.io/en/latest/types/biome_condition_types)
+/// 
+/// Checks for the temperature of the biome the entity is currently in.
+/// 
+/// Type ID: `origins:temperature`
+/// 
+/// !!! note
+/// 
+///     You can visit [Minecraft Wiki: Biome (List of Overworld climates)](https://minecraft.wiki/w/Biome#List_of_Overworld_climates) for a list of temperature values for the vanilla biomes.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:biome",
+///     "condition": {
+///         "type": "origins:temperature",
+///         "comparison": ">=",
+///         "compare_to": 2
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the biome the entity is currently in has a temperature of 2 or more. (e.g: `minecraft:badlands`, `minecraft:desert`, etc.)
+dispatch origins:biome_condition["origins:temperature", "apoli:temperature"] to struct Temperature {
+	/// Determines how the temperature value of the biome should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the temperature value of the biome will be compared to.
+	compare_to: float,
+}
