@@ -1,13 +1,4 @@
 {
-    "type": "apoli:modify_damage_taken",
-    "condition": {
-        "type": "apoli:in_block",
-        "block_condition": {
-            "type": "apoli:fluid",
-            "fluid_condition": {
-                "type": "apoli:in_tag",
-                "tag": "lava"
-            }
-        }
-    }
+    "type": "apoli:inventory",
+    "title": "LMAO  NO"
 }

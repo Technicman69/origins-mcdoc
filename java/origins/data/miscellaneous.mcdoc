@@ -1,4 +1,4 @@
-use ::java::util::slot::EquipmentSlotGroup
+use ::java::util::slot::EquipmentSlot
 use ::java::data::advancement::trigger::TriggerBase
 use ::java::data::advancement::trigger::Conditions
 use ::java::data::advancement::Trigger
@@ -10,11 +10,11 @@ dispatch minecraft:loot_condition[origins:origin] to struct OriginCondition {
   layer?: #[id="origins:origin_layer"] string,
 }
 
-dispatch minecraft:loot_condition[origins:power] to struct PowerCondition {
+dispatch minecraft:loot_condition[apoli:power] to struct PowerCondition {
   /// Checks if the entity has the specified power.
-  power: #[id="origins:power"] string,
+  power: (#[id="origins:power"] string | string),
   /// If specified, checks if the specified power is from this power source.
-  source?: #[id] string,
+  source?: (#[id(registry="origins:source")] string | string),
 }
 
 // Still waiting for it to work...
@@ -28,14 +28,17 @@ dispatch minecraft:trigger[origins:chose_origin] to Conditions<struct ChoseOrigi
 	origin: #[id="origins:origin"] string,
 }>
 
-dispatch minecraft:loot_function[origins:add_power] to struct AddPower {
+dispatch minecraft:loot_function[apoli:add_power] to struct AddPower {
 	power: #[id="origins:power"] string,
-  slot: EquipmentSlotGroup,
+  /// Determines if the item should add the power to the entity if held/equipped in the specified equipment slot.
+  slot: EquipmentSlot,
+  /// Determines if the tooltip for the power should be hidden or not.
   hidden?: boolean,
+  /// Determines if the color of the tooltip should be blue (false) or red (true).
   negative?: boolean,
 }
 
-dispatch minecraft:loot_function[origins:remove_power] to struct RemovePower {
+dispatch minecraft:loot_function[apoli:remove_power] to struct RemovePower {
 	power: #[id="origins:power"] string,
-  slot: EquipmentSlotGroup,
+  slot: EquipmentSlot,
 }

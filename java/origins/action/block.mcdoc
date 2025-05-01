@@ -1,5 +1,7 @@
 use super::super::condition::BlockCondition
+use ::java::origins::action::EntityAction
 use ::java::origins::util::Shape
+use ::java::origins::util::NBT
 
 struct BlockAction {
 	type: #[id] #[dispatcher_key="origins:block_action"] string,
@@ -324,15 +326,6 @@ dispatch origins:block_action["origins:set_block", "apoli:set_block"] to struct 
 /// Type ID: `origins:spawn_entity`
 /// 
 /// 
-/// ###	Fields
-/// 
-/// Field | Type | Default | Description
-/// ------|------|---------|------------
-/// `entity_type` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the type of entity that will be spawned.
-/// `tag` | [NBT](https://origins.readthedocs.io/en/latest/types/data_types/nbt) | *optional* | If specified, this NBT data will be applied to the entity that will be spawned.
-/// `entity_action` | [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) | *optional* | If specified, this entity action will be executed on the spawned entity.
-/// 
-/// 
 /// ###	Examples
 /// 
 /// ```json
@@ -348,4 +341,11 @@ dispatch origins:block_action["origins:set_block", "apoli:set_block"] to struct 
 /// ```
 /// 
 /// This example will summon a Vex with the power `origins:arcane_skin` power with the source as the ID of the example power at the position of the block.
-dispatch origins:block_action["origins:spawn_entity", "apoli:spawn_entity"] to struct SpawnEntity {}
+dispatch origins:block_action["origins:spawn_entity", "apoli:spawn_entity"] to struct SpawnEntity {
+	/// The namespace and ID of the entity type that will be spawned.
+	entity_type: #[id="entity_type"] string,
+	/// If specified, this NBT data will be applied to the entity that will be spawned.
+	tag?: NBT<minecraft:entity[[entity_type]]>,
+	/// If specified, the specified entity action type will be executed on the entity that will be spawned when it is spawned.
+	entity_action?: EntityAction,
+}

@@ -5,5 +5,5 @@ struct ItemStack {
     /// Size of the stack.
     amount?: byte,
     /// NBT data of the item.
-    tag?: #[nbt=minecraft:item[%fallback]] string,
+    tag?: #[nbt=minecraft:item[[item]]] string,
 }

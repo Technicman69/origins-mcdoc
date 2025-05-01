@@ -34,21 +34,16 @@ enum(string) Shape {
 }
 
 type Axes = (
-    ["x"] @ 1 |
-    ["y"] @ 1 |
-    ["z"] @ 1 |
-    ["x", "y"] |
-    ["y", "x"] |
-    ["y", "z"] |
-    ["z", "y"] |
-    ["z", "x"] |
-    ["x", "z"] |
+    [("x" | "y" | "z")] @ 1 |
+    ["x", ("y" | "z")] |
+    ["y", ("z" | "x")] |
+    ["z", ("x" | "y")] |
     ["x", "y", "z"] |
-    ["x", "z", "y"] |
-    ["y", "x", "z"] |
     ["z", "x", "y"] |
     ["y", "z", "x"] |
     ["z", "y", "x"] |
+    ["x", "z", "y"] |
+    ["y", "x", "z"] |
 )
 
 struct Vector {
@@ -59,3 +54,57 @@ struct Vector {
     /// The Z coordinate of the point.
     z?: float,
 }
+
+enum(string) Space {
+    /// The axes are global: `x` points to west (negative) or east (positive), `y` points to bottom (negative) or top (positive) and `z` points to north (negative) or south (positive).  
+    World = "world",
+    /// The axes are local to the entity: `x` points to its left side and is always horizontal, `y` points to the top of the entity's head and `z` points to the direction the entity is facing.  
+    Local = "local",
+    /// Same as `local`, except it considers the vertical length of the direction of the entity is facing to be 0, resulting in `z` being projected *(flattened out)* onto the horizontal plane, making it shorter. `x` and `y` also become shorter by the same amount and `y` always points upwards. The axes shrink as the direction the entity is facing diverges from being horizontal. *(e.g: if the entity is looking straight up or straight down, the axes will have a length of 0, akin to forcing `x`, `y` and `z` to be `0`)*  
+    LocalHorizontal = "local_horizontal",
+    /// Same as `local_horizontal`, except the axes are normalized. *(e.g: the axes' length are brought back to its previous length of 1 if it's of non-zero length)*  
+    LocalHorizontalNormalized = "local_horizontal_normalized",
+    /// The axes are local to the entity's velocity, similar to `local`. If the velocity is purely vertical, the way the entity is pointing is used to determine the direction of `x` and `y` instead of the velocity. The axes scale based on how fast the entity is moving. *(e.g: if the entity is not moving, the axes will have a length of 0, akin to forcing `x`, `y` and `z` to be `0`)*  
+    Velocity = "velocity",
+    /// Same as `velocity`, except the axes are normalized. *(e.g: the axes' length are brought back to its previous length of 1 if it's of non-zero length, making it **not** depend on the speed of the entity's movement, only as long as the entity is moving)*  
+    VelocityNormalized = "velocity_normalized",
+    /// Same as `velocity`, except the vertical velocity is considered to be `0`.  
+    VelocityHorizontal = "velocity_horizontal",
+    /// Same as `velocity_horizontal`, except the axes are normalized. *(e.g: the axes' length are brought back to its previous length of 1 if it's of non-zero length)*  
+    VelocityHorizontalNormalized = "velocity_horizontal_normalized",
+}
+
+enum(string) ActionResult {
+    /// Indicates that the action is performed but the actor's hand is not swung and no statistic is incremented.
+    ConsumePartial = "consume_partial", 
+    /// Indicates that the action is performed but the actor's hand is not swung.
+    Consume = "consume", 
+    /// Indicates that the action is **not** performed and prevents other actions from performing.
+    Fail = "fail", 
+    /// Indicates that the action is **not** performed but allows other actions to perform.
+    Pass = "pass", 
+    /// Indicates that the action is performed and the actor's hand is swung.
+    Success = "success", 
+}
+
+enum(string) HeightmapType {
+	MotionBlocking = "motion_blocking",
+	MotionBlockingNoLeaves = "motion_blocking_no_leaves",
+	OceanFloor = "ocean_floor",
+	OceanFloorWorldgen = "ocean_floor_wg",
+	WorldSurface = "world_surface",
+	WorldSurfaceWorldgen = "world_surface_wg",
+}
+
+type ParticleEffect = (
+    #[id="particle"] string |
+    struct {
+        type: #[id="particle"] string,
+        params: string,
+    } |
+)
+
+type NBT<T> = (
+		#[nbt_path=T] string |
+		T |
+	)

@@ -187,11 +187,6 @@ dispatch origins:bientity_condition["origins:either", "apoli:either"] to struct 
 /// Type ID: `origins:equal`
 /// 
 /// 
-/// ###	Fields
-/// 
-/// _None._
-/// 
-/// 
 /// ###	Examples
 /// 
 /// ```json
@@ -236,13 +231,6 @@ dispatch origins:bientity_condition["origins:invert", "apoli:invert"] to struct 
 /// Type ID: `origins:in_set`
 /// 
 /// 
-/// ###	Fields
-/// 
-/// Field | Type | Default | Description
-/// ------|------|---------|------------
-/// `set` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the power to check whether the target entity is in.
-/// 
-/// 
 /// ###	Examples
 /// 
 /// ```json
@@ -261,7 +249,10 @@ dispatch origins:bientity_condition["origins:invert", "apoli:invert"] to struct 
 /// ```
 /// 
 /// This example will check whether the target entity is either owned by the actor entity or if the target entity is within the `example:special_pets` (`data/example/powers/special_pets.json`) power.
-dispatch origins:bientity_condition["origins:in_set", "apoli:in_set"] to struct InSet {}
+dispatch origins:bientity_condition["origins:in_set", "apoli:in_set"] to struct InSet {
+	/// The ID of the power to check whether the target entity is in.
+	set: (#[id="origins:power"] string | string)
+}
 
 /// # Owner
 /// 

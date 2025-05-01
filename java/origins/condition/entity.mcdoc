@@ -1,9 +1,22 @@
+use ::java::util::slot::EquipmentSlot
+use ::java::data::advancement::predicate::GameMode
+
 use super::BlockCondition
+use super::BientityCondition
 use super::BiomeCondition
+use super::ItemCondition
 
 use ::java::origins::util::compare::Comparison
 use ::java::origins::util::FluidHandling
 use ::java::origins::util::Shape
+use ::java::origins::util::Space
+use ::java::origins::util::Vector
+use ::java::origins::util::inventory::InventoryType
+use ::java::origins::util::inventory::ItemSlot
+use ::java::origins::util::inventory::ProcessMode
+use ::java::origins::util::enchant::Enchantment
+use ::java::origins::util::effect::EffectID
+use ::java::origins::util::NBT
 
 struct EntityCondition {
 	type: #[id] #[dispatcher_key="origins:entity_condition"] string,
@@ -81,6 +94,19 @@ dispatch origins:entity_condition["origins:ability", "apoli:ability"] to struct 
 	ability: PlayerAbility,
 }
 
+enum(string) PlayerAbility {
+	/// Determines if a player is currently flying.
+	Flying = "minecraft:flying",
+	/// Determines if a player can instantly destroy blocks.
+	Instabuild = "minecraft:instabuild",
+	/// Determines if a player is immune to all damage except "out of world" damage.
+	Invulnerable = "minecraft:invulnerable",
+	/// Determines if a player can place and destroy blocks.
+	MayBuild = "minecraft:mayBuild",
+	/// Determines if a player can fly.
+	Mayfly = "minecraft:mayfly",
+}
+
 /// # Advancement
 /// 
 /// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
@@ -106,7 +132,7 @@ dispatch origins:entity_condition["origins:ability", "apoli:ability"] to struct 
 /// This example will check if the player has the `minecraft:story/smelt_iron` advancement, which can be obtained by smelting or obtaining their first Iron Ingot.
 dispatch origins:entity_condition["origins:advancement", "apoli:advancement"] to struct Advancement {
 	/// The namespace and ID of the advancement the player needs to have completed in order for this condition to evaluate to true.
-	advancement: Identifier,
+	advancement: #[id=advancement] string,
 }
 
 /// # Air
@@ -206,9 +232,9 @@ dispatch origins:entity_condition["origins:attribute", "apoli:attribute"] to str
 /// This example will check if the entity is currently in a Forest-like biome.
 dispatch origins:entity_condition["origins:biome", "apoli:biome"] to struct Biome {
 	/// If specified, only evaluate the condition to true if the biome the entity is in matches the specified namespace and ID.
-	biome?: Identifier,
+	biome?: #[id="worldgen/biome"] string,
 	/// If specified, only evaluate the condition to true if the biome the entity is in matches one of the specified namespace and IDs.
-	biomes?: Array,
+	biomes?: [#[id="worldgen/biome"] string],
 	/// If specified, only evaluate the condition to true if the biome the entity is in fulfills the specified biome condition type.
 	condition?: BiomeCondition,
 }
@@ -304,9 +330,9 @@ dispatch origins:entity_condition["origins:block_in_radius", "apoli:block_in_rad
 	/// The block condition type to check for.
 	block_condition: BlockCondition,
 	/// The radius of the area to check how many blocks fulfill the `block_condition`.
-	radius: int,
+	radius: int @ 1..,
 	/// Determines the shape of the radius. Accepts `"cube"`, `"star"` or `"sphere"`.
-	shape?: string,
+	shape?: Shape,
 	/// Determines how the amount of blocks which fulfill `block_condition` block condition should be compared to the specified value.
 	comparison?: Comparison,
 	/// The value at which the amount of blocks which fulfill `block_condition` will be compared to.
@@ -441,7 +467,7 @@ dispatch origins:entity_condition["origins:daytime", "apoli:daytime"] to struct 
 /// This example will check if the player is **not** in the Overworld dimension.
 dispatch origins:entity_condition["origins:dimension", "apoli:dimension"] to struct Dimension {
 	/// The namespace and ID of the dimension the player needs to be in for this condition to evaluate to true. Vanilla dimensions are `minecraft:overworld`, `minecraft:the_nether` and `minecraft:the_end`, but namespace and IDs of custom/modded dimensions should also work.
-	dimension: Identifier,
+	dimension: #[id="worldgen/dimension"] string,
 }
 
 /// # Distance From Coordinates
@@ -486,7 +512,10 @@ dispatch origins:entity_condition["origins:dimension", "apoli:dimension"] to str
 /// This example will check if the player is within a 4 blocks radius relative to the world spawn.
 dispatch origins:entity_condition["origins:distance_from_coordinates", "apoli:distance_from_coordinates"] to struct DistanceFromCoordinates {
 	/// The point to compare the distance to. Accepts `"world_origin"` or `"world_spawn"`.
-	reference?: string,
+	reference?: (
+		"world_origin" |
+		"world_spawn" |
+	),
 	/// If specified, determines how much the reference point should be offset.
 	offset?: Vector,
 	/// Determines whether to consider the X axis to be 0.
@@ -567,15 +596,15 @@ dispatch origins:entity_condition["origins:elytra_flight_possible", "apoli:elytr
 /// ```
 /// 
 /// This condition will check whether the entity is wearing a full set of Protection IV armor (or better, which might be possible with mods).
-dispatch origins:entity_condition["origins:enchantment", "apoli:enchantment"] to struct Enchantment {
+dispatch origins:entity_condition["origins:enchantment", "apoli:enchantment"] to struct EnchantmentCondition {
 	/// The namespace and ID of the enchantment of interest.
-	enchantment: Identifier,
+	enchantment: Enchantment,
 	/// Which number to compare - either the `sum` of levels of this enchantment on all of the player's equipment, or the `max` level of this enchantment on any of the player's equipment.
-	calculation?: string,
+	calculation?: ("sum" | "max"),
 	/// Determines how the level of the specified enchantment should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the level of the specified enchantment will be compared to.
-	compare_to: int,
+	compare_to: int @ 0..,
 }
 
 /// # Entity Group
@@ -603,7 +632,15 @@ dispatch origins:entity_condition["origins:enchantment", "apoli:enchantment"] to
 /// This example will check if the entity is included in the `undead` entity group.
 dispatch origins:entity_condition["origins:entity_group", "apoli:entity_group"] to struct EntityGroup {
 	/// Entity group required for the entity to pass the check. One of `default`, `undead`, `arthropod`, `illager` and `aquatic`.
-	group: string,
+	group: MobGroup,
+}
+
+enum(string) MobGroup {
+	Default = "default",
+	Undead = "undead",
+	Arthropod = "arthropod",
+	Illager = "illager",
+	Aquatic = "aquatic"
 }
 
 /// # Entity Type
@@ -627,7 +664,7 @@ dispatch origins:entity_condition["origins:entity_group", "apoli:entity_group"] 
 /// This example will check if the entity is a Creeper.
 dispatch origins:entity_condition["origins:entity_type", "apoli:entity_type"] to struct EntityType {
 	/// The namespace and ID of the entity type the entity needs to have to pass the check.
-	entity_type: Identifier,
+	entity_type: #[id=entity_type] string,
 }
 
 /// # Equipped Item
@@ -656,7 +693,7 @@ dispatch origins:entity_condition["origins:entity_type", "apoli:entity_type"] to
 /// This example will check if the item in the entity's mainhand has a harvest level of 2 or more.
 dispatch origins:entity_condition["origins:equipped_item", "apoli:equipped_item"] to struct EquippedItem {
 	/// Determines which equipment slot to check for the item. Accepts `"mainhand"`, `"offhand"`, `"head"`, `"chest"`, `"legs"`, `"feet"`.
-	equipment_slot: string,
+	equipment_slot: EquipmentSlot,
 	/// The item condition type to check for on the item in the specified equipment slot.
 	item_condition: ItemCondition,
 }
@@ -743,7 +780,7 @@ dispatch origins:entity_condition["origins:fall_distance", "apoli:fall_distance"
 	/// Determines how the fall distance of the entity should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the fall distance of the entity will be compared to.
-	compare_to: float,
+	compare_to: float @ 0.0..,
 }
 
 /// # Fall Flying
@@ -787,7 +824,7 @@ dispatch origins:entity_condition["origins:fall_flying", "apoli:fall_flying"] to
 /// This example will check if the entity is not touching a lava fluid.
 dispatch origins:entity_condition["origins:fluid_height", "apoli:fluid_height"] to struct FluidHeight {
 	/// The namespace and ID of the fluid tag of which the height should be checked. Most important examples: `minecraft:water` and `minecraft:lava`.
-	fluid: Identifier,
+	fluid: #[id(registry="fluid",tags="implicit")] string,
 	/// Determines how the height of the fluid should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the height of the fluid will be compared to.
@@ -822,7 +859,7 @@ dispatch origins:entity_condition["origins:food_level", "apoli:food_level"] to s
 	/// Determines how the food level of the player should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the food level of the player will be compared to.
-	compare_to: float,
+	compare_to: float @ 0.0..,
 }
 
 /// # Gamemode
@@ -850,7 +887,7 @@ dispatch origins:entity_condition["origins:food_level", "apoli:food_level"] to s
 /// This example will check if the player is in Creative Mode.
 dispatch origins:entity_condition["origins:gamemode", "apoli:gamemode"] to struct Gamemode {
 	/// Name of the gamemode the player should have in order for this condition to evaluate to true.
-	gamemode: string,
+	gamemode: GameMode,
 }
 
 /// #   Glowing
@@ -895,7 +932,7 @@ dispatch origins:entity_condition["origins:health", "apoli:health"] to struct He
 	/// Determines how the current health of the entity should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the current health of the entity will be compared to.
-	compare_to: float,
+	compare_to: float @ 0.0..,
 }
 
 /// #   Inventory
@@ -939,21 +976,21 @@ dispatch origins:entity_condition["origins:health", "apoli:health"] to struct He
 /// This example will check if 15 or less individual items that are included in the `#minecraft:flowers` (`data/minecraft/tags/items/flowers.json`) item tag are in the inventory of the entity.
 dispatch origins:entity_condition["origins:inventory", "apoli:inventory"] to struct Inventory {
 	/// Determines whether to check for items in the entity's inventory, inventories of powers present in the entity, or both.
-	inventory_types?: Array,
+	inventory_types?: [InventoryType],
 	/// Determines how the item stacks in the specified inventory/inventories are evaluated.
 	process_mode?: ProcessMode,
 	/// If specified, only account for items from the specified inventory/inventories that fulfill this condition.
 	item_condition?: ItemCondition,
 	/// If specified, only items from these specified item slots are evaluated.
-	slots?: Array,
+	slots?: [ItemSlot],
 	/// If specified, only the item from this specified item slot is evaluated.
 	slot?: ItemSlot,
 	/// If specified and if `inventory_type` is `"power"`, the items in the inventory of this power will be evaluated instead.
-	power?: Identifier,
+	power?: (#[id="origins:power"] string | string),
 	/// Determines how the amount of items/stacks that were evaluated should be compared to the specified value.
 	comparison?: Comparison,
 	/// The value at which the amount of items/stacks that were evaluated will be compared to.
-	compare_to?: int,
+	compare_to?: int @ 0..,
 }
 
 /// # Invisible
@@ -1057,7 +1094,7 @@ dispatch origins:entity_condition["origins:in_block_anywhere", "apoli:in_block_a
 	/// Determines how the amount of blocks which overlap and fulfill `block_condition` should be compared to the specified value.
 	comparison?: Comparison,
 	/// The value at which the amount of blocks which overlap and fulfill `block_condition` will be compared to.
-	compare_to?: int,
+	compare_to?: int @ 0..,
 }
 
 /// # In Rain
@@ -1216,7 +1253,7 @@ dispatch origins:entity_condition["origins:moving", "apoli:moving"] to struct Mo
 /// This example will check if the entity has the `example_tag` added via `/tag` or by modifying the entity's `Tags` NBT string list.
 dispatch origins:entity_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
 	/// The NBT data to check for.
-	nbt: #[nbt_path=minecraft:entity[%fallback]] string,
+	nbt: NBT<minecraft:entity[%fallback]>,
 }
 
 /// # On Block
@@ -1298,11 +1335,11 @@ dispatch origins:entity_condition["origins:on_fire", "apoli:on_fire"] to struct 
 /// ```
 /// 
 /// This example will check if the player has the `origins:human` origin that is provided by the `origins:origin` origin layer.
-dispatch origins:entity_condition["origins:origin", "apoli:origin"] to struct Origin {
+dispatch origins:entity_condition["origins:origin"] to struct Origin {
 	/// The namespace and ID of the origin the entity needs to have to pass the check.
-	origin: Identifier,
+	origin: #[id="origins:origin"] string,
 	/// If specified, the condition will check if the origin is from the specified origin layer.
-	layer?: Identifier,
+	layer?: #[id="origins:origin_layer"] string,
 }
 
 /// # Passenger
@@ -1341,7 +1378,7 @@ dispatch origins:entity_condition["origins:passenger", "apoli:passenger"] to str
 	/// How the amount of passengers of the entity should be compared to the specified value.
 	comparison?: Comparison,
 	/// The value at which the amount of passengers of the entity will be compared to.
-	compare_to?: int,
+	compare_to?: int @ 0..,
 }
 
 /// # Passenger Recursive
@@ -1382,7 +1419,7 @@ dispatch origins:entity_condition["origins:passenger_recursive", "apoli:passenge
 	/// Determines how the amount of passengers (including the passengers' passengers) of the entity should be compared to the specified value.
 	comparison?: Comparison,
 	/// The value at which the amount of passengers (including the passengers' passengers) of the entity will be compared to.
-	compare_to?: int,
+	compare_to?: int @ 0..,
 }
 
 /// # Power
@@ -1410,9 +1447,9 @@ dispatch origins:entity_condition["origins:passenger_recursive", "apoli:passenge
 /// This example will check if the player has the [`origins:damage_from_potions`](https://github.com/apace100/origins-fabric/blob/master/src/main/resources/data/origins/powers/damage_from_potions.json) power in its origin.
 dispatch origins:entity_condition["origins:power", "apoli:power"] to struct Power {
 	/// The namespace and ID of the power the entity needs to have to pass the check.
-	power: Identifier,
+	power: (#[id="origins:power"] string | string),
 	/// If specified, the condition will check if the power is from the specified power source.
-	source?: Identifier,
+	source?: (#[id(registry="origins:source")] string | string),
 }
 
 /// # Power Active
@@ -1436,7 +1473,7 @@ dispatch origins:entity_condition["origins:power", "apoli:power"] to struct Powe
 /// This example will check if the [`origins:phantomize`](https://github.com/apace100/origins-fabric/blob/master/src/main/resources/data/origins/powers/phantomize.json) power is toggled on.
 dispatch origins:entity_condition["origins:power_active", "apoli:power_active"] to struct PowerActive {
 	/// The namespace and ID of the power which will be checked for being active.
-	power: Identifier,
+	power: (#[id="origins:power"] string | string),
 }
 
 /// # Power Type
@@ -1460,7 +1497,7 @@ dispatch origins:entity_condition["origins:power_active", "apoli:power_active"] 
 /// This example will check if the entity has a power that uses the [Active Self (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/active_self).
 dispatch origins:entity_condition["origins:power_type", "apoli:power_type"] to struct PowerType {
 	/// The namespace and ID of the [Power Type](https://origins.readthedocs.io/en/latest/types/power_types) of a power the entity has.
-	power_type: Identifier,
+	power_type: #[id] #[dispatcher_key="origins:power"] string,
 }
 
 /// # Predicate
@@ -1499,7 +1536,7 @@ dispatch origins:entity_condition["origins:power_type", "apoli:power_type"] to s
 /// This being the contents of the `example:check_if_thunderstorm` predicate. (`data\example\predicates\weather\is_thunderstorm.json`)
 dispatch origins:entity_condition["origins:predicate", "apoli:predicate"] to struct Predicate {
 	/// The namespace and ID of the predicate the entity needs to pass.
-	predicate: Identifier,
+	predicate: #[id=predicate] string,
 }
 
 /// # Raycast
@@ -1537,7 +1574,7 @@ dispatch origins:entity_condition["origins:predicate", "apoli:predicate"] to str
 /// This example will check if a wolf mob is tamed by the entity that has fired the ray-cast. The ray-cast will ignore tamable mobs other than wolves.
 dispatch origins:entity_condition["origins:raycast", "apoli:raycast"] to struct Raycast {
 	/// Determines the maximum distance the ray-cast will travel.
-	distance?: float,
+	distance?: float @ 0.0..,
 	/// Determines whether the ray-cast should include blocks.
 	block?: boolean,
 	/// Determines whether the ray-cast should include entities.
@@ -1555,11 +1592,11 @@ dispatch origins:entity_condition["origins:raycast", "apoli:raycast"] to struct 
 	/// If specified, the entity condition type will check if this bientity condition type is fulfilled by either or both the 'actor' (the entity being checked by the entity condition type) and 'target' (the entity that has hit by the ray-cast).
 	hit_bientity_condition?: BientityCondition,
 	/// Determines the distance of the raycast for entities if `entity` is set to `true`. If absent, it will use the higher value between the entity's attack range (with Reach Entity Attributes compatibility) or the `distance` field.
-	entity_distance?: float,
+	entity_distance?: float @ 0.0..,
 	/// If specified, the entity condition type will check if the block that was hit by the ray-cast fulfills this block condition type.
 	block_condition?: BlockCondition,
 	/// Determines the distance of the raycast for blocks if `block` is set to `true`. If absent, it will use the higher value between the entity's block reach (with Reach Entity Attributes compatibility) or the `distance` field.
-	block_distance?: float,
+	block_distance?: float @ 0.0..,
 }
 
 /// # Relative Health
@@ -1628,7 +1665,7 @@ dispatch origins:entity_condition["origins:relative_health", "apoli:relative_hea
 /// This example will check if the player has a value of more than 50 in the `with_resource_subpower` sub-power of `example:a_multiple_power` power. (`data\example\powers\a_multiple_power.json`)
 dispatch origins:entity_condition["origins:resource", "apoli:resource"] to struct Resource {
 	/// The namespace and ID of a power that will be evaluated.
-	resource: Identifier,
+	resource: (#[id="origins:power"] string | string),
 	/// Determines how the value of the specified power should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the value of the specified power will be compared to.
@@ -1729,7 +1766,7 @@ dispatch origins:entity_condition["origins:riding_recursive", "apoli:riding_recu
 	/// Determines how the amount of entities currently being ridden should be compared to the specified value.
 	comparison?: Comparison,
 	/// The value at which the amoutn of entities currently being ridden will be compared to.
-	compare_to?: int,
+	compare_to?: int @ 0..,
 }
 
 /// # Riding Root
@@ -1804,7 +1841,7 @@ dispatch origins:entity_condition["origins:saturation_level", "apoli:saturation_
 	/// Determines how the saturation level of the player should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the saturation level of the player will be compared to.
-	compare_to: float,
+	compare_to: float @ 0.0..,
 }
 
 /// # Scoreboard
@@ -1840,9 +1877,9 @@ dispatch origins:entity_condition["origins:saturation_level", "apoli:saturation_
 /// This example will check if the score of the player in the `obj` scoreboard objective is greater than 3.
 dispatch origins:entity_condition["origins:scoreboard", "apoli:scoreboard"] to struct Scoreboard {
 	/// If specified, the condition will check for the score of this score holder.
-	name?: string,
+	name?: #[score_holder] string,
 	/// The name of the scoreboard objective to retrieve the value from and compare.
-	objective: string,
+	objective: #[objective] string,
 	/// Determines how the score of the specified score holder should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the score of the specified score holder will be compared to.
@@ -1858,15 +1895,6 @@ dispatch origins:entity_condition["origins:scoreboard", "apoli:scoreboard"] to s
 /// Type ID: `origins:set_size`
 /// 
 /// 
-/// ###	Fields
-/// 
-/// Field | Type | Default | Description
-/// ------|------|---------|------------
-/// `set` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the power.
-/// `comparison` | [Comparison](https://origins.readthedocs.io/en/latest/types/data_types/comparison) | | Determines how the amount of referenced entities in the specified power should be compared to the specified value.
-/// `compare_to` | [Integer](https://origins.readthedocs.io/en/latest/types/data_types/integer) | | The value at which the amount of referenced entities in the specified power will be compared to.
-/// 
-/// 
 /// ###	Examples
 /// 
 /// ```json
@@ -1879,7 +1907,14 @@ dispatch origins:entity_condition["origins:scoreboard", "apoli:scoreboard"] to s
 /// ```
 /// 
 /// This example will check if the amount of entities stored in the `example:special_pets` (`data/example/powers/special_pets.json`) power is non-zero (e.g: if it's not empty).
-dispatch origins:entity_condition["origins:set_size", "apoli:set_size"] to struct SetSize {}
+dispatch origins:entity_condition["origins:set_size", "apoli:set_size"] to struct SetSize {
+	/// The ID of the power.
+	set: (#[id="origins:power"] string | string),
+	/// Determines how the amount of referenced entities in the specified power should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the amount of referenced entities in the specified power will be compared to.
+	compare_to: int @ 0..,
+}
 
 /// # Sneaking
 /// 
@@ -1947,15 +1982,21 @@ dispatch origins:entity_condition["origins:sprinting", "apoli:sprinting"] to str
 /// This example will check if the entity has the Speed II status effect.
 dispatch origins:entity_condition["origins:status_effect", "apoli:status_effect"] to struct StatusEffect {
 	/// The namespace and ID of the status effect to check for.
-	effect: Identifier,
+	effect: EffectID,
 	/// The minimum amplifier the status effect should have in order to pass the check.
-	min_amplifier?: int,
+	min_amplifier?: byte,
 	/// The maximum amplifier the status effect should have in order to pass the check.
-	max_amplifier?: int,
+	max_amplifier?: byte,
 	/// The minimum duration in ticks the status effect should have left in order to pass the check.
-	min_duration?: int,
+	min_duration?: (
+		int @ 1.. |
+		#[since="1.19.4"] -1 |
+	),
 	/// The maximum duration in ticks the status effect should have left in order to pass the check.
-	max_duration?: int,
+	max_duration?: (
+		int @ 1.. |
+		#[since="1.19.4"] -1 |
+	),
 }
 
 /// # Submerged In
@@ -1979,7 +2020,7 @@ dispatch origins:entity_condition["origins:status_effect", "apoli:status_effect"
 /// This example will check if the player is submerged in water.
 dispatch origins:entity_condition["origins:submerged_in", "apoli:submerged_in"] to struct SubmergedIn {
 	/// The namespace and ID of the fluid tag that should be checked. Most important examples: `minecraft:water` and `minecraft:lava`.
-	fluid: Identifier,
+	fluid: #[id(registry="fluid",tags="implicit")] string,
 }
 
 /// # Swimming
@@ -2056,7 +2097,7 @@ dispatch origins:entity_condition["origins:time_of_day", "apoli:time_of_day"] to
 	/// Determines how the current day time ticks of the world should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the current day time ticks of the world will be compared to.
-	compare_to: int,
+	compare_to: int @ 0..,
 }
 
 /// # Using Effective Tool
@@ -2135,7 +2176,7 @@ dispatch origins:entity_condition["origins:xp_levels", "apoli:xp_levels"] to str
 	/// Determines how the experience level of the player should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the experience level of the player will be compared to.
-	compare_to: int,
+	compare_to: int @ 0..,
 }
 
 /// # XP Points
@@ -2166,7 +2207,7 @@ dispatch origins:entity_condition["origins:xp_points", "apoli:xp_points"] to str
 	/// Determines how the experience points of the player should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the experience points of the player will be compared to.
-	compare_to: int,
+	compare_to: int @ 0..,
 }
 
 

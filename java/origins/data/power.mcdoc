@@ -6,7 +6,11 @@ use ::java::origins::util::sprite::ResourceBarFile
 use ::java::origins::util::item::ItemStack
 use ::java::origins::util::DamageSource
 use ::java::origins::util::attribute::AttributeModifier
+use ::java::origins::util::attribute::AttributedAttributeModifier
 use ::java::origins::util::Axes
+use ::java::origins::util::ActionResult
+use ::java::origins::util::effect::EffectID
+use ::java::origins::util::NBT
 
 use ::java::origins::action::BientityAction
 use ::java::origins::action::BlockAction
@@ -19,6 +23,7 @@ use ::java::origins::condition::DamageCondition
 use ::java::origins::condition::EntityCondition
 use ::java::origins::condition::FluidCondition
 use ::java::origins::condition::ItemCondition
+
 
 
 struct HudRender {
@@ -53,28 +58,10 @@ struct PowerBase {
     badges?: [Badge],
 }
 
-dispatch minecraft:resource["origins:power"] to (
-	struct Power {
-		type: #[id] #[dispatcher_key="origins:power"] string,
-		...PowerBase,
-		...origins:power[[type]],
-	} |
-	struct Multiple {
-		type: #[id] ("origins:multiple" | "apoli:multiple"),
-		...PowerBase,
-		[#[id(definition=true)] string]: Power,
-	}
-)
-
-dispatch origins:power[%unknown] to struct {}
-
-dispatch origins:power["origins:simple", "apoli:simple"] to struct Simple {}
-
-dispatch origins:power["origins:cooldown", "apoli:cooldown"] to struct Cooldown {
-    /// Interval of ticks this power needs to recharge before the power can be triggered again.
-    cooldown: int @ 1..,
-    /// Determines how the cooldown of this power is visualized on the HUD.
-    hud_render?: HudRender,
+dispatch minecraft:resource["origins:power"] to struct Power {
+	type: #[id] #[dispatcher_key="origins:power"] string,
+	...PowerBase,
+	...origins:power[[type]],
 }
 
 struct OptionalCooldown {
@@ -84,13 +71,16 @@ struct OptionalCooldown {
     hud_render?: HudRender,
 }
 
+dispatch origins:power[%unknown] to struct {}
+
 dispatch origins:power["origins:multiple", "apoli:multiple"] to struct Multiple {
     [#[subpower(definition=true)] string]: struct {
-        type: #[id(registry="origins:power", exclude=["air"])] string,
+        type: #[id] #[dispatcher_key="origins:power"] string,
         ...PowerBase,
         ...origins:power[[type]],
     },
 }
+
 /// # Active Self
 /// 
 /// [Power Type](https://origins.readthedocs.io/en/latest/types/power_types)
@@ -231,7 +221,7 @@ dispatch origins:power["origins:action_on_being_used", "apoli:action_on_being_us
 	/// If specified, the specified actions will only be executed if this condition is fulfilled by the item used by the '**actor**' entity for right-clicking the '**target**' entity.
 	item_condition?: ItemCondition,
 	/// Determines if the power should be activated if the '**actor**' entity used the specified hand(s). Accepts `"off_hand"`, `"main_hand"` or both
-	hands?: Array,
+	hands?: Hands,
 	/// If specified, this item stack will be given to the '**actor**' entity.
 	result_stack?: ItemStack,
 	/// Determines the result of the 'use' action.
@@ -239,6 +229,12 @@ dispatch origins:power["origins:action_on_being_used", "apoli:action_on_being_us
 	/// Determines the execution priority of the power.
 	priority?: int,
 }
+
+type Hands = (
+	[("main_hand" | "off_hand")] @ 1 |
+	["main_hand", "off_hand"] |
+	["off_hand", "main_hand"]
+)
 
 /// # Action On Block Break
 /// 
@@ -299,23 +295,6 @@ dispatch origins:power["origins:action_on_block_break", "apoli:action_on_block_b
 /// !!!	note
 /// 
 /// 	This power type will only work for players.
-/// 
-/// 
-/// ###	Fields
-/// 
-/// Field | Type | Default | Description
-/// ------|------|---------|------------
-/// `entity_action` | [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) | *optional* | If specified, this entity action will be executed on the player upon placing a block.
-/// `held_item_action` | [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types) | *optional* | If specified, this item action will be executed on the item the player has used to place a block.
-/// `place_to_action` | [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types) | *optional* | If specified, this block action will be executed at the position of the block the player has placed.
-/// `place_on_action` | [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types) | *optional* | If specified, this block action will be executed on the block the player placed a block on.
-/// `item_condition` | [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types) | *optional* | If specified, the specified actions will only be executed if the item the player has used to place a block fulfills this item condition.
-/// `place_to_condition` | [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types) | *optional* | If specified, the specified actions will only be executed if the block at the position of the block the player is about to place fulfills this block condition.
-/// `place_on_condition` | [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types) | *optional* | If specified, the specified actions will only be executed if the block the player is about to place a block on fulfills this block condition.
-/// `directions` | [Array](https://origins.readthedocs.io/en/latest/types/data_types/array) of [Strings](https://origins.readthedocs.io/en/latest/types/data_types/string) | `["up", "down", "north", "south", "east", "west"]` | Determines whether the specified actions should be executed if the player is about to place a block at the specified side(s) of a block.
-/// `hands` | [Array](https://origins.readthedocs.io/en/latest/types/data_types/array) of [Hands](https://origins.readthedocs.io/en/latest/types/data_types/string) | `["main_hand", "off_hand"]` | Determines whether the specified actions should be executed if the player used the specified hand(s) when trying to place a block.
-/// `result_stack` | [Item Stack](https://origins.readthedocs.io/en/latest/types/data_types/item_stack) | *optional* | If specified, this item stack will be given to the player upon placing a block.
-/// `result_item_action` | [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types) | *optional* | If specified, this item action will be executed on the item that will be given to the player upon placing a block.
 /// 
 /// 
 /// ###	Examples
@@ -382,7 +361,41 @@ dispatch origins:power["origins:action_on_block_break", "apoli:action_on_block_b
 /// }
 /// ```
 /// This example will make Netherrack blocks placed by the player will absorb Lava fluid with a 4 radius star-shaped area, and replace the placed Netherrack with a Magma block.
-dispatch origins:power["origins:action_on_block_place", "apoli:action_on_block_place"] to struct ActionOnBlockPlace {}
+dispatch origins:power["origins:action_on_block_place", "apoli:action_on_block_place"] to struct ActionOnBlockPlace {
+	/// If specified, this entity action will be executed on the player upon placing a block.
+	entity_action?: EntityAction,
+	/// If specified, this item action will be executed on the item the player has used to place a block.
+	held_item_action?: ItemAction,
+	/// If specified, this block action will be executed at the position of the block the player has placed.
+	place_to_action?: BlockAction,
+	/// If specified, this block action will be executed on the block the player placed a block on.
+	place_on_action?: BlockAction,
+	/// If specified, the specified actions will only be executed if the item the player has used to place a block fulfills this item condition.
+	item_condition?: ItemCondition,
+	/// If specified, the specified actions will only be executed if the block at the position of the block the player is about to place fulfills this block condition.
+	place_to_condition?: BlockCondition,
+	/// If specified, the specified actions will only be executed if the block the player is about to place a block on fulfills this block condition.
+	place_on_condition?: BlockCondition,
+	/// Determines whether the specified actions should be executed if the player is about to place a block at the specified side(s) of a block.
+	directions?: Directions,
+	/// Determines whether the specified actions should be executed if the player used the specified hand(s) when trying to place a block.
+	hands?: Hands,
+	///* | If specified, this item stack will be given to the player upon placing a block.
+	result_stack?: ItemStack,
+	/// If specified, this item action will be executed on the item that will be given to the player upon placing a block.
+	result_item_action?: ItemAction,
+}
+
+type Directions = [Direction] @ 1..6
+
+enum(string) Direction {
+	Up = "up",
+	Down = "down",
+	North = "north",
+	South = "south",
+	East = "east",
+	West = "west"
+} 
 
 /// # Action On Block Use
 /// 
@@ -427,9 +440,9 @@ dispatch origins:power["origins:action_on_block_use", "apoli:action_on_block_use
 	/// If specified, only execute the specified actions if this condition is fulfilled by the item in the 'actor' (the player that has the power) entity's specified hand(s) determined by the `hands` string field.
 	item_condition?: ItemCondition,
 	/// If specified, only execute the specified actions if you used the specified face of the block.
-	directions?: Array,
+	directions?: Directions,
 	/// Determines if the power should be activated if the player used the specified hand(s). Accepts `"off_hand"`, `"main_hand"` or both.
-	hands?: Array,
+	hands?: Hands,
 	/// If specified, gives the item to the 'actor' (the player that has the power) entity.
 	result_stack?: ItemStack,
 	/// If specified, this action will be executed on the item used for right-clicking the 'target' entity in the specified hand(s) determined by the `hands` string field.
@@ -651,7 +664,7 @@ dispatch origins:power["origins:action_on_entity_use", "apoli:action_on_entity_u
 	/// If specified, the specified actions will only be executed if this condition is fulfilled by the item used by the '**actor**' entity for right-clicking the '**target**' entity.
 	item_condition?: ItemCondition,
 	/// Determines if the power should be activated if the '**actor**' entity used the specified hand(s). Accepts `"off_hand"`, `"main_hand"` or both
-	hands?: Array,
+	hands?: Hands,
 	/// If specified, this item stack will be given to the '**actor**' entity.
 	result_stack?: ItemStack,
 	/// Determines the result of the 'use' action.
@@ -693,10 +706,7 @@ dispatch origins:power["origins:action_on_hit", "apoli:action_on_hit"] to struct
 	bientity_condition?: BientityCondition,
 	/// If specified, the specified action will only be executed if this condition is fulfilled by the damage dealt by the '**actor**' entity.
 	damage_condition?: DamageCondition,
-	/// Interval of ticks this power needs to recharge before the power can be triggered again.
-	cooldown?: int,
-	/// Determines how the cooldown of this power is visualized on the HUD.
-	hud_render?: HudRender,
+    ...OptionalCooldown,
 }
 
 /// #	Action On Item Pickup
@@ -711,17 +721,6 @@ dispatch origins:power["origins:action_on_hit", "apoli:action_on_hit"] to struct
 /// !!!	note
 /// 
 /// 	In the context of this power type, the '**actor**' entity is the entity that may have thrown the item while the '**target**' entity is the entity that picked up the item.
-/// 
-/// 
-/// ###	Fields
-/// 
-/// Field | Type | Default | Description
-/// ------|------|---------|------------
-/// `bientity_action` | [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types) | *optional* | If specified, this bientity action will be executed on either or both the '**actor**' and '**target**' entities.
-/// `item_action` | [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types) | *optional* | If specified, this item action will be executed on the item that was picked up.
-/// `bientity_condition` | [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types) | *optional* | If specified, the actions will only be executed if this bientity condition is fulfilled by either or both the '**actor**' and '**target**' entities.
-/// `item_condition` | [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types) | *optional* | If specified, the actions will only be executed if this item condition is fulfilled by the item about to be picked up.
-/// `priority` | [Integer](https://origins.readthedocs.io/en/latest/types/data_types/integer) | `0` | Determines the execution priority of the powers that use this power type (in a low-to-high priority order.)
 /// 
 /// 
 /// ###	Examples
@@ -790,7 +789,18 @@ dispatch origins:power["origins:action_on_hit", "apoli:action_on_hit"] to struct
 /// ```
 /// 
 /// This example will notify all players that the entity that has the power has picked up an item thrown by another entity.
-dispatch origins:power["origins:action_on_item_pickup", "apoli:action_on_item_pickup"] to struct ActionOnItemPickup {}
+dispatch origins:power["origins:action_on_item_pickup", "apoli:action_on_item_pickup"] to struct ActionOnItemPickup {
+	/// If specified, this bientity action will be executed on either or both the '**actor**' and '**target**' entities.
+	bientity_action?: BientityAction,
+	/// If specified, this item action will be executed on the item that was picked up.
+	item_action?: ItemAction,
+	/// If specified, the actions will only be executed if this bientity condition is fulfilled by either or both the '**actor**' and '**target**' entities.
+	bientity_condition?: BientityCondition,
+	/// If specified, the actions will only be executed if this item condition is fulfilled by the item about to be picked up.
+	item_condition?: ItemCondition,
+	/// Determines the execution priority of the powers that use this power type (in a low-to-high priority order.)
+	priority?: int,
+}
 
 /// # Action On Item Use
 /// 
@@ -853,9 +863,22 @@ dispatch origins:power["origins:action_on_item_use", "apoli:action_on_item_use"]
 	/// If specified, the actions will only execute if this condition is fulfilled by the item _before use._
 	item_condition?: ItemCondition,
 	/// Defines when the action is executed, see below table for accepted values.
-	trigger?: string,
+	trigger?: Trigger,
 	/// Determines the execution priority of the power.
 	priority?: int,
+}
+
+enum(string) Trigger {
+	/// The action will execute when the entity finishes (as in, completes) using an item which has a use duration, such as eating food.
+	Finish = "finish",
+	/// The action will execute when the entity starts using an item which has a use duration.
+	Start = "start",
+	/// The action will execute when the entity stops using an item which has a use duration, before the maximum use duration has been reached. Compared to finish, this can be used to detect shooting a bow, for example.
+	Stop = "stop",
+	/// The action will be called every tick while the entity is using an item which has a use duration.
+	During = "during",
+	/// The action will not fire for items with a use duration, but will instead fire when an item is used which triggers its effect instantly, such as an ender pearl or splash potion.
+	Instant = "instant",
 }
 
 /// # Action On Land
@@ -978,8 +1001,8 @@ dispatch origins:power["origins:action_on_wake_up", "apoli:action_on_wake_up"] t
 /// 
 /// This example will set the entity on fire if the entity that has the power is on fire, essentially making the entity burn indefinitely unless the entity manages to extinguish the fire.
 dispatch origins:power["origins:action_over_time", "apoli:action_over_time"] to struct ActionOverTime {
-	/// Interval of ticks between subsequent executions of the specified actions. Must be a value of at least 1.
-	interval?: int,
+	/// Interval of ticks between subsequent executions of the specified actions.
+	interval?: int @ 1..,
 	/// The action to execute on the entity that has the power each interval.
 	entity_action?: EntityAction,
 	/// The action to execute on the first interval tick in which the condition became true.
@@ -1020,10 +1043,7 @@ dispatch origins:power["origins:action_when_damage_taken", "apoli:action_when_da
 	entity_action: EntityAction,
 	/// If specified, the action will only trigger when this condition holds for the specified type of damage.
 	damage_condition?: DamageCondition,
-	/// Interval of ticks this power needs to recharge before the power can be triggered again.
-	cooldown: int,
-	/// Determines how the cooldown of this power is visualized on the HUD.
-	hud_render?: HudRender,
+    ...OptionalCooldown,
 }
 
 /// # Action When Hit
@@ -1063,10 +1083,7 @@ dispatch origins:power["origins:action_when_hit", "apoli:action_when_hit"] to st
 	bientity_condition?: BientityCondition,
 	/// If specified, the specified action will only be executed if this condition is fulfilled by the damage dealt by the '**actor**' entity.
 	damage_condition?: DamageCondition,
-	/// Interval of ticks this power needs to recharge before the power can be triggered again.
-	cooldown?: int,
-	/// Determines how the cooldown of this power is visualized on the HUD.
-	hud_render?: HudRender,
+    ...OptionalCooldown,
 }
 
 /// # Attacker Action When Hit
@@ -1095,12 +1112,9 @@ dispatch origins:power["origins:action_when_hit", "apoli:action_when_hit"] to st
 dispatch origins:power["origins:attacker_action_when_hit", "apoli:attacker_action_when_hit"] to struct AttackerActionWhenHit {
 	/// The action to execute on the attacker.
 	entity_action: EntityAction,
-	/// Interval of ticks this power needs to recharge before the power can be triggered again.
-	cooldown?: int,
 	/// If set, the action will only trigger when this condition holds for the damage that was dealt by the attacker.
 	damage_condition?: DamageCondition,
-	/// If specified, determines how the cooldown of this power is visualized on the HUD.
-	hud_render?: HudRender,
+	...OptionalCooldown,
 }
 
 /// # Attribute
@@ -1139,7 +1153,7 @@ dispatch origins:power["origins:attribute", "apoli:attribute"] to struct Attribu
 	/// If specified, this modifier will be applied to its corresponding attribute.
 	modifier?: AttributedAttributeModifier,
 	/// If specified, these modifiers will be applied to their corresponding attributes.
-	modifiers?: Array,
+	modifiers?: [AttributedAttributeModifier],
 	/// When true, the player's health percentage will update to match their new maximum health.
 	update_health?: boolean,
 }
@@ -1170,12 +1184,29 @@ dispatch origins:power["origins:attribute", "apoli:attribute"] to struct Attribu
 /// 
 /// This example will transfer the value of the attribute modifier for the `minecraft:generic.movement_speed` attribute to the `modify_break_speed` (`io.github.apace100.apoli.power.ModifyBreakSpeedPower`) class, essentially giving the player mining speed boost if the player's movement speed is quite high.
 dispatch origins:power["origins:attribute_modify_transfer", "apoli:attribute_modify_transfer"] to struct AttributeModifyTransfer {
-	/// The ID of the class to transfer the value of an attribute modifier to. See [Value Modifying Power Classes](https://origins.readthedocs.io/en/latest/types/../misc/extras/value_modifying_power_classes) for possible values.
-	class: Identifier,
+	/// The ID of the class to transfer the value of an attribute modifier to. See [Value Modifying Power Classes](https://origins.readthedocs.io/en/latest//misc/extras/value_modifying_power_classes) for possible values.
+	class: ValueModifyingPowerClass,
 	/// The namespace and ID of the attribute to get the value from.
 	attribute: #[id="attribute"] string,
 	/// Determines the multiplier for the value.
 	multiplier?: float,
+}
+
+enum(string) ValueModifyingPowerClass {
+	ModifyAirSpeedPower = "modify_air_speed",
+	ModifyBreakSpeedPower = "modify_break_speed",
+	ModifyCraftingPower = "modify_crafting",
+	ModifyDamageDealtPower = "modify_damage_dealt",
+	ModifyDamageTakenPower = "modify_damage_taken",
+	ModifyExhaustionPower = "modify_exhaustion",
+	ModifyExperiencePower = "modify_xp_gain",
+	ModifyJumpPower = "modify_jump",
+	ModifyLavaSpeedPower = "modify_lava_speed",
+	ModifyProjectileDamagePower = "modify_projectile_damage",
+	ModifySlipperinessPower = "modify_slipperiness",
+	ModifyStatusEffectAmplifierPower = "modify_status_effect_amplifier",
+	ModifyStatusEffectDurationPower = "modify_status_effect_duration",
+	ModifySwimSpeedPower = "modify_swim_speed",
 }
 
 /// # Burn
@@ -1299,9 +1330,9 @@ dispatch origins:power["origins:conditioned_attribute", "apoli:conditioned_attri
 	/// If specified, this modifier will be applied to its corresponding attribute.
 	modifier?: AttributedAttributeModifier,
 	/// If specified, these modifiers will be applied to their corresponding attributes.
-	modifiers?: Array,
+	modifiers?: [AttributedAttributeModifier],
 	/// The frequency (in ticks) with which to check the condition. Lower values mean the condition changes are detected more quickly, but this comes at a potentially huge performance cost.
-	tick_rate?: int,
+	tick_rate?: int @ 1..,
 	/// Determines whether the health percentage will update to match the entity's new maximum health.
 	update_health?: boolean,
 }
@@ -1367,7 +1398,7 @@ dispatch origins:power["origins:conditioned_restrict_armor", "apoli:conditioned_
 	/// If specified, items which fulfills this condition cannot be equipped in the feet equipment slot.
 	feet?: ItemCondition,
 	/// The frequency (in ticks) with which to check the condition. Lower values mean the condition changes are detected more quickly, but this comes at a potentially huge performance cost.
-	tick_rate?: int,
+	tick_rate?: int @ 1..,
 }
 
 /// # Cooldown
@@ -1399,7 +1430,7 @@ dispatch origins:power["origins:conditioned_restrict_armor", "apoli:conditioned_
 /// This example will provide a cooldown that will last for 10 seconds, and display the 4th resource bar sprite from the default sprite sheet.
 dispatch origins:power["origins:cooldown", "apoli:cooldown"] to struct Cooldown {
 	/// Interval of ticks this power needs to recharge before the power can be triggered again.
-	cooldown: int,
+	cooldown: int @ 0..,
 	/// Determines how the cooldown of this power is visualized on the HUD.
 	hud_render?: HudRender,
 }
@@ -1468,9 +1499,9 @@ dispatch origins:power["origins:creative_flight", "apoli:creative_flight"] to st
 /// This example will deal damage to the entity if the entity is in water.
 dispatch origins:power["origins:damage_over_time", "apoli:damage_over_time"] to struct DamageOverTime {
 	/// Duration of ticks to wait between the damage.
-	interval?: int,
+	interval?: int @ 1..,
 	/// How many ticks the power has to be active in order to apply the first damage. If not set, this will be equal to `interval`.
-	onset_delay?: int,
+	onset_delay?: int @ 1..,
 	/// How much damage will be dealt each interval.
 	damage: float,
 	/// How much damage will be dealt each interval on Easy difficulty. If not set, this will be equal to `damage`.
@@ -1478,9 +1509,9 @@ dispatch origins:power["origins:damage_over_time", "apoli:damage_over_time"] to 
 	/// **DEPRICATED** Use `damage_type` instead. See [Damage Source (Data Type)](https://origins.readthedocs.io/en/latest/types/data_types/damage_source) for more details.
 	damage_source?: DamageSource,
 	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
-	damage_type?: Identifier,
+	damage_type?: #[id="damage_type"] string,
 	/// If set, the total amount of levels of this enchantment will be counted on the player's armor to increase the `onset_delay`.
-	protection_enchantment?: Identifier,
+	protection_enchantment?: #[id="enchantmnet"] string,
 	/// If `protection_enchantment` is set, this multiplier scales how effective it will be (1.0 = time the `onset_delay` is increased is the same as with Hydrophobia and Water Protection).
 	protection_effectiveness?: float,
 }
@@ -1573,11 +1604,11 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 	/// If specified, will only make the item edible and the specified actions will only be executed if this condition is fulfilled by the item.
 	item_condition?: ItemCondition,
 	/// The food component that the item grants upon eating it.
-	food_component: FoodComponent,
+	food_component: "FoodComponent",
 	...(
         struct {
             /// If specified, this item stack will be given to the player.
-            result_stac?: ItemStack
+            result_stack?: ItemStack
         } |
         struct {
             /// If specified, this item stack will be given to the player.
@@ -1587,7 +1618,7 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 	...(
         struct {
             /// Determines whether the animation effect for consuming the item should be "eating" (`"eat"`, displays particle effects based on the item) or "drinking" (`"drink"`, no particle effects.)
-            consume_animatio?: string
+            consume_animation?: string
         } |
         struct {
             /// Determines whether the animation effect for consuming the item should be "eating" (`"eat"`, displays particle effects based on the item) or "drinking" (`"drink"`, no particle effects.)
@@ -1597,17 +1628,17 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 	...(
         struct {
             /// If specified, the sound event with this namespace and ID will be played when the item is eaten.
-            consume_soun?: Identifier
+            consume_sound?: #[id="sound_event"] string
         } |
         struct {
             /// If specified, the sound event with this namespace and ID will be played when the item is eaten.
-            sound?: Identifier
+            sound?: #[id="sound_event"] string
         }
     ),
 	/// If specified, this modifier will be applied on the maximum time the item is being consumed (in ticks).
 	consuming_time_modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied on the the maximum time the item is being consumed (in ticks).
-	consuming_time_modifiers?: Array,
+	consuming_time_modifiers?: [AttributeModifier],
 	/// Determines the priority of which the power will apply its modification to the item. Must be higher than 0 if the item is already edible.
 	priority?: int,
 }
@@ -1636,9 +1667,9 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 /// This example will make the entity immune to the Weakness and Strength status effects.
 dispatch origins:power["origins:effect_immunity", "apoli:effect_immunity"] to struct EffectImmunity {
 	/// If specified, only the status effect with this namespace and ID can not be applied to the entity that has the power.
-	effect?: Identifier,
+	effect?: EffectID,
 	/// If specified, only the status effects with the specified namespace and IDs can not be applied to the entity that has the power.
-	effects?: Array,
+	effects?: [EffectID],
 	/// Determines whether to make the entity immune to the status effect(s) that aren't specified.
 	inverted?: boolean,
 }
@@ -1677,7 +1708,7 @@ dispatch origins:power["origins:elytra_flight", "apoli:elytra_flight"] to struct
 	/// Determines whether an Elytra should render on the player's back while this power is active.
 	render_elytra: boolean,
 	/// If specified, this will be the texture used by the Elytra granted by this power.
-	texture_location?: Identifier,
+	texture_location?: string,
 }
 
 /// # Entity Glow
@@ -1747,11 +1778,11 @@ dispatch origins:power["origins:entity_glow", "apoli:entity_glow"] to struct Ent
 	/// Determines whether glowing entities should use their team's color with their glow. If set to false, the entity will instead use the `red`, `green` and `blue` fields within this power type.
 	use_teams?: boolean,
 	/// Value by which the red component of the glow will be multiplied. Range: 0.0 - 1.0.
-	red?: float,
+	red?: float @ 0.0..1.0,
 	/// Value by which the green component of the glow will be multiplied. Range: 0.0 - 1.0.
-	green?: float,
+	green?: float @ 0.0..1.0,
 	/// Value by which the blue component of the glow will be multiplied. Range: 0.0 - 1.0.
-	blue?: float,
+	blue?: float @ 0.0..1.0,
 }
 
 /// # Entity Group
@@ -1782,8 +1813,8 @@ dispatch origins:power["origins:entity_glow", "apoli:entity_glow"] to struct Ent
 /// 
 /// This example will classify the entity that has the power as an arthropod, meaning that they will take more damage from the Bane of Arthropods enchantment.
 dispatch origins:power["origins:entity_group", "apoli:entity_group"] to struct EntityGroup {
-	/// The group to associate with the player. One of `default`, `undead`, `arthropod`, `illager`, or `aquatic`.
-	group: string,
+	/// The group to associate with the player.
+	group: ("default" | "undead" | "arthropod" | "illager" | "aquatic"),
 }
 
 /// #	Entity Set
@@ -1802,14 +1833,6 @@ dispatch origins:power["origins:entity_group", "apoli:entity_group"] to struct E
 /// !!!	note
 /// 
 /// 	Entities are not stored in the set physically, meaning that the entity will continue to exist as is. The UUID of the entity is stored in the power's data, allowing for the power type to access the entity for later use (unless the entity no longer exists).
-/// 
-/// 
-/// ###	Fields
-/// 
-/// Field | Type | Default | Description
-/// ------|------|---------|------------
-/// `action_on_add` | [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types) | *optional* | If specified, this bientity action will be executed on either or both the '**actor**' and the '**target**' upon the '**target**' being added to the set.
-/// `action_on_remove` | [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types) | *optional* | If specified, this bientity action will be executed on either or both the '**actor**' and the '**target**' upon the '**target**' being removed from the set.
 /// 
 /// 
 /// ###	Examples
@@ -1836,7 +1859,12 @@ dispatch origins:power["origins:entity_group", "apoli:entity_group"] to struct E
 /// ```
 /// 
 /// This example will deal 6 (3 hearts of) damage to entities that were removed from the set.
-dispatch origins:power["origins:entity_set", "apoli:entity_set"] to struct EntitySet {}
+dispatch origins:power["origins:entity_set", "apoli:entity_set"] to struct EntitySet {
+	/// If specified, this bientity action will be executed on either or both the '**actor**' and the '**target**' upon the '**target**' being added to the set.
+	action_on_add?: BientityAction,
+	/// If specified, this bientity action will be executed on either or both the '**actor**' and the '**target**' upon the '**target**' being removed from the set.
+	action_on_remove?: BientityAction,
+}
 
 /// # Exhaust
 /// 
@@ -1866,7 +1894,7 @@ dispatch origins:power["origins:entity_set", "apoli:entity_set"] to struct Entit
 /// This example will apply 4.0 exhaustion to the player if the player is touching water.
 dispatch origins:power["origins:exhaust", "apoli:exhaust"] to struct Exhaust {
 	/// Duration of ticks to wait between applying exhaustion.
-	interval?: int,
+	interval?: int @ 1..,
 	/// How much exhaustion will be applied each interval.
 	exhaustion: float,
 }
@@ -1951,26 +1979,23 @@ dispatch origins:power["origins:fire_immunity", "apoli:fire_immunity"] to struct
 /// 
 /// This example will let the player fire 4 snow balls disguised as slime balls consecutively, with an interval of 5 ticks upon pressing the right mouse button.
 dispatch origins:power["origins:fire_projectile", "apoli:fire_projectile"] to struct FireProjectile {
+	...OptionalCooldown,
 	/// The ID of the entity type that will be fired.
-	entity_type: Identifier,
-	/// Interval of ticks this power needs to recharge before the power can be triggered again.
-	cooldown?: int,
-	/// Determines how the cooldown of this power is visualized on the HUD.
-	hud_render?: HudRender,
-	/// The amount of projectiles to fire each use.
-	count?: int,
+	entity_type: #[id="entity_type"] string,
+	/// Number of projectiles to be fired.
+	count?: int @ 1..,
 	/// Determines the interval for firing multiple projectiles consecutively (in ticks). If set to 0, it will fire all the projectiles at the same tick.
-	interval?: int,
+	interval?: int @ 1..,
 	/// Determines how long the start of the firing process is delayed (in ticks).
-	start_delay?: int,
+	start_delay?: int @ 1..,
 	/// The speed applied to the fired projectile.
 	speed?: float,
 	/// How much each projectile fired is affected by random spread.
 	divergence?: float,
 	/// If set, the sound with this ID will be played when the power is used.
-	sound?: Identifier,
+	sound?: #[id="sound_event"] string,
 	/// NBT data of the entity.
-	tag?: NBT,
+	tag?: NBT<minecraft:entity[[entity_type]]>,
 	/// Which active key this power should respond to. If none is specified, this power will use the primary active power key (by default G).
 	key?: Key,
 	/// If specified, this entity action will be executed on the projectile or entity that will be launched.
@@ -2050,6 +2075,7 @@ dispatch origins:power["origins:freeze", "apoli:freeze"] to struct Freeze {}
 /// 
 /// This example will set the entity with the power on fire every time the `hit_ground` game event is emmited.
 dispatch origins:power["origins:game_event_listener", "apoli:game_event_listener"] to struct GameEventListener {
+	...OptionalCooldown,
 	/// Determines whether the power type should prioritize game events by distance (`"by_distance"`) or arbitrarily (`"unspecified"`).
 	trigger_order?: string,
 	/// Determines whether the power type should listen to game events emitted by entities.
@@ -2064,16 +2090,12 @@ dispatch origins:power["origins:game_event_listener", "apoli:game_event_listener
 	block_action?: BlockAction,
 	/// If specified, only executes the actions if the game event or vibration is emitted by a block that fulfills the block condition.
 	block_condition?: BlockCondition,
-	/// Interval of ticks this power needs to recharge before being able to listen to game events or vibrations again.
-	cooldown?: int,
-	/// Determines how the cooldown of this power is visualized on the HUD.
-	hud_render?: HudRender,
 	/// If specified, will make the power only listen for the game events with this namespace and IDs.
-	event?: Identifier,
+	event?: #[id="game_event"] string,
 	/// If specified, will make the power only listen for the game events with these namespace and IDs.
-	events?: Array,
+	events?: [#[id="game_event"] string],
 	/// If specified, will make the power only listen for the game events inside game event tag.
-	event_tag?: Identifier,
+	event_tag?: #[id(registry="game_event",tags="implicit")] string,
 	/// Determines whether the vibration should emit a particle effect.
 	show_particle?: boolean,
 }
@@ -2207,9 +2229,9 @@ dispatch origins:power["origins:ignore_water", "apoli:ignore_water"] to struct I
 /// This example will allow the player to open a 9-slots inventory of which only non-food items will drop on death.
 dispatch origins:power["origins:inventory", "apoli:inventory"] to struct Inventory {
 	/// The translation key or literal text to use as the display name for the inventory.
-	title?: string,
+	title?: #[translation_key] string,
 	/// Determines what type of container the inventory will be similar to.
-	container_type?: Container,
+	container_type?: ContainerType,
 	/// When this is set to true, the player will drop the items in the inventory on death (vanishing items will vanish!).
 	drop_on_death?: boolean,
 	/// If this is set, only item stacks matching this condition will be dropped on death.
@@ -2218,6 +2240,19 @@ dispatch origins:power["origins:inventory", "apoli:inventory"] to struct Invento
 	recoverable?: boolean,
 	/// Which active key this power should respond to.
 	key?: Key,
+}
+
+enum(string) ContainerType {
+	/// Determines that the inventory will be similar to the inventory of a single Chest block.
+	Chest = "chest",
+	/// Determines that the inventory will be similar to the inventory of a Hopper block.
+	Hopper = "hopper",
+	/// Determines that the inventory will be similar to the inventory of a Dropper block.
+	Dropper = "dropper",
+	/// Determines that the inventory will be similar to the inventory of a Dispenser block.
+	Dispenser = "dispenser",
+	/// Determines that the inventory will be similar to the inventory of a double Chest block.
+	Double_Chest = "double_chest",
 }
 
 /// # Invisibility
@@ -2382,7 +2417,7 @@ dispatch origins:power["origins:item_on_item", "apoli:item_on_item"] to struct I
 	/// If specified, this item will be given to the player.
 	result?: ItemStack,
 	/// Determines how many items based on the `on_item` stack will be given as a result for using an item on an item. Mostly to be used in conjunction with `result_item_action`.
-	result_from_on_stack?: int,
+	result_from_on_stack?: int @ 1..,
 	/// If specified, this action will be executed on the item that is used to right-click an item.
 	using_item_action?: ItemAction,
 	/// If specified, this action will be executed on the item that has been right-clicked.
@@ -2460,12 +2495,9 @@ dispatch origins:power["origins:keep_inventory", "apoli:keep_inventory"] to stru
 /// 
 /// This example will launch the player into the air, with a cooldown of 30 seconds.
 dispatch origins:power["origins:launch", "apoli:launch"] to struct Launch {
-	/// Interval of ticks this power needs to recharge before the power can be triggered again.
-	cooldown?: int,
+	...OptionalCooldown,
 	/// The speed applied to the player in the upwards direction.
 	speed: float,
-	/// Determines how the cooldown of this power is visualized on the HUD.
-	hud_render?: HudRender,
 	/// If specified, the sound event with this namespace and ID will be played when the power is triggered.
 	sound?: Identifier,
 	/// Which active key this power should respond to.
@@ -4773,12 +4805,9 @@ dispatch origins:power["origins:restrict_armor", "apoli:restrict_armor"] to stru
 /// 
 /// This example will restore 4 hearts of health of the entity that has the power if the entity manages to deal 5 or more hearts of damage.
 dispatch origins:power["origins:self_action_on_hit", "apoli:self_action_on_hit"] to struct SelfActionOnHit {
+	...OptionalCooldown,
 	/// The action to execute on the entity.
 	entity_action: EntityAction,
-	/// Interval of ticks this power needs to recharge before the power can be triggered again.
-	cooldown?: int,
-	/// If specified, determines how the cooldown of this power is visualized on the HUD.
-	hud_render?: HudRender,
 	/// If specified, the specified action will only be executed if the damage dealt is fulfills this condition.
 	damage_condition?: DamageCondition,
 	/// If specified, the specified actions will only be executed if the entity/entities that has been hit fulfills this condition.
@@ -4824,12 +4853,9 @@ dispatch origins:power["origins:self_action_on_hit", "apoli:self_action_on_hit"]
 /// 
 /// This example will restore 2 hearts to the entity that has the power if the entity has killed a mob with an Iron Sword.
 dispatch origins:power["origins:self_action_on_kill", "apoli:self_action_on_kill"] to struct SelfActionOnKill {
+	...OptionalCooldown,
 	/// The action to execute on the entity.
 	entity_action: EntityAction,
-	/// Interval of ticks this power needs to recharge before the power can be triggered again.
-	cooldown?: int,
-	/// If specified, determines how the cooldown of this power is visualized on the HUD.
-	hud_render?: HudRender,
 	/// If specified, the specified action will only execute if the damage dealt by the entity fulfills this condition.
 	damage_condition?: DamageCondition,
 	/// If specified, the specified action will only execute if the entity that has been killed fulfills this condition.
@@ -4867,12 +4893,9 @@ dispatch origins:power["origins:self_action_on_kill", "apoli:self_action_on_kill
 /// ```
 /// When a player with this power is damaged by 3 hearts or more damage in a single hit, they gain a Regeneration II effect for 10 seconds. This has a cooldown of one minute.
 dispatch origins:power["origins:self_action_when_hit", "apoli:self_action_when_hit"] to struct SelfActionWhenHit {
+	...OptionalCooldown,
 	/// The action to execute on the entity.
 	entity_action: EntityAction,
-	/// Interval of ticks this power needs to recharge before the power can be triggered again.
-	cooldown?: int,
-	/// If specified, determines how the cooldown of this power is visualized on the HUD.
-	hud_render?: HudRender,
 	/// If specified, the specified action will only execute if the damage taken fulfills this condition.
 	damage_condition?: DamageCondition,
 }
@@ -5286,12 +5309,9 @@ dispatch origins:power["origins:swimming", "apoli:swimming"] to struct Swimming 
 /// 
 /// This example will apply a Slowness IV status effect on the target entity that would last for 5 seconds for every 10 seconds of usage.
 dispatch origins:power["origins:target_action_on_hit", "apoli:target_action_on_hit"] to struct TargetActionOnHit {
+	...OptionalCooldown,
 	/// The action to execute on the entity that has been hit.
 	entity_action: EntityAction,
-	/// Interval of ticks this power needs to recharge before the power can be triggered again.
-	cooldown?: int,
-	/// If specified, determines how the cooldown of this power is visualized on the HUD.
-	hud_render?: HudRender,
 	/// If specified, the specified action will only execute if the damage dealt by the entity that has the power fulfills this condition.
 	damage_condition?: DamageCondition,
 	/// If specified, the specified action will only execute if the entity that has been hit fulfills this condition.

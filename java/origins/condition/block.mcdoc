@@ -3,6 +3,8 @@ use super::FluidCondition
 use ::java::origins::util::compare::Comparison
 use ::java::origins::util::Vector
 use ::java::origins::util::Shape
+use ::java::origins::util::NBT
+
 
 struct BlockCondition {
 	type: #[id] #[dispatcher_key="origins:block_condition"] string,
@@ -601,7 +603,7 @@ dispatch origins:block_condition["origins:movement_blocking", "apoli:movement_bl
 /// This example will check if Beacon block has a `Level` value of 1.
 dispatch origins:block_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
 	/// The NBT data to check for.
-	nbt: #[nbt_path=minecraft:block[%fallback]] string,
+	nbt: NBT<minecraft:block[%fallback]>,
 }
 
 /// # Offset

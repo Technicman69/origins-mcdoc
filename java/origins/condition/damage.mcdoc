@@ -277,13 +277,6 @@ dispatch origins:damage_condition["origins:projectile", "apoli:projectile"] to s
 /// Type ID: `origins:type`
 /// 
 /// 
-/// ###	Fields
-/// 
-/// Field | Type | Default | Description
-/// ------|------|---------|------------
-/// `damage_type` | [Identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) | | The ID of the damage type to compare the damage source to.
-/// 
-/// 
 /// ###	Examples
 /// 
 /// ```json
@@ -294,7 +287,10 @@ dispatch origins:damage_condition["origins:projectile", "apoli:projectile"] to s
 /// ```
 /// 
 /// This example will check if the damage source is of the `minecraft:magic` damage type.
-dispatch origins:damage_condition["origins:type", "apoli:type"] to struct Type {}
+dispatch origins:damage_condition["origins:type", "apoli:type"] to struct Type {
+	/// The ID of the damage type to compare the damage source to.
+	damage_type: #[id="damage_type"] string,
+}
 
 /// #   Unblockable
 /// 

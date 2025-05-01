@@ -1,4 +1,7 @@
 use ::java::origins::util::compare::Comparison
+use ::java::origins::util::NBT
+
+use ::java::util::slot::EquipmentSlot
 
 struct ItemCondition {
 	type: #[id] #[dispatcher_key="origins:item_condition"] string,
@@ -354,10 +357,22 @@ dispatch origins:item_condition["origins:has_power", "apoli:has_power"] to struc
 /// ```
 /// 
 /// This example will check if the item is included in the `#minecraft:planks` (`data/minecraft/tags/items/planks.json`) item tag or if the item is a `minecraft:oak_log` item.
-dispatch origins:item_condition["origins:ingredient", "apoli:ingredient"] to struct Ingredient {
+dispatch origins:item_condition["origins:ingredient", "apoli:ingredient"] to struct IngredientCondition {
 	/// The ingredient this item must match to pass the check.
-	ingredient: Ingredient,
+	ingredient: (
+		Ingredient |
+		[Ingredient]
+	),
 }
+
+type Ingredient = (
+	struct {
+		item: #[id=item] string,
+	} |
+	struct {
+		tag: #[id(registry="item",tags="implicit")] string,
+	} |
+)
 
 /// #   Is Damageable
 /// 
@@ -407,7 +422,7 @@ dispatch origins:item_condition["origins:is_damageable", "apoli:is_damageable"] 
 /// This example will check if the item can be equipped in the chest equipment slot.
 dispatch origins:item_condition["origins:is_equippable", "apoli:is_equippable", "origins:equippable", "apoli:equippable"] to struct IsEquippable {
 	/// If specified, checks if the item is equippable in the specified equipment slot. Accepts `"head"`, `"chest"`, `"legs"`, `"feet"`, or `"offhand"`.
-	quipment_slo?: string,
+	equipment_slot?: EquipmentSlot,
 }
 
 /// # Meat
@@ -451,7 +466,7 @@ dispatch origins:item_condition["origins:meat", "apoli:meat"] to struct Meat {}
 /// This example will check if the item stack has the `exampleCustomTag: 1b` NBT.
 dispatch origins:item_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
 	/// The NBT data to check for.
-	nbt: #[nbt_path=minecraft:item[%fallback]] string,
+	nbt: NBT<minecraft:item[%fallback]>,
 }
 
 /// #   Power Count

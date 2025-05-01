@@ -1,3 +1,7 @@
+use super::EntityAction
+use ::java::origins::util::NBT
+
+
 struct ItemAction {
 	type: #[id] #[dispatcher_key="origins:item_action"] string,
 	...origins:item_action[[type]],
@@ -65,14 +69,6 @@ dispatch origins:item_action["origins:damage", "apoli:damage"] to struct Damage 
 /// Aliases: `origins:holder`
 /// 
 /// 
-/// ###	Fields
-/// 
-/// Field | Type | Default | Description
-/// ------|------|---------|------------
-/// `action` | [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) | *optional* | The entity action to execute on the holder of the item stack.
-/// `entity_action` | [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) | *optional* | The same as the `action` field, but with a different name.
-/// 
-/// 
 /// ###	Examples
 /// 
 /// ```json
@@ -86,7 +82,12 @@ dispatch origins:item_action["origins:damage", "apoli:damage"] to struct Damage 
 /// ```
 /// 
 /// This example will recover 2 hearts (4 health points) of the holder of the item stack.
-dispatch origins:item_action["origins:holder_action", "apoli:holder_action", "origins:holder", "apoli:holder"] to struct HolderAction {}
+dispatch origins:item_action["origins:holder_action", "apoli:holder_action", "origins:holder", "apoli:holder"] to struct HolderAction {
+	/// The entity action to execute on the holder of the item stack.
+	action?: EntityAction,
+	/// The same as the `action` field, but with a different name.
+	entity_action?: EntityAction,
+}
 
 /// #   Merge NBT
 /// 
@@ -109,7 +110,7 @@ dispatch origins:item_action["origins:holder_action", "apoli:holder_action", "or
 /// This example will merge the `{custom_stuff: 1b}` NBT to the item's NBT.
 dispatch origins:item_action["origins:merge_nbt", "apoli:merge_nbt"] to struct MergeNbt {
 	/// The NBT to merge to the item's NBT.
-	nbt: #[nbt_path=minecraft:item[%fallback]] string,
+	nbt: NBT<minecraft:item[%fallback]>,
 }
 
 /// # Modify
