@@ -251,7 +251,7 @@ dispatch origins:bientity_condition["origins:invert", "apoli:invert"] to struct 
 /// This example will check whether the target entity is either owned by the actor entity or if the target entity is within the `example:special_pets` (`data/example/powers/special_pets.json`) power.
 dispatch origins:bientity_condition["origins:in_set", "apoli:in_set"] to struct InSet {
 	/// The ID of the power to check whether the target entity is in.
-	set: (#[id="origins:power"] string | string)
+	set: #[id="origins:power"] string
 }
 
 /// # Owner
@@ -311,13 +311,18 @@ dispatch origins:bientity_condition["origins:relative_rotation", "apoli:relative
 	/// The axes to get the angle values to calculate, and compare to.
 	axes?: Axes,
 	/// Determines the initial point of the rotation for the actor. Accepts `"head"` or `"body"`.
-	actor_rotation?: string,
+	actor_rotation?: PointOfRotation,
 	/// Determines the initial point of the rotation for the target. Accepts `"head"` or `"body"`.
-	target_rotation?: string,
+	target_rotation?: PointOfRotation,
 	/// Determines how the calculated angle value should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the calculated angle value will be compared to.
 	compare_to: float,
+}
+
+enum(string) PointOfRotation {
+	Head = "head",
+	Body = "body",
 }
 
 /// # Riding

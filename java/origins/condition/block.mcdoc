@@ -131,7 +131,7 @@ dispatch origins:block_condition["origins:blast_resistance", "apoli:blast_resist
 /// This example will check if the block is either a Diamond Block or an Emerald Block.
 dispatch origins:block_condition["origins:block", "apoli:block"] to struct Block {
 	/// The namespace and ID of the block that this block needs to be to pass the check.
-	block: #[id=block] string,
+	block: #[id="block"] string,
 }
 
 /// #   Block Entity
@@ -197,7 +197,7 @@ dispatch origins:block_condition["origins:block_entity", "apoli:block_entity"] t
 /// This example will check if the specified block has the `age` Block State property.
 dispatch origins:block_condition["origins:block_state", "apoli:block_state"] to struct BlockState {
 	/// The name of the property that will be checked. Examples are `facing` or `age`. See: [Minecraft Wiki: Block States (List of block states)](https://minecraft.wiki/w/Block_states#List_of_block_states)
-	property: string,
+	property: mcdoc:block_state_keys[%fallback],
 	/// If specified and if the property uses an integer, determines how the integer value of the specified property should be compared to the specified value. <span style="color: goldenrod;"><b>Only used if the specified property has an [integer](https://origins.readthedocs.io/en/latest/types/data_types/integer) value.</b></span>
 	comparison?: Comparison,
 	/// If specified, the itneger at which the integer value of the specified property will be compared to. <span style="color: goldenrod;"><b>Only used if the specified property has an [integer](https://origins.readthedocs.io/en/latest/types/data_types/integer) value.</b></span>

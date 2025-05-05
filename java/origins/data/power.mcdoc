@@ -1,16 +1,23 @@
 use ::java::util::text::Text
 
+use ::java::origins::util::Axes
+use ::java::origins::util::FeatureRenderer
+use ::java::origins::util::Vector
+use ::java::origins::util::ActionResult
+use ::java::origins::util::NBT
 use ::java::origins::data::badge::Badge
+use ::java::origins::data::badge::CraftingRecipe
+use ::java::origins::util::effect::EffectID
+use ::java::origins::util::effect::StatusEffectInstance
 use ::java::origins::util::key::Key
 use ::java::origins::util::sprite::ResourceBarFile
 use ::java::origins::util::item::ItemStack
+use ::java::origins::util::item::PositionedItemStack
 use ::java::origins::util::DamageSource
 use ::java::origins::util::attribute::AttributeModifier
 use ::java::origins::util::attribute::AttributedAttributeModifier
-use ::java::origins::util::Axes
-use ::java::origins::util::ActionResult
-use ::java::origins::util::effect::EffectID
-use ::java::origins::util::NBT
+use ::java::origins::util::inventory::PositionedItemSlot
+use ::java::origins::util::particle::ParticleEffect
 
 use ::java::origins::action::BientityAction
 use ::java::origins::action::BlockAction
@@ -50,12 +57,15 @@ struct PowerBase {
     description?: Text,
     /// If set to true, this power will not be displayed in the power list of the origin.
     hidden?: boolean,
-    /// If set, this power will only be active when the player with this power fulfills the condition.
-    condition?: EntityCondition,
     /// Specifies when this power is loaded. Higher numbers mean it's loaded later, which means it will override those with lower loading priorities which share the same ID.
     loading_priority?: int,
     /// If set, it will display icon(s) after the name of the power.
     badges?: [Badge],
+}
+
+struct Conditioned {
+    /// If set, this power will only be active when the player with this power fulfills the condition.
+    condition?: EntityCondition,
 }
 
 dispatch minecraft:resource["origins:power"] to struct Power {
@@ -169,6 +179,7 @@ dispatch origins:power["origins:multiple", "apoli:multiple"] to struct Multiple 
 /// This example will allow the player that has the power to essentially consume a Sugar item if the player is holding a Sugar item, which would then apply a Speed II status effect that would last for 5 seconds upon pressing the `key.use` keybind.
 /// (The example is bound to the `key.use` keybind, as seen inside the [`key`](https://origins.readthedocs.io/en/latest/types/data_types/key) object field.)
 dispatch origins:power["origins:active_self", "apoli:active_self"] to struct ActiveSelf {
+	...Conditioned,
     ...OptionalCooldown,
     /// The action to execute on the player.
     entity_action: EntityAction,
@@ -210,6 +221,7 @@ dispatch origins:power["origins:active_self", "apoli:active_self"] to struct Act
 /// 
 /// This example will grant the players the ability to mount the target entity that has the power upon "using" (right-clicking) the said entity, unless the entity that has the power already has a passenger.
 dispatch origins:power["origins:action_on_being_used", "apoli:action_on_being_used"] to struct ActionOnBeingUsed {
+	...Conditioned,
 	/// If specified, this action will be executed on either or both the '**actor**' and '**target**' entities.
 	bientity_action?: BientityAction,
 	/// If specified, this action will be executed on the item used by the '**actor**' entity for right-clicking the '**target**' entity.
@@ -273,6 +285,7 @@ type Hands = (
 /// 
 /// This example will deal 1 heart of `onFire` damage to the player, and place a Lava fluid at where the Magma Block previously was if the player were to mine a Magma Block.
 dispatch origins:power["origins:action_on_block_break", "apoli:action_on_block_break"] to struct ActionOnBlockBreak {
+	...Conditioned,
 	/// If specified, this action will be executed on the player when a block is broken.
 	entity_action?: EntityAction,
 	/// If specified, this action will be executed on the block that is broken.
@@ -362,6 +375,7 @@ dispatch origins:power["origins:action_on_block_break", "apoli:action_on_block_b
 /// ```
 /// This example will make Netherrack blocks placed by the player will absorb Lava fluid with a 4 radius star-shaped area, and replace the placed Netherrack with a Magma block.
 dispatch origins:power["origins:action_on_block_place", "apoli:action_on_block_place"] to struct ActionOnBlockPlace {
+	...Conditioned,
 	/// If specified, this entity action will be executed on the player upon placing a block.
 	entity_action?: EntityAction,
 	/// If specified, this item action will be executed on the item the player has used to place a block.
@@ -431,6 +445,7 @@ enum(string) Direction {
 /// 
 /// This example will replace any iron blocks with gold blocks if you right click the top or bottom of the block while sprinting.
 dispatch origins:power["origins:action_on_block_use", "apoli:action_on_block_use"] to struct ActionOnBlockUse {
+	...Conditioned,
 	/// If specified, this entity action type will be executed if all conditions are met.
 	entity_action?: EntityAction,
 	/// If specified, the used block will run this action if all conditions are met.
@@ -504,6 +519,7 @@ dispatch origins:power["origins:action_on_block_use", "apoli:action_on_block_use
 /// This example will make players automatically join the team called "TheNetherBoys" upon gaining the power, and will make the players also leave automatically if they ever change their origin with another one that doesn't have the power.
 /// (The "TheNetherBoys" team has to exist beforehand for this power to work!)
 dispatch origins:power["origins:action_on_callback", "apoli:action_on_callback"] to struct ActionOnCallback {
+	...Conditioned,
 	/// If specified, this action will be executed on the player after the player chooses an origin on all available origin layers.
 	entity_action_chosen?: EntityAction,
 	/// Determines whether the action in `entity_action_chosen` should be executed if the player also used an Orb of Origin item for choosing an origin.
@@ -557,6 +573,7 @@ dispatch origins:power["origins:action_on_callback", "apoli:action_on_callback"]
 /// 
 /// This example will make the entity that died explode.
 dispatch origins:power["origins:action_on_death", "apoli:action_on_death"] to struct ActionOnDeath {
+	...Conditioned,
 	/// The action to be executed on either or both the '**actor**' and '**target**' entities.
 	bientity_action: BientityAction,
 	/// If specified, the specified action will only be executed if this condition is fulfilled by either or both '**actor**' and '**target**' entities.
@@ -653,6 +670,7 @@ dispatch origins:power["origins:action_on_death", "apoli:action_on_death"] to st
 /// 
 /// This example will let the player ride any entity they "use" (right-click), with similar rules as to riding a Horse or a Pig.
 dispatch origins:power["origins:action_on_entity_use", "apoli:action_on_entity_use"] to struct ActionOnEntityUse {
+	...Conditioned,
 	/// If specified, this action will be executed on either or both the '**actor**' and '**target**' entities.
 	bientity_action?: BientityAction,
 	/// If specified, this action will be executed on the item used by the '**actor**' entity for right-clicking the '**target**' entity.
@@ -700,6 +718,7 @@ dispatch origins:power["origins:action_on_entity_use", "apoli:action_on_entity_u
 /// 
 /// This example will add positive-Z axis velocity to the entity that's been hit by the entity that has the power, essentially granting the entity with this power extra knockback.
 dispatch origins:power["origins:action_on_hit", "apoli:action_on_hit"] to struct ActionOnHit {
+	...Conditioned,
 	/// The action to be executed on either or both the '**actor**' or '**target**' entities.
 	bientity_action: BientityAction,
 	/// If specified, the specified action will only be executed if this condition is fulfilled by either or both '**actor**' and '**target**' entities.
@@ -790,6 +809,7 @@ dispatch origins:power["origins:action_on_hit", "apoli:action_on_hit"] to struct
 /// 
 /// This example will notify all players that the entity that has the power has picked up an item thrown by another entity.
 dispatch origins:power["origins:action_on_item_pickup", "apoli:action_on_item_pickup"] to struct ActionOnItemPickup {
+	...Conditioned,
 	/// If specified, this bientity action will be executed on either or both the '**actor**' and '**target**' entities.
 	bientity_action?: BientityAction,
 	/// If specified, this item action will be executed on the item that was picked up.
@@ -856,6 +876,7 @@ dispatch origins:power["origins:action_on_item_pickup", "apoli:action_on_item_pi
 /// 
 /// This example will give the player 20 seconds of invisibility whenever they throw an ender pearl.
 dispatch origins:power["origins:action_on_item_use", "apoli:action_on_item_use"] to struct ActionOnItemUse {
+	...Conditioned,
 	/// If specified, this action will be executed on the player after they use an item.
 	entity_action?: EntityAction,
 	/// If specified, this action will be executed on the _remaining_ item.
@@ -909,6 +930,7 @@ enum(string) Trigger {
 /// 
 /// This example will execute an [Execute Command (Entity Action Type)](https://origins.readthedocs.io/en/latest/types/entity_action_types/execute_command) that will then execute a `/fill` command that will replace a 3x3 area of Grass Blocks with Air underneath the entity's feet if the entity in question has been falling for 4 or more blocks.
 dispatch origins:power["origins:action_on_land", "apoli:action_on_land"] to struct ActionOnLand {
+	...Conditioned,
 	/// The action to execute on the player.
 	entity_action: EntityAction,
 }
@@ -966,6 +988,7 @@ dispatch origins:power["origins:action_on_land", "apoli:action_on_land"] to stru
 /// 
 /// This example will apply a Regeneration II and Hunger III status effect that both lasts for 5 seconds, and execute a `/title` command that will display a "`You feel rejuvenated but hungry...`" message in the actionbar if the player has woken up from sleeping in a Red Bed.
 dispatch origins:power["origins:action_on_wake_up", "apoli:action_on_wake_up"] to struct ActionOnWakeUp {
+	...Conditioned,
 	/// If specified, this action will be executed on the player when they wake up.
 	entity_action?: EntityAction,
 	/// If specified, this action will be executed on the bed block.
@@ -1001,6 +1024,7 @@ dispatch origins:power["origins:action_on_wake_up", "apoli:action_on_wake_up"] t
 /// 
 /// This example will set the entity on fire if the entity that has the power is on fire, essentially making the entity burn indefinitely unless the entity manages to extinguish the fire.
 dispatch origins:power["origins:action_over_time", "apoli:action_over_time"] to struct ActionOverTime {
+	...Conditioned,
 	/// Interval of ticks between subsequent executions of the specified actions.
 	interval?: int @ 1..,
 	/// The action to execute on the entity that has the power each interval.
@@ -1039,6 +1063,7 @@ dispatch origins:power["origins:action_over_time", "apoli:action_over_time"] to 
 /// 
 /// This example will execute an [Execute Command (Entity Action Type)](https://origins.readthedocs.io/en/latest/types/entity_action_types/execute_command) that will execute a `/say` command that will display a "`[ENTITYNAME] ow! i'm burning!`" in chat if the entity has taken fire-related damage type.
 dispatch origins:power["origins:action_when_damage_taken", "apoli:action_when_damage_taken"] to struct ActionWhenDamageTaken {
+	...Conditioned,
 	/// The action to be executed upon taking damage.
 	entity_action: EntityAction,
 	/// If specified, the action will only trigger when this condition holds for the specified type of damage.
@@ -1077,6 +1102,7 @@ dispatch origins:power["origins:action_when_damage_taken", "apoli:action_when_da
 /// 
 /// This example will deal 1 heart of damage to any entities that attacks the entity that has the power, quite similar to having an armor item that has the Thorns enchantment. Bear in mind that the '**actor**' is the entity that dealt the hit, so an invert is needed.
 dispatch origins:power["origins:action_when_hit", "apoli:action_when_hit"] to struct ActionWhenHit {
+	...Conditioned,
 	/// The action to be executed on either or both the '**actor**' and '**target**' entities.
 	bientity_action: BientityAction,
 	/// If specified, the specified action will only be executed if this condition is fulfilled by either or both '**actor**' and '**target**' entities.
@@ -1110,6 +1136,7 @@ dispatch origins:power["origins:action_when_hit", "apoli:action_when_hit"] to st
 /// 
 /// This example will add positive-Y axis velocity to the attacker of the entity that has the power, essentially launching them up into the air.
 dispatch origins:power["origins:attacker_action_when_hit", "apoli:attacker_action_when_hit"] to struct AttackerActionWhenHit {
+	...Conditioned,
 	/// The action to execute on the attacker.
 	entity_action: EntityAction,
 	/// If set, the action will only trigger when this condition holds for the damage that was dealt by the attacker.
@@ -1184,6 +1211,7 @@ dispatch origins:power["origins:attribute", "apoli:attribute"] to struct Attribu
 /// 
 /// This example will transfer the value of the attribute modifier for the `minecraft:generic.movement_speed` attribute to the `modify_break_speed` (`io.github.apace100.apoli.power.ModifyBreakSpeedPower`) class, essentially giving the player mining speed boost if the player's movement speed is quite high.
 dispatch origins:power["origins:attribute_modify_transfer", "apoli:attribute_modify_transfer"] to struct AttributeModifyTransfer {
+	...Conditioned,
 	/// The ID of the class to transfer the value of an attribute modifier to. See [Value Modifying Power Classes](https://origins.readthedocs.io/en/latest//misc/extras/value_modifying_power_classes) for possible values.
 	class: ValueModifyingPowerClass,
 	/// The namespace and ID of the attribute to get the value from.
@@ -1241,6 +1269,7 @@ enum(string) ValueModifyingPowerClass {
 /// 
 /// This example will set the entity on fire for 1 second, within an interval of 20 ticks if the said entity is not wearing a Leather Helmet.
 dispatch origins:power["origins:burn", "apoli:burn"] to struct Burn {
+	...Conditioned,
 	/// Interval between being set on fire, in ticks.
 	interval: int,
 	/// Determines how long the fire should last on the entity each time it is set, in seconds.
@@ -1284,6 +1313,7 @@ dispatch origins:power["origins:burn", "apoli:burn"] to struct Burn {
 /// 
 /// This example will allow the entity to climb in cobwebs and hold onto them by sneaking.
 dispatch origins:power["origins:climbing", "apoli:climbing"] to struct Climbing {
+	...Conditioned,
 	/// If `true`, the entity that has the power is able to hold onto blocks.
 	allow_holding?: boolean,
 	/// If specified and `allow_holding` is `true`, the entity that has the power will be able to 'hold onto the block' (not affected by gravity) if this condition is fulfilled, otherwise, defaults to if the entity is sneaking.
@@ -1327,6 +1357,7 @@ dispatch origins:power["origins:climbing", "apoli:climbing"] to struct Climbing 
 /// 
 /// This example power will add 0.4 to the entity's `minecraft:generic.movement_speed` attribute if the entity is sprinting.
 dispatch origins:power["origins:conditioned_attribute", "apoli:conditioned_attribute"] to struct ConditionedAttribute {
+	...Conditioned,
 	/// If specified, this modifier will be applied to its corresponding attribute.
 	modifier?: AttributedAttributeModifier,
 	/// If specified, these modifiers will be applied to their corresponding attributes.
@@ -1389,6 +1420,7 @@ dispatch origins:power["origins:conditioned_attribute", "apoli:conditioned_attri
 /// 
 /// This example will prevent the entity from equipping any armor which is more powerful than chainmail, unless the entity is in dark places (light level below 7).
 dispatch origins:power["origins:conditioned_restrict_armor", "apoli:conditioned_restrict_armor"] to struct ConditionedRestrictArmor {
+	...Conditioned,
 	/// If specified, items which fulfills this condition cannot be equipped in the head equipment slot.
 	head?: ItemCondition,
 	/// If specified, items which fulfills this condition cannot be equipped in the chest equipment slot.
@@ -1429,6 +1461,7 @@ dispatch origins:power["origins:conditioned_restrict_armor", "apoli:conditioned_
 /// 
 /// This example will provide a cooldown that will last for 10 seconds, and display the 4th resource bar sprite from the default sprite sheet.
 dispatch origins:power["origins:cooldown", "apoli:cooldown"] to struct Cooldown {
+	...Conditioned,
 	/// Interval of ticks this power needs to recharge before the power can be triggered again.
 	cooldown: int @ 0..,
 	/// Determines how the cooldown of this power is visualized on the HUD.
@@ -1451,7 +1484,9 @@ dispatch origins:power["origins:cooldown", "apoli:cooldown"] to struct Cooldown 
 ///     "type": "origins:creative_flight"
 /// }
 /// ```
-dispatch origins:power["origins:creative_flight", "apoli:creative_flight"] to struct CreativeFlight {}
+dispatch origins:power["origins:creative_flight", "apoli:creative_flight"] to struct CreativeFlight {
+	...Conditioned,
+}
 
 /// # Damage Over Time
 /// 
@@ -1498,6 +1533,7 @@ dispatch origins:power["origins:creative_flight", "apoli:creative_flight"] to st
 /// 
 /// This example will deal damage to the entity if the entity is in water.
 dispatch origins:power["origins:damage_over_time", "apoli:damage_over_time"] to struct DamageOverTime {
+	...Conditioned,
 	/// Duration of ticks to wait between the damage.
 	interval?: int @ 1..,
 	/// How many ticks the power has to be active in order to apply the first damage. If not set, this will be equal to `interval`.
@@ -1532,7 +1568,9 @@ dispatch origins:power["origins:damage_over_time", "apoli:damage_over_time"] to 
 ///     "type": "origins:disable_regen"
 /// }
 /// ```
-dispatch origins:power["origins:disable_regen", "apoli:disable_regen"] to struct DisableRegen {}
+dispatch origins:power["origins:disable_regen", "apoli:disable_regen"] to struct DisableRegen {
+	...Conditioned,
+}
 
 /// # Edible Item
 /// 
@@ -1595,6 +1633,7 @@ dispatch origins:power["origins:disable_regen", "apoli:disable_regen"] to struct
 /// 
 /// This example will replace the food component of Cookies, making it take 3 times longer to eat while also giving 4 hunger shanks and 3.2 saturation (4.0 * 0.4 * 2).
 dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct EdibleItem {
+	...Conditioned,
 	/// If specified, this action will be executed on the player upon consuming an item.
 	entity_action?: EntityAction,
 	/// If specified, this action will be executed on the item consumed by the player.
@@ -1666,6 +1705,7 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 /// 
 /// This example will make the entity immune to the Weakness and Strength status effects.
 dispatch origins:power["origins:effect_immunity", "apoli:effect_immunity"] to struct EffectImmunity {
+	...Conditioned,
 	/// If specified, only the status effect with this namespace and ID can not be applied to the entity that has the power.
 	effect?: EffectID,
 	/// If specified, only the status effects with the specified namespace and IDs can not be applied to the entity that has the power.
@@ -1705,6 +1745,7 @@ dispatch origins:power["origins:effect_immunity", "apoli:effect_immunity"] to st
 /// 
 /// This example will grant the player the ability to fall-fly, with the Elytra being rendered as the default texture.
 dispatch origins:power["origins:elytra_flight", "apoli:elytra_flight"] to struct ElytraFlight {
+	...Conditioned,
 	/// Determines whether an Elytra should render on the player's back while this power is active.
 	render_elytra: boolean,
 	/// If specified, this will be the texture used by the Elytra granted by this power.
@@ -1771,6 +1812,7 @@ dispatch origins:power["origins:elytra_flight", "apoli:elytra_flight"] to struct
 /// 
 /// This example will make all entities that the player is able to see glow with a green glow.
 dispatch origins:power["origins:entity_glow", "apoli:entity_glow"] to struct EntityGlow {
+	...Conditioned,
 	/// If specified, only entities which fulfill this condition will glow for the player that has the power.
 	entity_condition?: EntityCondition,
 	/// If specified, the power will only be active if this condition is fulfilled by either or both the 'actor' (the player that has the power) and 'target' (the entity that would glow) entities.
@@ -1813,6 +1855,7 @@ dispatch origins:power["origins:entity_glow", "apoli:entity_glow"] to struct Ent
 /// 
 /// This example will classify the entity that has the power as an arthropod, meaning that they will take more damage from the Bane of Arthropods enchantment.
 dispatch origins:power["origins:entity_group", "apoli:entity_group"] to struct EntityGroup {
+	...Conditioned,
 	/// The group to associate with the player.
 	group: ("default" | "undead" | "arthropod" | "illager" | "aquatic"),
 }
@@ -1860,6 +1903,7 @@ dispatch origins:power["origins:entity_group", "apoli:entity_group"] to struct E
 /// 
 /// This example will deal 6 (3 hearts of) damage to entities that were removed from the set.
 dispatch origins:power["origins:entity_set", "apoli:entity_set"] to struct EntitySet {
+	...Conditioned,
 	/// If specified, this bientity action will be executed on either or both the '**actor**' and the '**target**' upon the '**target**' being added to the set.
 	action_on_add?: BientityAction,
 	/// If specified, this bientity action will be executed on either or both the '**actor**' and the '**target**' upon the '**target**' being removed from the set.
@@ -1893,6 +1937,7 @@ dispatch origins:power["origins:entity_set", "apoli:entity_set"] to struct Entit
 /// 
 /// This example will apply 4.0 exhaustion to the player if the player is touching water.
 dispatch origins:power["origins:exhaust", "apoli:exhaust"] to struct Exhaust {
+	...Conditioned,
 	/// Duration of ticks to wait between applying exhaustion.
 	interval?: int @ 1..,
 	/// How much exhaustion will be applied each interval.
@@ -1927,7 +1972,9 @@ dispatch origins:power["origins:exhaust", "apoli:exhaust"] to struct Exhaust {
 /// ```
 /// 
 /// This example will grant immunity to fire if the entity is holding a Magma Block in their mainhand.
-dispatch origins:power["origins:fire_immunity", "apoli:fire_immunity"] to struct FireImmunity {}
+dispatch origins:power["origins:fire_immunity", "apoli:fire_immunity"] to struct FireImmunity {
+	...Conditioned,
+}
 
 /// # Fire Projectile
 /// 
@@ -1979,6 +2026,7 @@ dispatch origins:power["origins:fire_immunity", "apoli:fire_immunity"] to struct
 /// 
 /// This example will let the player fire 4 snow balls disguised as slime balls consecutively, with an interval of 5 ticks upon pressing the right mouse button.
 dispatch origins:power["origins:fire_projectile", "apoli:fire_projectile"] to struct FireProjectile {
+	...Conditioned,
 	...OptionalCooldown,
 	/// The ID of the entity type that will be fired.
 	entity_type: #[id="entity_type"] string,
@@ -2038,7 +2086,9 @@ dispatch origins:power["origins:fire_projectile", "apoli:fire_projectile"] to st
 /// ```
 /// 
 /// This example will freeze the entity that has the power if the entity is in a biome that snows.
-dispatch origins:power["origins:freeze", "apoli:freeze"] to struct Freeze {}
+dispatch origins:power["origins:freeze", "apoli:freeze"] to struct Freeze {
+	...Conditioned,
+}
 
 /// # Game Event Listener
 /// 
@@ -2075,6 +2125,7 @@ dispatch origins:power["origins:freeze", "apoli:freeze"] to struct Freeze {}
 /// 
 /// This example will set the entity with the power on fire every time the `hit_ground` game event is emmited.
 dispatch origins:power["origins:game_event_listener", "apoli:game_event_listener"] to struct GameEventListener {
+	...Conditioned,
 	...OptionalCooldown,
 	/// Determines whether the power type should prioritize game events by distance (`"by_distance"`) or arbitrarily (`"unspecified"`).
 	trigger_order?: string,
@@ -2168,7 +2219,9 @@ dispatch origins:power["origins:game_event_listener", "apoli:game_event_listener
 /// ```
 /// 
 /// A combination of powers which allows the player to walk on air (neither jump nor fall) for a short duration when they use their primary ability key.
-dispatch origins:power["origins:grounded", "apoli:grounded"] to struct Grounded {}
+dispatch origins:power["origins:grounded", "apoli:grounded"] to struct Grounded {
+	...Conditioned,
+}
 
 /// # Ignore Water
 /// 
@@ -2188,7 +2241,9 @@ dispatch origins:power["origins:grounded", "apoli:grounded"] to struct Grounded 
 /// ```
 /// 
 /// This example makes the entity that has the power ignore water. :)
-dispatch origins:power["origins:ignore_water", "apoli:ignore_water"] to struct IgnoreWater {}
+dispatch origins:power["origins:ignore_water", "apoli:ignore_water"] to struct IgnoreWater {
+	...Conditioned,
+}
 
 /// # Inventory
 /// 
@@ -2228,6 +2283,7 @@ dispatch origins:power["origins:ignore_water", "apoli:ignore_water"] to struct I
 /// 
 /// This example will allow the player to open a 9-slots inventory of which only non-food items will drop on death.
 dispatch origins:power["origins:inventory", "apoli:inventory"] to struct Inventory {
+	...Conditioned,
 	/// The translation key or literal text to use as the display name for the inventory.
 	title?: #[translation_key] string,
 	/// Determines what type of container the inventory will be similar to.
@@ -2279,6 +2335,7 @@ enum(string) ContainerType {
 /// 
 /// This example will make the entity that has the power invisible if the entity is not burning, even hiding the armor.
 dispatch origins:power["origins:invisibility", "apoli:invisibility"] to struct Invisibility {
+	...Conditioned,
 	/// Determines whether armor should be shown or not.
 	render_armor?: boolean,
 	/// Determines whether the glowing outline should be shown or not.
@@ -2316,6 +2373,7 @@ dispatch origins:power["origins:invisibility", "apoli:invisibility"] to struct I
 /// 
 /// This example will make the entity immune to fall damage.
 dispatch origins:power["origins:invulnerability", "apoli:invulnerability"] to struct Invulnerability {
+	...Conditioned,
 	/// Specifies which damage the player will be immune to.
 	damage_condition: DamageCondition,
 }
@@ -2410,6 +2468,7 @@ dispatch origins:power["origins:invulnerability", "apoli:invulnerability"] to st
 /// 
 /// This example will give the player 8 Oak Planks if the player were to use any Axe tool item on an Oak Log item (have the Axe tool item in the cursor, and right-click on an Oak Log item).
 dispatch origins:power["origins:item_on_item", "apoli:item_on_item"] to struct ItemOnItem {
+	...Conditioned,
 	/// If specified, the specified actions will only execute if this condition is fulfilled by the item that is used to right-click an item.
 	using_item_condition?: ItemCondition,
 	/// If specified, the specified actions will only execute if this condition is fulfilled by the item that has been right-clicked.
@@ -2460,10 +2519,11 @@ dispatch origins:power["origins:item_on_item", "apoli:item_on_item"] to struct I
 /// 
 /// This example will make items in the hotbar slots persist.
 dispatch origins:power["origins:keep_inventory", "apoli:keep_inventory"] to struct KeepInventory {
+	...Conditioned,
 	/// If specified, only make the items that fulfill the specified item condition type persist in the entity's inventory.
 	item_condition?: ItemCondition,
 	/// If specified, only make the items that are in the listed inventory slots persist in the entity's inventory. See [Positioned Item Stack Slots](https://origins.readthedocs.io/en/latest/types/../misc/extras/positioned_item_stack_slots) for possible values.
-	slots?: Array,
+	slots?: [PositionedItemSlot],
 }
 
 /// # Launch
@@ -2495,11 +2555,12 @@ dispatch origins:power["origins:keep_inventory", "apoli:keep_inventory"] to stru
 /// 
 /// This example will launch the player into the air, with a cooldown of 30 seconds.
 dispatch origins:power["origins:launch", "apoli:launch"] to struct Launch {
+	...Conditioned,
 	...OptionalCooldown,
 	/// The speed applied to the player in the upwards direction.
 	speed: float,
 	/// If specified, the sound event with this namespace and ID will be played when the power is triggered.
-	sound?: Identifier,
+	sound?: #[id="sound_event"] string,
 	/// Which active key this power should respond to.
 	key?: Key,
 }
@@ -2525,6 +2586,7 @@ dispatch origins:power["origins:launch", "apoli:launch"] to struct Launch {
 /// 
 /// This example will allow the player to see 15 blocks far while submerged in Lava.
 dispatch origins:power["origins:lava_vision", "apoli:lava_vision"] to struct LavaVision {
+	...Conditioned,
 	/// Near view. Vanilla default is 0.25, or 0.0 if you are under the effect of Fire Resistance.
 	s: float,
 	/// Far view. Vanilla default is 1.0, or 3.0 if you are under the effect of Fire Resistance.
@@ -2557,14 +2619,15 @@ dispatch origins:power["origins:lava_vision", "apoli:lava_vision"] to struct Lav
 /// 
 /// This example will give the entity's texture a blue-ish tint and makes it slightly transparent.
 dispatch origins:power["origins:model_color", "apoli:model_color"] to struct ModelColor {
+	...Conditioned,
 	/// Value by which the red component of the texture will be multiplied. Range: 0.0 - 1.0.
-	red?: float,
+	red?: float @ 0.0..1.0,
 	/// Value by which the green component of the texture will be multiplied. Range: 0.0 - 1.0.
-	green?: float,
+	green?: float @ 0.0..1.0,
 	/// Value by which the blue component of the texture will be multiplied. Range: 0.0 - 1.0.
-	blue?: float,
+	blue?: float @ 0.0..1.0,
 	/// Value by which the alpha (= transparency) component of the texture will be multiplied. Range: 0.0 - 1.0.
-	alpha?: float,
+	alpha?: float @ 0.0..1.0,
 }
 
 /// # Modify Air Speed
@@ -2590,10 +2653,11 @@ dispatch origins:power["origins:model_color", "apoli:model_color"] to struct Mod
 /// 
 /// This example will increase the entity's air speed by 150%.
 dispatch origins:power["origins:modify_air_speed", "apoli:modify_air_speed"] to struct ModifyAirSpeed {
+	...Conditioned,
 	/// If specified, this modifier will be applied to the entity's air speed.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the entity's air speed.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// #   Modify Attribute
@@ -2629,6 +2693,7 @@ dispatch origins:power["origins:modify_air_speed", "apoli:modify_air_speed"] to 
 /// 
 /// This example will set the total value of the entity's `minecraft:generic.attack_damage` attribute using the value of the `example:resource` (`data/example/powers/resource.json`) power.
 dispatch origins:power["origins:modify_attribute", "apoli:modify_attribute"] to struct ModifyAttribute {
+	...Conditioned,
 	/// The namespace and ID of the attribute to apply the modifier(s) to.
 	attribute: #[id="attribute"] string,
 	/// If specified, this modifier will be applied to the specified attribute.
@@ -2672,7 +2737,7 @@ dispatch origins:power["origins:modify_block_render", "apoli:modify_block_render
 	/// If specified, only modify how the blocks that fulfill this condition would look like.
 	block_condition?: BlockCondition,
 	/// The namespace and ID of the replacement block.
-	block: Identifier,
+	block: #[id="block"] string,
 }
 
 /// # Modify Break Speed
@@ -2725,16 +2790,17 @@ dispatch origins:power["origins:modify_block_render", "apoli:modify_block_render
 /// 
 /// This example will make the player break blocks 90% slower than usual, which also applies to blocks that can be mined instantly (which is handled by assigning a minimum value of `0.1` if the hardness value of the block is `0`, which is the case for such blocks.)
 dispatch origins:power["origins:modify_break_speed", "apoli:modify_break_speed"] to struct ModifyBreakSpeed {
+	...Conditioned,
 	/// If specified, the modifier(s) will only apply to the blocks that fulfills this condition.
 	block_condition?: BlockCondition,
 	/// If specified, this modifier will be applied to the break speed.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the break speed.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 	/// If specified, this modifier will be applied to the *effective* hardness value of the block while calculating the block's break speed.
 	hardness_modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the *effective* hardness value of the block while calculating the block's break speed.
-	hardness_modifiers?: Array,
+	hardness_modifiers?: [AttributeModifier],
 }
 
 /// # Modify Camera Submersion
@@ -2758,11 +2824,14 @@ dispatch origins:power["origins:modify_break_speed", "apoli:modify_break_speed"]
 /// 
 /// This example will make it look like the player is submerged in Water if the player is not submerged in any fluid.
 dispatch origins:power["origins:modify_camera_submersion", "apoli:modify_camera_submersion"] to struct ModifyCameraSubmersion {
+	...Conditioned,
 	/// If specified, only this submersion type will be modified. Accepts either `"none"` , `"water"` or `"lava"`
-	from?: string,
+	from?: Submersion,
 	/// Which submersion type to change to. Accepts either `"none"`, `"water"` or `"lava"`
-	to: string,
+	to: Submersion,
 }
+
+type Submersion = ("none" | "water" | "lava")
 
 /// # Modify Crafting
 /// 
@@ -2786,8 +2855,9 @@ dispatch origins:power["origins:modify_camera_submersion", "apoli:modify_camera_
 /// 
 /// This example will replace the result item stack from the `minecraft:wooden_sword` (`data/minecraft/recipes/wooden_sword.json`) vanilla recipe with a Diamond Sword only for the player that has the power.
 dispatch origins:power["origins:modify_crafting", "apoli:modify_crafting"] to struct ModifyCrafting {
+	...Conditioned,
 	/// If specified, modifies the result item of the recipe that matches the specified namespace and ID.
-	recipe?: Identifier,
+	recipe?: #[id="recipe"] string,
 	/// If specified, this action will be executed on the result item of a recipe.
 	item_action?: ItemAction,
 	/// If specified, this action will be executed on the result item of a recipe after crafting the said recipe.
@@ -2855,6 +2925,7 @@ dispatch origins:power["origins:modify_crafting", "apoli:modify_crafting"] to st
 /// 
 /// This example will nullify the damage dealt to an entity if that entity is owned by the entity that has the power. (Essentially, dealing no damage to one's pets and such.)
 dispatch origins:power["origins:modify_damage_dealt", "apoli:modify_damage_dealt"] to struct ModifyDamageDealt {
+	...Conditioned,
 	/// If specified, this action will be executed on either or both the '**actor**' and '**target**' entities whenever the modifier(s) is/are applied.
 	bientity_action?: BientityAction,
 	/// If specified, this action will be executed on the '**actor**' entity whenever the modifier(s) is/are applied.
@@ -2870,7 +2941,7 @@ dispatch origins:power["origins:modify_damage_dealt", "apoli:modify_damage_dealt
 	/// If specified, this modifier will be applied to the damage dealt by the '**actor**' entity.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied t othe damage dealt by the '**actor**' entity.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Modify Damage Taken
@@ -2963,6 +3034,7 @@ dispatch origins:power["origins:modify_damage_dealt", "apoli:modify_damage_dealt
 /// 
 /// This example is an updated version of the first example.
 dispatch origins:power["origins:modify_damage_taken", "apoli:modify_damage_taken"] to struct ModifyDamageTaken {
+	...Conditioned,
 	/// If specified, this action will be executed on either or both the '**actor**' and '**target**' entities whenever the modifier(s) is/are applied.
 	bientity_action?: BientityAction,
 	/// If specified, this action will be executed on the '**target**' entity whenever the modifier(s) is/are applied.
@@ -2980,7 +3052,7 @@ dispatch origins:power["origins:modify_damage_taken", "apoli:modify_damage_taken
 	/// If specified, this modifier will be applied to the damage taken by the '**target**' entity.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the damage taken by the '**target**' entity.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Modify Enchantment Level
@@ -3007,14 +3079,15 @@ dispatch origins:power["origins:modify_damage_taken", "apoli:modify_damage_taken
 /// 
 /// This example will grant the player the ability to use Silk Touch, regardless of whether the player is holding any item or no item at all.
 dispatch origins:power["origins:modify_enchantment_level", "apoli:modify_enchantment_level"] to struct ModifyEnchantmentLevel {
+	...Conditioned,
 	/// ID of the enchantment to apply/modify the level of to the entity., e.g. `minecraft:protection`.
-	enchantment: Identifier,
+	enchantment: #[id="enchantment"] string,
 	/// If specified, only applies/modifies the level of the specified enchantment to/from the entity if the item condition is fulfilled by the item.
 	item_condition?: ItemCondition,
 	/// If specified, this modifier will be applied to the current level of the specified enchantment from the entity.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the current level of the specified enchantment from the entity.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Modify Exhaustion
@@ -3041,10 +3114,11 @@ dispatch origins:power["origins:modify_enchantment_level", "apoli:modify_enchant
 /// 
 /// This example triples the exhaustion rate of the player.
 dispatch origins:power["origins:modify_exhaustion", "apoli:modify_exhaustion"] to struct ModifyExhaustion {
+	...Conditioned,
 	/// If specified, this modifier will be applied to the received exhaustion amount.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the received exhaustion amount.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Modify Falling
@@ -3075,6 +3149,7 @@ dispatch origins:power["origins:modify_exhaustion", "apoli:modify_exhaustion"] t
 /// 
 /// This example will make the player fall faster and not take fall damage if they're sneaking.
 dispatch origins:power["origins:modify_falling", "apoli:modify_falling"] to struct ModifyFalling {
+	...Conditioned,
 	/// Determines the speed of the falling velocity.
 	velocity: float,
 	/// Determines whether the entity should take fall damage or not.
@@ -3118,7 +3193,7 @@ dispatch origins:power["origins:modify_fluid_render", "apoli:modify_fluid_render
 	/// If specified, only modify how the fluids that fulfills this condition would look like.
 	fluid_condition?: FluidCondition,
 	/// The namespace and ID of the replacement fluid.
-	fluid: Identifier,
+	fluid: #[id="fluid"] string,
 }
 
 /// # Modify Food
@@ -3160,6 +3235,7 @@ dispatch origins:power["origins:modify_fluid_render", "apoli:modify_fluid_render
 /// 
 /// This example will add 1 and a half shanks of hunger, and 1 saturation point if a player eats a dried kelp, totalling to 2 shanks of hunger and 6.4 saturation points.
 dispatch origins:power["origins:modify_food", "apoli:modify_food"] to struct ModifyFood {
+	...Conditioned,
 	/// If specified, the specified actions and modifier(s) will only apply to food items that fulfills this condition.
 	item_condition?: ItemCondition,
 	/// If specified, this item action type will be executed on the remaining item stacks that was consumed.
@@ -3228,8 +3304,9 @@ dispatch origins:power["origins:modify_food", "apoli:modify_food"] to struct Mod
 /// 
 /// This example will replace the item in the output/result slot of a Grindstone with a Netherite Sword if the initial item is a Diamond Sword. This will also remove the used Grindstone block after taking the said item.
 dispatch origins:power["origins:modify_grindstone", "apoli:modify_grindstone"] to struct ModifyGrindstone {
+	...Conditioned,
 	/// Determines whether to not change the initial item stack (`"unchanged"`), replace it with the item stack specified in the `result_stack` field (`"specified"`), replace it with the item stack from the top input slot of a Grindstone block (`"from_top"`) or replace it with the item stack from the bottom input slot of a Grindstone block (`"from_bottom"`).
-	result_type?: string,
+	result_type?: ("unchanged" | "specified" | "from_top" | "from_bottom"),
 	/// If specified, this action will be executed on the player upon taking the item stack from the result slot of a Grindstone.
 	entity_action?: EntityAction,
 	/// If specified, this action will be executed on the Grindstone block upon taking the item stack from the result slot of the said Grindstone block.
@@ -3274,6 +3351,7 @@ dispatch origins:power["origins:modify_grindstone", "apoli:modify_grindstone"] t
 /// 
 /// This example will allow players to harvest a Diamond Block regardless of using the proper tool or not.
 dispatch origins:power["origins:modify_harvest", "apoli:modify_harvest"] to struct ModifyHarvest {
+	...Conditioned,
 	/// If specified, only blocks that fulfill this condition are affected.
 	block_condition?: BlockCondition,
 	/// Determines whether the player is be able to harvest the block.
@@ -3313,10 +3391,11 @@ dispatch origins:power["origins:modify_harvest", "apoli:modify_harvest"] to stru
 /// 
 /// This example will half the effectiveness of all healing used on you.
 dispatch origins:power["origins:modify_healing", "apoli:modify_healing"] to struct ModifyHealing {
+	...Conditioned,
 	/// If specified, this modifier will be applied to your healing bonus.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to your healing bonus.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Modify Insomnia Ticks
@@ -3342,10 +3421,11 @@ dispatch origins:power["origins:modify_healing", "apoli:modify_healing"] to stru
 /// 
 /// This example will set the value used for calculating when a Phantom will spawn for a player to 0, essentially disabling Phantoms from spawning for the player that has the power.
 dispatch origins:power["origins:modify_insomnia_ticks", "apoli:modify_insomnia_ticks"] to struct ModifyInsomniaTicks {
+	...Conditioned,
 	/// If specified, this modifier will be applied to the value.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the value.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Modify Jump
@@ -3375,10 +3455,11 @@ dispatch origins:power["origins:modify_insomnia_ticks", "apoli:modify_insomnia_t
 /// 
 /// This example will increase the entity that has the power's jump height to 4 blocks and display a cloud particle at the entity's feet upon jumping.
 dispatch origins:power["origins:modify_jump", "apoli:modify_jump"] to struct ModifyJump {
+	...Conditioned,
 	/// If specified, this modifier will be applied to the upwards velocity.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the upwards velocity.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 	/// If specified, this action will be executed on the entity that has the power whenever the entity jumps.
 	entity_action?: EntityAction,
 }
@@ -3406,10 +3487,11 @@ dispatch origins:power["origins:modify_jump", "apoli:modify_jump"] to struct Mod
 /// 
 /// This example will make the player swim/walk significantly faster in lava.
 dispatch origins:power["origins:modify_lava_speed", "apoli:modify_lava_speed"] to struct ModifyLavaSpeed {
+	...Conditioned,
 	/// If specified, this modifier will be applied to the movement speed while in lava.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the movement speed while in lava.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Modify Player Spawn
@@ -3443,14 +3525,15 @@ dispatch origins:power["origins:modify_lava_speed", "apoli:modify_lava_speed"] t
 /// 
 /// This example will let players spawn at an End City in The End dimension.
 dispatch origins:power["origins:modify_player_spawn", "apoli:modify_player_spawn"] to struct ModifyPlayerSpawn {
+	...Conditioned,
 	/// The namespace and ID of the dimension the player should spawn in.
-	dimension: Identifier,
+	dimension: #[id="dimension"] string,
 	/// If specified, the player will only spawn in the biome that matches the specified namespace and ID.
-	biome?: Identifier,
+	biome?: #[id="worldgen/biome"] string,
 	/// If specified, the player will only spawn in the specified namespace and ID of the structure. **The structure needs to generate in the specified dimension.**
-	structure?: Identifier,
+	structure?: #[id="worldgen/structure"] string,
 	/// Determines whether the player should spawn near the world spawnpoint (0, 0) of the dimension (`"center"`) or near the coordinates of the Overworld spawnpoint (whilst considering the value of the `dimension_distance_multiplier` field) (`"default"`).
-	spawn_strategy?: string,
+	spawn_strategy?: ("center" | "default"),
 	/// Defines the ratio of Overworld blocks to blocks in the specified dimension. e.g: for The Nether dimension, this would be set to `0.125`. **This needs to be set when `spawn_strategy` is set to `"default"`**
 	dimension_distance_multiplier?: float,
 }
@@ -3482,12 +3565,13 @@ dispatch origins:power["origins:modify_player_spawn", "apoli:modify_player_spawn
 /// 
 /// This example will modify the damage of the Spectral Arrow projectile entity shot by the entity that has the power to deal additional 4 hearts of damage.
 dispatch origins:power["origins:modify_projectile_damage", "apoli:modify_projectile_damage"] to struct ModifyProjectileDamage {
+	...Conditioned,
 	/// If specified, the specified modifier(s) and action(s) will only apply if the dealt damage fulfills by this condition.
 	damage_condition?: DamageCondition,
 	/// If specified, this modifier will apply to the damage amount.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will apply to the damage amount.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 	/// If specified, the specified modifier(s) and action(s) will only apply if the the entity that has been hit fulfills this condition.
 	target_condition?: EntityCondition,
 	/// If specified, this action will be executed on the 'actor' entity (the entity that has the power) whenever the modifier(s) are applied.
@@ -3523,12 +3607,13 @@ dispatch origins:power["origins:modify_projectile_damage", "apoli:modify_project
 /// 
 /// This example will increase the entity's friction by 50% while standing on dirt blocks.
 dispatch origins:power["origins:modify_slipperiness", "apoli:modify_slipperiness"] to struct ModifySlipperiness {
+	...Conditioned,
 	/// If specified, the modifier(s) will only apply to the blocks that fulfills this condition.
 	block_condition?: BlockCondition,
 	/// If specified, this modifier will be applied to the entity's slipperiness.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the entity's slipperiness.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Modify Status Effect Amplifier
@@ -3555,14 +3640,15 @@ dispatch origins:power["origins:modify_slipperiness", "apoli:modify_slipperiness
 /// 
 /// This example will modify the amplifier of the Speed status effect to have a 1 level increase, making the entity that has the power receive Speed II if the entity were to receive Speed I, etc.
 dispatch origins:power["origins:modify_status_effect_amplifier", "apoli:modify_status_effect_amplifier"] to struct ModifyStatusEffectAmplifier {
+	...Conditioned,
 	/// If specified, only this status effect will have its amplifier modified upon being received.
-	status_effect?: Identifier,
+	status_effect?: EffectID,
 	/// If specified, only these status effect(s) will have its amplifier modified upon being received.
-	status_effects?: Array,
+	status_effects?: [EffectID],
 	/// If specified, this modifier will be applied to the amplifier of the specified status effect(s).
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the amplifier of the specified status effect(s).
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Modify Status Effect Duration
@@ -3589,14 +3675,15 @@ dispatch origins:power["origins:modify_status_effect_amplifier", "apoli:modify_s
 /// 
 /// This example will modify the duration of the Speed status effect to have a 25% increase, making the entity that has the power receive Speed that initially lasted 60 seconds now last for 75 seconds.
 dispatch origins:power["origins:modify_status_effect_duration", "apoli:modify_status_effect_duration"] to struct ModifyStatusEffectDuration {
+	...Conditioned,
 	/// If specified, only this status effect will have its duration modified upon being received.
-	status_effect?: Identifier,
+	status_effect?: EffectID,
 	/// If specified, only these status effects will have its duration modified upon being received.
-	status_effects?: Array,
+	status_effects?: [EffectID],
 	/// If specified, this modifier will be applied to the duration of the specified status effect(s).
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the duration of the specified status effect(s).
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Modify Swim Speed
@@ -3622,10 +3709,11 @@ dispatch origins:power["origins:modify_status_effect_duration", "apoli:modify_st
 /// 
 /// This power will make the entity that has the power swim/walk significantly faster in water.
 dispatch origins:power["origins:modify_swim_speed", "apoli:modify_swim_speed"] to struct ModifySwimSpeed {
+	...Conditioned,
 	/// If specified, this modifier will apply to the swim speed.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will apply to the swim speed.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Modify Velocity
@@ -3656,12 +3744,13 @@ dispatch origins:power["origins:modify_swim_speed", "apoli:modify_swim_speed"] t
 /// 
 /// This example will make all of the player's velocity reversed. You'll fall upwards, your movement keys will be inverted, etc.
 dispatch origins:power["origins:modify_velocity", "apoli:modify_velocity"] to struct ModifyVelocity {
+	...Conditioned,
 	/// Used to specify the axes affected by this modifier.
 	axes?: Axes,
 	/// If specified, this modifier will apply to velocity in the specified axes.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will apply to the specified axes.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Modify XP Gain
@@ -3691,10 +3780,11 @@ dispatch origins:power["origins:modify_velocity", "apoli:modify_velocity"] to st
 /// 
 /// This example will triple the gained experience from experience orbs.
 dispatch origins:power["origins:modify_xp_gain", "apoli:modify_xp_gain"] to struct ModifyXpGain {
+	...Conditioned,
 	/// If specified, this modifier will apply to the experience gained.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will apply to the experience gained.
-	modifiers?: Array,
+	modifiers?: [AttributeModifier],
 }
 
 /// # Night Vision
@@ -3736,8 +3826,9 @@ dispatch origins:power["origins:modify_xp_gain", "apoli:modify_xp_gain"] to stru
 /// 
 /// This example will give the player night vision with 50% strength upon being submerged in water.
 dispatch origins:power["origins:night_vision", "apoli:night_vision"] to struct NightVision {
+	...Conditioned,
 	/// Determines how strong the night vision effect is. Accepted range is from 0.0 to 1.0.
-	strength?: float,
+	strength?: float @ 0.0..1.0,
 }
 
 /// # Overlay
@@ -3768,20 +3859,21 @@ dispatch origins:power["origins:night_vision", "apoli:night_vision"] to struct N
 /// 
 /// This example will render an overlay with the texture of an Ice block, below the HUD and is not visible in third person.
 dispatch origins:power["origins:overlay", "apoli:overlay"] to struct Overlay {
+	...Conditioned,
 	/// The namespace and ID of the texture to use as an overlay.
-	texture: Identifier,
+	texture: string,
 	/// If the `"texture"` draw mode is used, it determines the alpha (transparency) value of the texture. If the `"nausea"` draw mode is used, it determines the value of how the texture is stretched (1.0 = screen size). Range: 0.0 to 1.0.
-	strength?: float,
+	strength?: float @ 0.0..1.0,
 	/// Value by which the red component of the texture will be multiplied. Range: 0.0 to 1.0.
-	red?: float,
+	red?: float @ 0.0..1.0,
 	/// Value by which the green component of the texture will be multiplied. Range: 0.0 to 1.0.
-	green?: float,
+	green?: float @ 0.0..1.0,
 	/// Value by which the blue component of the texture will be multiplied. Range: 0.0 to 1.0.
-	blue?: float,
+	blue?: float @ 0.0..1.0,
 	/// Determines whether to treat black as transparent or draw the texture as is (`"nausea"` or `"texture"` respectively).
-	draw_mode: string,
+	draw_mode: ("nausea" | "texture"),
 	/// Determines if the overlay should render below or above the HUD (`"below_hud"` or `"above_hud"` respectively).
-	draw_phase: string,
+	draw_phase: ("below_hud" | "above_hud"),
 	/// Determines if the overlay should be hidden if the HUD elements are hidden (with F1).
 	hide_with_hud?: boolean,
 	/// Determines if the overlay is visible in third person.
@@ -3814,14 +3906,15 @@ dispatch origins:power["origins:overlay", "apoli:overlay"] to struct Overlay {
 /// 
 /// This example will continuously spawn portal particles on the entity that has the power.
 dispatch origins:power["origins:particle", "apoli:particle"] to struct Particle {
+	...Conditioned,
 	/// The particle type that will be spawned.
 	particle: ParticleEffect,
 	/// If specified, the particle will only be visible if this bientity condition is fulfilled by either or both the entity that has the power and the entity looking at the entity that has the power.
 	bientity_condition?: BientityCondition,
 	/// Determines the amount of particles to spawn.
-	count?: int,
+	count?: int @ 0..,
 	/// Determines the speed of the specified particle type.
-	speed?: float,
+	speed?: float @ 0.0..,
 	/// Determines whether to display the emitted particles within 512 blocks (`true`) or 32 blocks (`false`).
 	force?: boolean,
 	/// Determines the size of the three-dimensional cuboid volume to spawn the specified particle type in.
@@ -3877,14 +3970,15 @@ dispatch origins:power["origins:particle", "apoli:particle"] to struct Particle 
 /// 
 /// This example will allow the player to phase through all blocks except for those in the `origins:unphasable` (`data/origins/tags/blocks/unphasable.json`) block tag. They can also phase down while sneaking, but will make a short stop at each block so they don't take fall damage.
 dispatch origins:power["origins:phasing", "apoli:phasing"] to struct Phasing {
+	...Conditioned,
 	/// If set to true, the `block_condition` field will define which blocks the player can **NOT** move through.
 	blacklist?: boolean,
 	/// If specified, the entity will only be able to move through these blocks (or **not** be able to move through these, depending on what `blacklist` is set to).
 	block_condition?: BlockCondition,
 	/// Determines how the environment is rendered when "phasing" through (moving) blocks. Accepts `"blindness"`, `"remove_blocks"` or `"none"`.
-	render_type?: string,
+	render_type?: ("blindness" | "remove_blocks" | "none"),
 	/// Determines how far the player can look through walls when "phasing" (moving) through blocks when `render_type` is set to `"blindness"`.
-	view_distance?: float,
+	view_distance?: float @ 0.0..,
 	/// If specified, the entity will only be able to "phase" (move) downwards if this condition is fulfilled.
 	phase_down_condition?: EntityCondition,
 }
@@ -3920,6 +4014,7 @@ dispatch origins:power["origins:phasing", "apoli:phasing"] to struct Phasing {
 /// 
 /// This example will prevent other players from "using" (right-clicking) the entity that has the power and inform them that the 'entity cannot be interacted with'.
 dispatch origins:power["origins:prevent_being_used", "apoli:prevent_being_used"] to struct PreventBeingUsed {
+	...Conditioned,
 	/// If specified, this action will be executed on either or both the '**actor**' and '**target**' entities.
 	bientity_action?: BientityAction,
 	/// If specified, this action will be executed on the item used by the '**actor**' entity for right-clicking the '**target**' entity.
@@ -3931,7 +4026,7 @@ dispatch origins:power["origins:prevent_being_used", "apoli:prevent_being_used"]
 	/// If specified, the specified actions will only be executed if this condition is fulfilled by the item used by the '**actor**' entity for right-clicking the '**target**' entity.
 	item_condition?: ItemCondition,
 	/// Determines if the power should be activated if the '**actor**' entity used the specified hand(s). Accepts `"off_hand"`, `"main_hand"` or both.
-	hands?: Array,
+	hands?: Hands,
 	/// If specified, this item stack will be given to the '**actor**' entity.
 	result_stack?: ItemStack,
 }
@@ -3943,23 +4038,6 @@ dispatch origins:power["origins:prevent_being_used", "apoli:prevent_being_used"]
 /// Prevents the player from placing a block.
 /// 
 /// Type ID: `origins:prevent_block_place`
-/// 
-/// 
-/// ###	Fields
-/// 
-/// Field | Type | Default | Description
-/// ------|------|---------|------------
-/// `entity_action` | [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) | *optional* | If specified, this entity action will be executed on the player upon being prevented from placing a block.
-/// `held_item_action` | [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types) | *optional* | If specified, this item action will be executed on the item the player has used to try to place a block.
-/// `place_to_action` | [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types) | *optional* | If specified, this block action will be executed at the position of the block the player tried to place.
-/// `place_on_action` | [Block Action Type](https://origins.readthedocs.io/en/latest/types/block_action_types) | *optional* | If specified, this block action will be executed on the block the player tried to place a block on.
-/// `item_condition` | [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types) | *optional* | If specified, the specified actions will only be executed if the item the player has used to try to place a block fulfills this item condition.
-/// `place_to_condition` | [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types) | *optional* | If specified, the specified actions will only be executed if the block at the position of the block the player tried to place fulfills this block condition.
-/// `place_on_condition` | [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types) | *optional* | If specified, the specified actions will only be executed if the block the player tried to place a block on fulfills this block condition.
-/// `directions` | [Array](https://origins.readthedocs.io/en/latest/types/data_types/array) of [Strings](https://origins.readthedocs.io/en/latest/types/data_types/string) | `["up", "down", "north", "south", "east", "west"]` | Determines whether the specified actions should be executed if the player tried to place a block at the specified side(s) of a block.
-/// `hands` | [Array](https://origins.readthedocs.io/en/latest/types/data_types/array) of [Hands](https://origins.readthedocs.io/en/latest/types/data_types/string) | `["main_hand", "off_hand"]` | Determines whether the specified actions should be executed if the player used the specified hand(s) when trying to place a block.
-/// `result_stack` | [Item Stack](https://origins.readthedocs.io/en/latest/types/data_types/item_stack) | *optional* | If specified, this item stack will be given to the player upon trying to place a block.
-/// `result_item_action` | [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types) | *optional* | If specified, this item action will be executed on the item that will be given to the player upon trying to place a block.
 /// 
 /// 
 /// ###	Examples
@@ -3982,7 +4060,31 @@ dispatch origins:power["origins:prevent_being_used", "apoli:prevent_being_used"]
 /// ```
 /// 
 /// This example will prevent the player from placing blocks in spaces occupied by source fluids.
-dispatch origins:power["origins:prevent_block_place", "apoli:prevent_block_place"] to struct PreventBlockPlace {}
+dispatch origins:power["origins:prevent_block_place", "apoli:prevent_block_place"] to struct PreventBlockPlace {
+	...Conditioned,
+	/// If specified, this entity action will be executed on the player upon being prevented from placing a block.
+	entity_action?: EntityAction,
+	/// If specified, this item action will be executed on the item the player has used to try to place a block.
+	held_item_action?: ItemAction,
+	/// If specified, this block action will be executed at the position of the block the player tried to place.
+	place_to_action?: BlockAction,
+	/// If specified, this block action will be executed on the block the player tried to place a block on.
+	place_on_action?: BlockAction,
+	/// If specified, the specified actions will only be executed if the item the player has used to try to place a block fulfills this item condition.
+	item_condition?: ItemCondition,
+	/// If specified, the specified actions will only be executed if the block at the position of the block the player tried to place fulfills this block condition.
+	place_to_condition?: BlockCondition,
+	/// If specified, the specified actions will only be executed if the block the player tried to place a block on fulfills this block condition.
+	place_on_condition?: BlockCondition,
+	/// Determines whether the specified actions should be executed if the player tried to place a block at the specified side(s) of a block.
+	directions?: Directions,
+	/// Determines whether the specified actions should be executed if the player used the specified hand(s) when trying to place a block.
+	hands?: Hands,
+	/// If specified, this item stack will be given to the player upon trying to place a block.
+	result_stack?: ItemStack,
+	/// If specified, this item action will be executed on the item that will be given to the player upon trying to place a block.
+	result_item_action?: ItemAction,
+}
 
 /// # Prevent Block Selection
 /// 
@@ -4015,6 +4117,7 @@ dispatch origins:power["origins:prevent_block_place", "apoli:prevent_block_place
 /// 
 /// This example will prevent the selection of cobwebs (including the Temporary Cobweb block from the Arachnid's power), allowing the player to punch through them, unless they sneak.
 dispatch origins:power["origins:prevent_block_selection", "apoli:prevent_block_selection"] to struct PreventBlockSelection {
+	...Conditioned,
 	/// If specified, only blocks that fulfill this condition are affected.
 	block_condition?: BlockCondition,
 }
@@ -4046,6 +4149,7 @@ dispatch origins:power["origins:prevent_block_selection", "apoli:prevent_block_s
 /// 
 /// This example will prevent the player from using Crafting Tables.
 dispatch origins:power["origins:prevent_block_use", "apoli:prevent_block_use"] to struct PreventBlockUse {
+	...Conditioned,
 	/// If specified, only blocks that fulfill this condition are affected.
 	block_condition: BlockCondition,
 }
@@ -4096,6 +4200,7 @@ dispatch origins:power["origins:prevent_block_use", "apoli:prevent_block_use"] t
 /// 
 /// This example will always prevent the entity from dying and then apply the same effects as a Totem of Undying, e.g: clear all status effects on the entity and then apply Regeneration II, Fire Resistance I and Absorption I.
 dispatch origins:power["origins:prevent_death", "apoli:prevent_death"] to struct PreventDeath {
+	...Conditioned,
 	/// If specified, death will only be prevented if the damage dealt to the entity fulfills this condition.
 	damage_condition?: DamageCondition,
 	/// If specified, this action will be executed on the entity when death is prevented.
@@ -4133,6 +4238,7 @@ dispatch origins:power["origins:prevent_death", "apoli:prevent_death"] to struct
 /// 
 /// This example will display a warning and prevent the entity that has the power from flying with an Elytra if they're at Y=64 or lower.
 dispatch origins:power["origins:prevent_elytra_flight", "apoli:prevent_elytra_flight"] to struct PreventElytraFlight {
+	...Conditioned,
 	/// If specified, this action will be executed upon the entity trying to fly an Elytra/power that uses the [Elytra Flight (Power Type)](elytra_flight).
 	entity_action?: EntityAction,
 }
@@ -4179,6 +4285,7 @@ dispatch origins:power["origins:prevent_elytra_flight", "apoli:prevent_elytra_fl
 /// 
 /// This example will prevent the entity that has the power from colliding with tamable entities that are owned by the said entity.
 dispatch origins:power["origins:prevent_entity_collision", "apoli:prevent_entity_collision"] to struct PreventEntityCollision {
+	...Conditioned,
 	/// If specified, the collision will only be prevented if this condition is fulfilled by either or both '**actor**' and '**target**' entities.
 	bientity_condition?: BientityCondition,
 }
@@ -4243,6 +4350,7 @@ dispatch origins:power["origins:prevent_entity_collision", "apoli:prevent_entity
 /// 
 /// This example will prevent mobs that are from the 'aquatic' entity group from rendering for the entity that has the power only if the entity that has the power is submerged in water and those mobs are 9 or more blocks away.
 dispatch origins:power["origins:prevent_entity_render", "apoli:prevent_entity_render"] to struct PreventEntityRender {
+	...Conditioned,
 	/// If specified, only entities which fulfills this condition will be affected.
 	entity_condition?: EntityCondition,
 	/// If specified, the power will only be active if this condition is fulfilled by either or both the 'actor' (the player that has the power) and 'target' (the entity that will not render) entities.
@@ -4286,6 +4394,7 @@ dispatch origins:power["origins:prevent_entity_render", "apoli:prevent_entity_re
 /// 
 /// This example will prevent the player that has the power from interacting with a Pig (also prevent powers that enables you to interact with a Pig) and executes an [Execute Command (Entity Action Type)](https://origins.readthedocs.io/en/latest/types/entity_action_types/execute_command) to the entity that has attempted to interact with a Pig.
 dispatch origins:power["origins:prevent_entity_use", "apoli:prevent_entity_use"] to struct PreventEntityUse {
+	...Conditioned,
 	/// If specified, this action will be executed on either or both the '**actor**' and '**target**' entities.
 	bientity_action?: BientityAction,
 	/// If specified, this action will be executed on the item used by the '**actor**' entity for right-clicking the '**target**' entity.
@@ -4297,7 +4406,7 @@ dispatch origins:power["origins:prevent_entity_use", "apoli:prevent_entity_use"]
 	/// If specified, the specified actions will only be executed if this condition is fulfilled by the item used by the '**actor**' entity for right-clicking the '**target**' entity.
 	item_condition?: ItemCondition,
 	/// Determines if the power should be activated if the '**actor**' entity used the specified hand(s). Accepts `"off_hand"`, `"main_hand"` or both.
-	hands?: Array,
+	hands?: Hands,
 	/// If specified, this item stack will be given to the '**actor**' entity.
 	result_stack?: ItemStack,
 }
@@ -4326,10 +4435,11 @@ dispatch origins:power["origins:prevent_entity_use", "apoli:prevent_entity_use"]
 /// 
 /// This example will make the worn armor, held item and worn Elytra of the entity that has this power disappear as if they weren't wearing or holding an item.
 dispatch origins:power["origins:prevent_feature_render", "apoli:prevent_feature_render"] to struct PreventFeatureRender {
+	...Conditioned,
 	/// If specified, this feature renderer will not be rendered.
 	feature?: FeatureRenderer,
 	/// If specified, these feature renderers will not be rendered.
-	features?: Array,
+	features?: [FeatureRenderer],
 }
 
 /// # Prevent Game Event
@@ -4361,12 +4471,13 @@ dispatch origins:power["origins:prevent_feature_render", "apoli:prevent_feature_
 /// 
 /// This example will prevent the entity that has the power to emit a `minecraft:hit_ground` game event, which is usually emitted by landing on the ground upon falling.
 dispatch origins:power["origins:prevent_game_event", "apoli:prevent_game_event"] to struct PreventGameEvent {
+	...Conditioned,
 	/// If specified, the game event with this namespace and ID will be prevent from being emitted by the entity.
-	event?: Identifier,
+	event?: #[id="game_event"] string,
 	/// If specified, the game events with these namespace and IDs will be prevent from being emitted by the entity.
-	events?: Array,
+	events?: [#[id="game_event"] string],
 	/// If specified, the game events inside game event tag will be prevented from being emitted by the entity.
-	tag?: Identifier,
+	tag?: #[id(registry="game_event",tags="implicit")] string,
 	/// If specified, this action will be executed on the entity upon preventing game events.
 	entity_action?: EntityAction,
 }
@@ -4391,18 +4502,6 @@ dispatch origins:power["origins:prevent_game_event", "apoli:prevent_game_event"]
 /// 	`bientity_condition` | The entity that threw the item. | The entity about to pick up the item.
 /// 
 /// 
-/// ###	Fields
-/// 
-/// Field | Type | Default | Description
-/// ------|------|---------|------------
-/// `bientity_action_thrower` | [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types) | *optional* | If specified, this bientity action will be executed on either or both the actor and target entities (See to the table above to determine which actor/target entity is being referred to.)
-/// `bientity_action_item` | [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types) | *optional* | If specified, this bientity action will be executed on either or both the actor and target entities (See to the table above to determine which actor/target entity is being referred to.)
-/// `item_action` | [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types) | *optional* | If specified,this item action will be executed on the item that was attempted to be picked up.
-/// `bientity_condition` | [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types) | *optional* | If specified, the restriction will only happen if this bientity condition is fulfilled by either or both the actor and target entities (See the table above to determine which actor/target entity is being referred to.)
-/// `item_condition` | [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types) | *optional* | If specified, the restriction will only happen if this item condition is fulfilled by the item about to be picked up.
-/// `priority` | [Integer](https://origins.readthedocs.io/en/latest/types/data_types/integer) | `0` | Determines the execution priority of the powers that use this power type (in a low-to-high priority order.)
-/// 
-/// 
 /// ###	Examples
 /// 
 /// ```json
@@ -4415,7 +4514,21 @@ dispatch origins:power["origins:prevent_game_event", "apoli:prevent_game_event"]
 /// ```
 /// 
 /// This example will prevent the entity that has the power from picking up food items that are considered meat.
-dispatch origins:power["origins:prevent_item_pickup", "apoli:prevent_item_pickup"] to struct PreventItemPickup {}
+dispatch origins:power["origins:prevent_item_pickup", "apoli:prevent_item_pickup"] to struct PreventItemPickup {
+	...Conditioned,
+	/// If specified, this bientity action will be executed on either or both the actor and target entities (See to the table above to determine which actor/target entity is being referred to.)
+	bientity_action_thrower?: BientityAction,
+	/// If specified, this bientity action will be executed on either or both the actor and target entities (See to the table above to determine which actor/target entity is being referred to.)
+	bientity_action_item?: BientityAction,
+	/// If specified,this item action will be executed on the item that was attempted to be picked up.
+	item_action?: ItemAction,
+	/// If specified, the restriction will only happen if this bientity condition is fulfilled by either or both the actor and target entities (See the table above to determine which actor/target entity is being referred to.)
+	bientity_condition?: BientityCondition,
+	/// If specified, the restriction will only happen if this item condition is fulfilled by the item about to be picked up.
+	item_condition?: ItemCondition,
+	/// Determines the execution priority of the powers that use this power type (in a low-to-high priority order.)
+	priority?: int,
+}
 
 /// # Prevent Item Use
 /// 
@@ -4439,6 +4552,7 @@ dispatch origins:power["origins:prevent_item_pickup", "apoli:prevent_item_pickup
 /// 
 /// This example will prevent the player from eating any food items.
 dispatch origins:power["origins:prevent_item_use", "apoli:prevent_item_use"] to struct PreventItemUse {
+	...Conditioned,
 	/// If specified, only items that fulfills this condition will be prevented from being used.
 	item_condition?: ItemCondition,
 }
@@ -4467,10 +4581,14 @@ dispatch origins:power["origins:prevent_item_use", "apoli:prevent_item_use"] to 
 /// 
 /// This example will prevent the player from sleeping unless they are burning.
 dispatch origins:power["origins:prevent_sleep", "apoli:prevent_sleep"] to struct PreventSleep {
+	...Conditioned,
 	/// If specified, sleep will only be prevented if this condition is fulfilled by the bed block.
 	block_condition?: BlockCondition,
 	/// The message that will be shown when sleep is prevented this way.
-	message?: DefaultTranslatableTextComponent,
+	message?: (
+		#[translation_key] string |
+		Text |
+	),
 	/// Determines whether the spawnpoint of the player is set upon right-clicking a bed while being prevented. (similar to what happens when you right-click a bed while it's daytime)
 	set_spawn_point?: boolean,
 	/// Determines the priority of which power will prevent the player to sleep, set their spawn and display a message. The power with `set_spawn_point` set to `true` and the highest `priority` value will be prioritized.
@@ -4500,7 +4618,9 @@ dispatch origins:power["origins:prevent_sleep", "apoli:prevent_sleep"] to struct
 /// ```
 /// 
 /// This example will prevent the player from sprinting if their food level is at, or below 6 hunger shanks
-dispatch origins:power["origins:prevent_sprinting", "apoli:prevent_sprinting"] to struct PreventSprinting {}
+dispatch origins:power["origins:prevent_sprinting", "apoli:prevent_sprinting"] to struct PreventSprinting {
+	...Conditioned,
+}
 
 /// # Recipe
 /// 
@@ -4536,6 +4656,7 @@ dispatch origins:power["origins:prevent_sprinting", "apoli:prevent_sprinting"] t
 /// 
 /// This example will allow the player that has the power to craft Cobwebs by combining two strings in a crafting grid with no specific order.
 dispatch origins:power["origins:recipe", "apoli:recipe"] to struct Recipe {
+	...Conditioned,
 	/// The recipe to craft, including an `id` field which can be any arbitrary (but unique) identifier.
 	recipe: CraftingRecipe,
 }
@@ -4645,8 +4766,11 @@ dispatch origins:power["origins:recipe", "apoli:recipe"] to struct Recipe {
 /// 
 /// This example will replace the loot table for Creepers with the `example:entities/custom_creeper_loot` loot table if the actor entity is holding a Wooden Sword, which will make the Creeper drop one of the Music Disc items from the `#minecraft:creeper_drop_music_discs` item tag in a random fashion if killed.
 dispatch origins:power["origins:replace_loot_table", "apoli:replace_loot_table"] to struct ReplaceLootTable {
+	...Conditioned,
 	/// An object with `"key": "value"` pairs that determine which loot table (`"key"`) will be replaced with a new loot table (`"value"`).
-	replace: object,
+	replace: struct {
+		[#[regex_pattern] string]: #[id="loot_table"] string,
+	},
 	/// If specified, the loot tables will only be replaced if this condition is fulfilled by either or both '**actor**' and '**target**' entities.
 	bientity_condition?: BientityCondition,
 	/// If specified, the loot tables will only be replaced if the block at the context of the loot tables fulfill this condition.
@@ -4689,6 +4813,7 @@ dispatch origins:power["origins:replace_loot_table", "apoli:replace_loot_table"]
 /// 
 /// This example will provide a variable with a minimum value of 0 and a maximum value of 1, which can effectively serve as a boolean that can be changed with the [Change Resource (Entity Action Type)](https://origins.readthedocs.io/en/latest/types/entity_action_types/change_resource).
 dispatch origins:power["origins:resource", "apoli:resource"] to struct Resource {
+	...Conditioned,
 	/// The minimum value of the resource.
 	min: int,
 	/// The maximum value of the resource.
@@ -4805,6 +4930,7 @@ dispatch origins:power["origins:restrict_armor", "apoli:restrict_armor"] to stru
 /// 
 /// This example will restore 4 hearts of health of the entity that has the power if the entity manages to deal 5 or more hearts of damage.
 dispatch origins:power["origins:self_action_on_hit", "apoli:self_action_on_hit"] to struct SelfActionOnHit {
+	...Conditioned,
 	...OptionalCooldown,
 	/// The action to execute on the entity.
 	entity_action: EntityAction,
@@ -4853,6 +4979,7 @@ dispatch origins:power["origins:self_action_on_hit", "apoli:self_action_on_hit"]
 /// 
 /// This example will restore 2 hearts to the entity that has the power if the entity has killed a mob with an Iron Sword.
 dispatch origins:power["origins:self_action_on_kill", "apoli:self_action_on_kill"] to struct SelfActionOnKill {
+	...Conditioned,
 	...OptionalCooldown,
 	/// The action to execute on the entity.
 	entity_action: EntityAction,
@@ -4893,6 +5020,7 @@ dispatch origins:power["origins:self_action_on_kill", "apoli:self_action_on_kill
 /// ```
 /// When a player with this power is damaged by 3 hearts or more damage in a single hit, they gain a Regeneration II effect for 10 seconds. This has a cooldown of one minute.
 dispatch origins:power["origins:self_action_when_hit", "apoli:self_action_when_hit"] to struct SelfActionWhenHit {
+	...Conditioned,
 	...OptionalCooldown,
 	/// The action to execute on the entity.
 	entity_action: EntityAction,
@@ -4950,6 +5078,7 @@ dispatch origins:power["origins:self_action_when_hit", "apoli:self_action_when_h
 /// 
 /// This example will make the entity that has the power glow for the entity that can see the said entity.
 dispatch origins:power["origins:self_glow", "apoli:self_glow"] to struct SelfGlow {
+	...Conditioned,
 	/// If specified, only entities that fulfill this condition will see the entity that has the power glow.
 	entity_condition?: EntityCondition,
 	/// If specified, only entities that fulfill this bientity condition in relation to the entity that has the power will see the entity that has the power glow.
@@ -4957,11 +5086,11 @@ dispatch origins:power["origins:self_glow", "apoli:self_glow"] to struct SelfGlo
 	/// Determines whether glowing entities should use their team's color with their glow. If set to false, the entity will instead use the `red`, `green` and `blue` fields within this power type.
 	use_teams?: boolean,
 	/// Value by which the red component of the glow will be multiplied. Range: 0.0 - 1.0.
-	red?: float,
+	red?: float @ 0.0..1.0,
 	/// Value by which the green component of the glow will be multiplied. Range: 0.0 - 1.0.
-	green?: float,
+	green?: float @ 0.0..1.0,
 	/// Value by which the blue component of the glow will be multiplied. Range: 0.0 - 1.0.
-	blue?: float,
+	blue?: float @ 0.0..1.0,
 }
 
 /// # Shader
@@ -4988,8 +5117,9 @@ dispatch origins:power["origins:self_glow", "apoli:self_glow"] to struct SelfGlo
 /// 
 /// This example makes the player view the world as a pencil sketch!
 dispatch origins:power["origins:shader", "apoli:shader"] to struct Shader {
+	...Conditioned,
 	/// Specifies the location of the shader resource file to use.
-	shader: Identifier,
+	shader: string,
 	/// Determines if the applied shader can be toggled.
 	toggleable?: boolean,
 }
@@ -5016,7 +5146,9 @@ dispatch origins:power["origins:shader", "apoli:shader"] to struct Shader {
 /// ```
 /// 
 /// This example will make the entity shake if the entity is not burning.
-dispatch origins:power["origins:shaking", "apoli:shaking"] to struct Shaking {}
+dispatch origins:power["origins:shaking", "apoli:shaking"] to struct Shaking {
+	...Conditioned,
+}
 
 /// # Simple
 /// 
@@ -5040,7 +5172,9 @@ dispatch origins:power["origins:shaking", "apoli:shaking"] to struct Shaking {}
 /// ```
 /// 
 /// This example will do nothing. However, it's still visible in the origin's power list GUI.
-dispatch origins:power["origins:simple", "apoli:simple"] to struct Simple {}
+dispatch origins:power["origins:simple", "apoli:simple"] to struct Simple {
+	...Conditioned,
+}
 
 /// # Stacking Status Effect
 /// 
@@ -5110,18 +5244,19 @@ dispatch origins:power["origins:simple", "apoli:simple"] to struct Simple {}
 /// 
 /// This example will apply the Blindness I status effect that would last for 5 seconds after being exposed to the sun for at least 4 seconds.
 dispatch origins:power["origins:stacking_status_effect", "apoli:stacking_status_effect"] to struct StackingStatusEffect {
+	...Conditioned,
 	/// The minimum number of stacks. Negative numbers are allowed.
 	min_stacks: int,
 	/// The maximum number of stacks.
-	max_stacks: int,
+	max_stacks: int @ 1..,
 	/// Determines the duration of the specified status effect(s) for each stack.
-	duration_per_stack: int,
+	duration_per_stack: int @ 1..,
 	/// Determines how fast the power will gain/lose stacks in ticks.
-	tick_rate?: int,
+	tick_rate?: int @ 1..,
 	/// If specified, this status effect will be applied on the entity that has the power.
 	effect?: StatusEffectInstance,
 	/// If specified, these status effects will be applied on the entity that has the power.
-	effects?: Array,
+	effects?: [StatusEffectInstance],
 }
 
 /// # Starting Equipment
@@ -5195,10 +5330,11 @@ dispatch origins:power["origins:stacking_status_effect", "apoli:stacking_status_
 /// 
 /// This example will give the player a White Stained Glass Block in its head equipment slot, a white-colored Leather Chestplate, Leggings and Boots in its chest, legs, and feet equipment slots respectively and a Written Book with two pages in the 9th hotbar slot.
 dispatch origins:power["origins:starting_equipment", "apoli:starting_equipment"] to struct StartingEquipment {
+	...Conditioned,
 	/// If specified, this item will be given to the player (can be specified in an inventory slot).
 	stack?: PositionedItemStack,
 	/// If specified, these items will be given to the player (can be specified in an inventory slot).
-	stacks?: Array,
+	stacks?: [PositionedItemStack],
 	/// Determines whether the specified item(s) should be given after respawning.
 	recurrent?: boolean,
 }
@@ -5248,10 +5384,13 @@ dispatch origins:power["origins:starting_equipment", "apoli:starting_equipment"]
 /// 
 /// This example will replace the full (`assets/minecraft/textures/gui/sprites/hud/heart/full.png`), and half (`assets/minecraft/textures/gui/sprites/hud/heart/half.png`) heart status bar texture sprites with `example:hud/custom_heart/full` (`assets/example/textures/gui/sprites/hud/custom_heart/full.png`) and `example:hud/custom_heart/half` (`assets/example/textures/gui/sprites/hud/custom_heart/half.png`) custom status bar texture sprites respectively.
 dispatch origins:power["origins:status_bar_texture", "apoli:status_bar_texture"] to struct StatusBarTexture {
-	/// The identifier (including the `textures` directory and the `.png` file extension) of the status bar sprite sheet to replace the default one with (e.g: [the vanilla status bar sprite sheet](https://raw.githubusercontent.com/misode/mcmeta/6d496b1a91476c4fdd45fdb093d0319141f9c109/assets/minecraft/textures/gui/icons.png)). <span style="color: darkred"><b>Use <code>texture_map</code> instead.</b></span>
-	texture?: Identifier,
+	...Conditioned,
+	/// **DEPRECATED** The identifier (including the `textures` directory and the `.png` file extension) of the status bar sprite sheet to replace the default one with (e.g: [the vanilla status bar sprite sheet](https://raw.githubusercontent.com/misode/mcmeta/6d496b1a91476c4fdd45fdb093d0319141f9c109/assets/minecraft/textures/gui/icons.png)). <span style="color: darkred"><b>Use <code>texture_map</code> instead.</b></span>
+	texture?: string,
 	/// An object with `"key": "value"` [identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) pairs that determine which status bar texture sprite (`"key"`) will be replaced by a new status bar texture sprite (`"value"`).
-	texture_map?: object,
+	texture_map?: struct {
+		[#[id(registry="texture",path="gui/sprites/")] string]: #[id(registry="texture",path="gui/sprites/")] string
+	},
 }
 
 /// # Swimming
@@ -5275,7 +5414,9 @@ dispatch origins:power["origins:status_bar_texture", "apoli:status_bar_texture"]
 /// ```
 /// 
 /// This example will make the player swim instead of sprint if the player is on the ground.
-dispatch origins:power["origins:swimming", "apoli:swimming"] to struct Swimming {}
+dispatch origins:power["origins:swimming", "apoli:swimming"] to struct Swimming {
+	...Conditioned,
+}
 
 /// # Target Action On Hit
 /// 
@@ -5309,6 +5450,7 @@ dispatch origins:power["origins:swimming", "apoli:swimming"] to struct Swimming 
 /// 
 /// This example will apply a Slowness IV status effect on the target entity that would last for 5 seconds for every 10 seconds of usage.
 dispatch origins:power["origins:target_action_on_hit", "apoli:target_action_on_hit"] to struct TargetActionOnHit {
+	...Conditioned,
 	...OptionalCooldown,
 	/// The action to execute on the entity that has been hit.
 	entity_action: EntityAction,
@@ -5363,6 +5505,7 @@ dispatch origins:power["origins:target_action_on_hit", "apoli:target_action_on_h
 /// 
 /// This example will provide a switch that is active by default and can be toggled via sneaking and pressing the `key.attack` keybind. This example will also retain its state if the entity is no longer sneaking.
 dispatch origins:power["origins:toggle", "apoli:toggle"] to struct Toggle {
+	...Conditioned,
 	/// Determines whether the state of this power type should be ON by default.
 	active_by_default?: boolean,
 	/// Which active key this power should respond to.
@@ -5395,6 +5538,7 @@ dispatch origins:power["origins:toggle", "apoli:toggle"] to struct Toggle {
 /// 
 /// This example will give the player night vision while underwater, improving their vision by quite a bit that can be turned on and off by pressing the Primary ability key.
 dispatch origins:power["origins:toggle_night_vision", "apoli:toggle_night_vision"] to struct ToggleNightVision {
+	...Conditioned,
 	/// Whether this power starts in the on or off state.
 	active_by_default?: boolean,
 	/// How strong the night vision effect is. Range: 0.0 - 1.0.
@@ -5453,12 +5597,13 @@ dispatch origins:power["origins:toggle_night_vision", "apoli:toggle_night_vision
 /// 
 /// This example will apply a yellow-colored "`Happy birthday!`" tooltip to a Cake item.
 dispatch origins:power["origins:tooltip", "apoli:tooltip"] to struct Tooltip {
+	...Conditioned,
 	/// If specified, the specified tooltip(s) will only apply to items that fulfills this condition.
 	item_condition?: ItemCondition,
 	/// If specified, apply this string as a tooltip.
-	text?: TextComponent,
+	text?: Text,
 	/// If specified, apply these strings as a tooltip.
-	texts?: Array,
+	texts?: [Text],
 	/// Determines the placement order of the tooltip(s) of the power.
 	order?: int,
 }
@@ -5493,6 +5638,7 @@ dispatch origins:power["origins:tooltip", "apoli:tooltip"] to struct Tooltip {
 /// 
 /// This example will allow the entity that has the power to walk on lava similar to Striders. The suggested condition was added to allow the entity to swim in lava once they sink, which may happens when they walk into a Lava-fall.
 dispatch origins:power["origins:walk_on_fluid", "apoli:walk_on_fluid"] to struct WalkOnFluid {
+	...Conditioned,
 	/// The namespace and ID of the fluid tag on which the player should be able to walk onto. Most important examples: `minecraft:water` and `minecraft:lava`.
-	fluid: Identifier,
+	fluid: #[id(registry="fluid",tags="implicit")] string,
 }

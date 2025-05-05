@@ -9,6 +9,75 @@ enum(string) FluidHandling {
     SourceOnly = "source_only"
 }
 
+enum(string) FeatureRenderer {
+    /// The armor that an entity is wearing.
+    Armor = "armor",
+    /// The cape that a player might have.
+    Cape = "cape",
+    /// The collar of a tamed Cat.
+    CatCollar = "cat_collar",
+    /// The [mouse ears](https://origins.readthedocs.io/en/latest/img/deadmau5_ears_render.png) that the official Deadmau5 Minecraft account has on its head.
+    Deadmau5 = "deadmau5",
+    /// The item in a Dolphin's mouth that appears when the Dolphin is playing with the said item.
+    DolphinHeldItem = "dolphin_held_item",
+    /// The outer layer of the Drowned's texture (clothes, vegetation, etc.).
+    DrownedOverlay = "drowned_overlay",
+    /// The elytra on the back of an entity. Also works for elytras from the Elytra Flight (Power Type).
+    Elytra = "elytra",
+    /// The block an Enderman is holding.
+    EndermanBlock = "enderman_block",
+    /// The animated swirling texture that appears on a Creeper (when charged) and a Wither Boss (when at half health).
+    EnergySwirlOverlay = "energy_swirl_overlay",
+    /// The glow-in-the-dark eyes of a Spider, Cave Spider and Enderman.
+    Eyes = "eyes",
+    /// The item in a Fox's mouth.
+    FoxHeldItem = "fox_held_item",
+    /// The non-armor item on an entity's head.
+    Head = "head",
+    /// The item in the hands of a bipedal mob.
+    HeldItem = "held_item",
+    /// The armor on a Horse that appears when the Horse is wearing an armor.
+    HorseArmor = "horse_armor",
+    /// The patterns on a Horse. (See [Minecraft Wiki: Horse (Appearance)](https://minecraft.wiki/w/Horse#Appearance))
+    HorseMarking = "horse_marking",
+    /// The cracks on an Iron Golem that appears when the Iron Golem is damaged.
+    IronGolemCrack = "iron_golem_crack",
+    /// The flowers and vines that appears on an Iron Golem.
+    IronGolemFlower = "iron_golem_flower",
+    /// The decoration on a Llama that appears when a Llama is wearing a certain carpet. (See [Minecraft Wiki: Llama (Decoration)](https://minecraft.wiki/w/Horse#Appearance))
+    LlamaDecor = "llama_decor",
+    /// The mushrooms on the back of Mooshrooms.
+    MooshroomMushroom = "mooshroom_mushroom",
+    /// The item a Panda is holding that appears when the Panda is eating.
+    PandaHeldItem = "panda_held_item",
+    /// The saddle on a Pig or any mobs that can have saddles.
+    Saddle = "saddle",
+    /// The wool coat of a Sheep.
+    SheepWool = "sheep_wool",
+    /// The parrot(s) perching on a player.
+    ShoulderParrot = "shoulder_parrot",
+    /// The head of a Shulker.
+    ShulkerHead = "shulker_head",
+    /// The translucent, jelly-like part of a Slime.
+    SlimeOverlay = "slime_overlay",
+    /// The pumpkin on the head of a Snow Golem.
+    SnowmanPumpkin = "snowman_pumpkin",
+    /// The teared clothing of a Stray.
+    StrayOverlay = "stray_overlay",
+    /// The objects that can get stuck to a player, like Arrows or Bee Stingers.
+    StuckObjects = "stuck_objects",
+    /// The animated swirling texture that appears when a player uses a Trident that has the Riptide enchantment.
+    TridentRiptide = "trident_riptide",
+    /// The patterns on top of a Tropical Fish's base color (See [Minecraft Wiki: Tropical Fish (Varieties)](https://minecraft.wiki/w/Tropical_Fish#Varieties))
+    TropicalFishColor = "tropical_fish_color",
+    /// The biome-dependent clothes of a Villager.
+    VillagerClothing = "villager_clothing",
+    /// The item that a Villager presents in their arms when a player holds an item that they want to buy.
+    VillagerHeldItem = "villager_held_item",
+    /// The collar of a tamed Wolf.
+    WolfCollar = "wolf_collar",
+}
+
 struct DamageSource {
     /// The name of the damage source. Controls death message as well as other interactions. Consider the List of Damage Source Names when picking a name.
     name: string,
@@ -105,6 +174,7 @@ type ParticleEffect = (
 )
 
 type NBT<T> = (
-		#[nbt_path=T] string |
-		T |
-	)
+    #[nbt_path=T] string |
+    T |
+)
+

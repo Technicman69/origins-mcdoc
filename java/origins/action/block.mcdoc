@@ -89,7 +89,7 @@ dispatch origins:block_action["origins:add_block", "apoli:add_block"] to struct 
 /// This example will replace all blocks that aren't included in the `#minecraft:dragon_immune` block tag with air within a 4 blocks radius with a shape of a diamond.
 dispatch origins:block_action["origins:area_of_effect", "apoli:area_of_effect"] to struct AreaOfEffect {
 	/// Determines the radius of the area.
-	radius?: int,
+	radius?: int @ 1..,
 	/// Determines the shape of the area.
 	shape?: Shape,
 	/// The block action to execute on the blocks within the specified radius.
@@ -190,7 +190,7 @@ dispatch origins:block_action["origins:execute_command", "apoli:execute_command"
 /// This example will summon an explosion at the position of where the block action was invoked that would only destroy blocks that are in the `#minecraft:impermeable` (`data/minecraft/tags/blocks/impermeable.json`) block tag.
 dispatch origins:block_action["origins:explode", "apoli:explode"] to struct Explode {
 	/// Determines the power of the explosion.
-	power: float,
+	power: float @ 0.0<..,
 	/// Determines the effect of the explosion to the terrain.
 	destruction_type?: Destruction,
 	/// If specified, the blocks that fulfill this condition will not be destroyed by the summoned explosion.
@@ -236,9 +236,9 @@ enum(string) Destruction {
 /// This example will cycle through the values of the `facing` property if available.
 dispatch origins:block_action["origins:modify_block_state", "apoli:modify_block_state"] to struct ModifyBlockState {
 	/// The name of the property that will be modified. Examples are `facing` or `age`. See [Minecraft Wiki: Block States (List of block states)](https://minecraft.wiki/w/Block_states#List_of_block_states) for possible values.
-	property: string,
-	/// Determines how the value specified in the `change` field is operated on the specified property. Accepts `"add"` or `"set"`.
-	operation?: string,
+	property: mcdoc:block_state_keys[%fallback],
+	/// Determines how the value specified in the `change` field is operated on the specified property.
+	operation?: ("add" | "set"),
 	/// If specified, the value to add, remove or set to/from the specified property if the specified property is an integer.
 	change?: int,
 	/// If specified, the boolean to use as the new value for the specified property if the specified property is a boolean.

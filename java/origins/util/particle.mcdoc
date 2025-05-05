@@ -1,0 +1,9 @@
+type ParticleEffect = (
+    #[id="particle"] string |
+    Particle
+)
+
+struct Particle {
+    type: #[id="particle"] string,
+    params?: string
+}

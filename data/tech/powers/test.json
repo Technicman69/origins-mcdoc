@@ -1,4 +1,7 @@
 {
-    "type": "apoli:inventory",
-    "title": "LMAO  NO"
+    "type": "apoli:modify_damage_taken",
+    "bientity_condition": {
+        "type": "apoli:in_set",
+        "set": "origins:aquatic_asdasdas"
+    }
 }

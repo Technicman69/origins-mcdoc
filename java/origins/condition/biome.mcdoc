@@ -142,7 +142,7 @@ dispatch origins:biome_condition["origins:in_tag", "apoli:in_tag"] to struct InT
 /// This example will check if the biome the entity is currently in has a snowy precipitation. (e.g: `minecraft:snowy_taiga`, `minecraft:ice_spikes`, etc.)
 dispatch origins:biome_condition["origins:precipitation", "apoli:precipitation"] to struct Precipitation {
 	/// Which precipitation the biome has to have in order to succeed the check. Accepts `"none"`, `"rain"` or `"snow"`. Due to limitations with the system, this will check precipitation at a world height of 64.
-	precipitation: string,
+	precipitation: ("none" | "rain" | "snow"),
 }
 
 /// # Temperature
