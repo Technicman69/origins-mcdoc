@@ -7,7 +7,7 @@ Dependencies: Datapack Helper Plus by Spyglass (ofc)
 Reference mcdoc used: https://github.com/SpyglassMC/vanilla-mcdoc
 
 ## How to use
-Currently the only way is copy-pasting everything in the datapack's folder lol
+Currently the only way is either adding whole repo to the workplace or putting it in the datapack's folder
 I don't know any other way how to include dependencies yet. Imma ask Misode in the future
 
 ## Features
@@ -28,5 +28,10 @@ The syntax checking currently includes data types and files listed below:
 - Action types
 - Condition types
  
-## Currently not supported:
-- Most of Data Types
+## Future:
+- specify which power types don't have condition fields
+- Alias fields
+- support for texture/model/shader paths
+- support for particle params syntax
+- support for 1.21
+- support for earlier versions

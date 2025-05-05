@@ -264,7 +264,7 @@ dispatch origins:damage_condition["origins:out_of_world", "apoli:out_of_world"] 
 /// This example will check if the damage source is a burning arrow.
 dispatch origins:damage_condition["origins:projectile", "apoli:projectile"] to struct Projectile {
 	/// If set, the check will only pass if the projectile was of an entity type with the specified namespace and ID.
-	projectile?: #[id=entity_type] string,
+	projectile?: #[id="entity_type"] string,
 	/// If set, the check will only pass if the projectile entity fulfills this condition.
 	projectile_condition?: EntityCondition,
 }

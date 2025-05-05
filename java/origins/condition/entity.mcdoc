@@ -664,7 +664,7 @@ enum(string) MobGroup {
 /// This example will check if the entity is a Creeper.
 dispatch origins:entity_condition["origins:entity_type", "apoli:entity_type"] to struct EntityType {
 	/// The namespace and ID of the entity type the entity needs to have to pass the check.
-	entity_type: #[id=entity_type] string,
+	entity_type: #[id="entity_type"] string,
 }
 
 /// # Equipped Item
@@ -1536,7 +1536,7 @@ dispatch origins:entity_condition["origins:power_type", "apoli:power_type"] to s
 /// This being the contents of the `example:check_if_thunderstorm` predicate. (`data\example\predicates\weather\is_thunderstorm.json`)
 dispatch origins:entity_condition["origins:predicate", "apoli:predicate"] to struct Predicate {
 	/// The namespace and ID of the predicate the entity needs to pass.
-	predicate: #[id=predicate] string,
+	predicate: #[id="predicate"] string,
 }
 
 /// # Raycast

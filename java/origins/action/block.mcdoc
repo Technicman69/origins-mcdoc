@@ -39,7 +39,7 @@ struct BlockAction {
 /// This example will add a Chest block facing north at the position of the block action type.
 dispatch origins:block_action["origins:add_block", "apoli:add_block"] to struct AddBlock {
 	/// The namespace and ID of the block to place.
-	block: #[id=block] string,
+	block: #[id="block"] string,
 }
 
 /// # Area of Effect
@@ -314,7 +314,7 @@ dispatch origins:block_action["origins:offset", "apoli:offset"] to struct Offset
 /// This example will set a Lit Redstone Lamp at the position of the block action type.
 dispatch origins:block_action["origins:set_block", "apoli:set_block"] to struct SetBlock {
 	/// The namespace and ID of the block to place.
-	block: #[id=block] string,
+	block: #[id="block"] string,
 }
 
 /// #	Spawn Entity

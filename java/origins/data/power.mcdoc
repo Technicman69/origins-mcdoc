@@ -1644,36 +1644,18 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 	item_condition?: ItemCondition,
 	/// The food component that the item grants upon eating it.
 	food_component: "FoodComponent",
-	...(
-        struct {
-            /// If specified, this item stack will be given to the player.
-            result_stack?: ItemStack
-        } |
-        struct {
-            /// If specified, this item stack will be given to the player.
-            return_stack?: ItemStack
-        }
-    ),
-	...(
-        struct {
-            /// Determines whether the animation effect for consuming the item should be "eating" (`"eat"`, displays particle effects based on the item) or "drinking" (`"drink"`, no particle effects.)
-            consume_animation?: string
-        } |
-        struct {
-            /// Determines whether the animation effect for consuming the item should be "eating" (`"eat"`, displays particle effects based on the item) or "drinking" (`"drink"`, no particle effects.)
-            use_action?: string
-        }
-    ),
-	...(
-        struct {
-            /// If specified, the sound event with this namespace and ID will be played when the item is eaten.
-            consume_sound?: #[id="sound_event"] string
-        } |
-        struct {
-            /// If specified, the sound event with this namespace and ID will be played when the item is eaten.
-            sound?: #[id="sound_event"] string
-        }
-    ),
+	/// If specified, this item stack will be given to the player.
+    result_stack?: ItemStack,
+	/// If specified, this item stack will be given to the player.
+	return_stack?: ItemStack,
+	/// Determines whether the animation effect for consuming the item should be "eating" (`"eat"`, displays particle effects based on the item) or "drinking" (`"drink"`, no particle effects.)
+	consume_animation?: string,
+	/// Determines whether the animation effect for consuming the item should be "eating" (`"eat"`, displays particle effects based on the item) or "drinking" (`"drink"`, no particle effects.)
+	use_action?: string,
+	/// If specified, the sound event with this namespace and ID will be played when the item is eaten.
+	consume_sound?: #[id="sound_event"] string,
+	/// If specified, the sound event with this namespace and ID will be played when the item is eaten.
+	sound?: #[id="sound_event"] string,
 	/// If specified, this modifier will be applied on the maximum time the item is being consumed (in ticks).
 	consuming_time_modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied on the the maximum time the item is being consumed (in ticks).

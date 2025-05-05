@@ -1,4 +1,4 @@
 type Enchantment = (
-    #[id=enchantment] string |
+    #[id="enchantment"] string |
     #[id] "origins:water_protection" |
 )
