@@ -28,6 +28,10 @@ The syntax checking currently includes data types and files listed below:
 - Action types
 - Condition types
  
+## Problems:
+- power type "origins:multiple" shouldn't be a subpower.
+- subpowers of a "origins:multiple" power type are not registered as a power resource.
+
 ## Future:
 - specify which power types don't have condition fields
 - Alias fields
