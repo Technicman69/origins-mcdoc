@@ -4,12 +4,22 @@ type ResourceBarFile = (
 )
 
 type BadgeFile = (
+    Badge |
     Color |
     Icon |
     NumberOrExpression |
     Shape |
     SunOrMoon |
 )
+
+enum(string) Badge {
+    Active = "origins:textures/gui/badge/active.png",
+    ArrowUp = "origins:textures/gui/badge/arrow_up.png",
+    Info = "origins:textures/gui/badge/info.png",
+    Recipe = "origins:textures/gui/badge/recipe.png",
+    Star = "origins:textures/gui/badge/star.png",
+    Toggle = "origins:textures/gui/badge/toggle.png",
+}
 
 enum(string) ResourceBar {
     Apace = "origins:textures/gui/resource_bar.png",

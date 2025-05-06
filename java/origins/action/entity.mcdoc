@@ -12,6 +12,7 @@ use ::java::origins::util::FluidHandling
 use ::java::origins::util::DamageSource
 use ::java::origins::util::attribute::AttributeModifier
 use ::java::origins::util::Shape
+use ::java::origins::util::ShapeType
 use ::java::origins::util::Space
 use ::java::origins::util::Vector
 use ::java::origins::util::inventory::ProcessMode
@@ -88,7 +89,7 @@ dispatch origins:entity_action["origins:execute_command", "apoli:execute_command
 /// This example will restore 2 hearts to entities that were added to the `example:special_pets` (`data/example/powers/special_pets.json`) power using the [Add to Set (Bientity Action Type)](https://origins.readthedocs.io/en/latest/types/bientity_action_types/add_to_set).
 dispatch origins:entity_action["origins:action_on_set", "apoli:action_on_set"] to struct ActionOnSet {
 	/// The ID of the power.
-	set: #[id="origins:power"] string,
+	set: (#[id="origins:power"] string | string),
 	/// The bientity action to execute on both or either the actor and target.
 	bientity_action: BientityAction,
 	/// If specified, only execute the bientity action if this bientity condition is fulfilled by both or either the actor and target.
@@ -271,7 +272,7 @@ dispatch origins:entity_action["origins:apply_effect", "apoli:apply_effect"] to 
 /// ```
 /// 
 /// This example will set entities within a 32 block radius on fire for 5 seconds if the entities that are within the radius can be "seen" by the entity that invoked the action.
-struct AreaOfEffectBase {
+dispatch origins:entity_action["origins:area_of_effect", "apoli:area_of_effect"] to struct AreaOfEffect {
 	/// Determines the radius of the area.
 	radius?: float @ 0.0<..,
 	/// Determines the shape of the area.
@@ -280,34 +281,11 @@ struct AreaOfEffectBase {
 	bientity_action: BientityAction,
 	/// If specified, the specified bientity action will only be executed on either or both the '**actor**' or '**target(s)**' that fulfill this bientity condition.
 	bientity_condition?: BientityCondition,
+	/// Determines whether the '**actor**' should be included as a target.
+	include_actor?: boolean,
+	/// Determines whether the '**actor**' should be included as a target.
+	include_target?: boolean
 }
-
-dispatch origins:entity_action["origins:area_of_effect", "apoli:area_of_effect"] to (
-	struct {
-        /// Determines the radius of the area.
-		radius?: float @ 0.0<..,
-		/// Determines the shape of the area.
-		shape?: Shape,
-		/// The bientity action to execute on either or both the '**actor**' or the '**target(s)**'.
-		bientity_action: BientityAction,
-		/// If specified, the specified bientity action will only be executed on either or both the '**actor**' or '**target(s)**' that fulfill this bientity condition.
-		bientity_condition?: BientityCondition,
-		/// Determines whether the '**actor**' should be included as a target.
-        include_actor: boolean
-    } |
-    struct {
-        /// Determines the radius of the area.
-		radius?: float @ 0.0<..,
-		/// Determines the shape of the area.
-		shape?: Shape,
-		/// The bientity action to execute on either or both the '**actor**' or the '**target(s)**'.
-		bientity_action: BientityAction,
-		/// If specified, the specified bientity action will only be executed on either or both the '**actor**' or '**target(s)**' that fulfill this bientity condition.
-		bientity_condition?: BientityCondition,
-		/// Determines whether the '**actor**' should be included as a target.
-        include_target: boolean
-    } |
-)
 
 /// # Block Action At
 /// 
@@ -358,7 +336,7 @@ dispatch origins:entity_action["origins:block_action_at", "apoli:block_action_at
 /// This example will add 1 to the `namespace:example` (`data/namespace/powers/example.json`) power that uses the [Resource (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/resource).
 dispatch origins:entity_action["origins:change_resource", "apoli:change_resource"] to struct ChangeResource {
 	/// The namespace and ID of the power that uses the [Resource (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/resource) or has a built-in cooldown.
-	resource: #[id="origins:power"] string,
+	resource: (#[id="origins:power"] string | string),
 	/// This value will be added to the resource (won't go below `min` or above `max` of the [Resource (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/resource)).
 	change: int,
 	/// Determines if the action should add or set the value of the resource. Accepts `"add"` or `"set"`.
@@ -545,7 +523,7 @@ dispatch origins:entity_action["origins:drop_inventory", "apoli:drop_inventory"]
 	/// If specified, only items in the designated slots will be dropped.
 	slots?: [ItemSlot],
 	/// If specified, the items in the inventory of this power will be dropped instead of the items in the entity's inventory if `inventory_type` is set to `"power"`.
-	power?: #[id="origins:power"] string,
+	power?: (#[id="origins:power"] string | string),
 	/// If `true`, items will be thrown in random directions instead of being normally dropped, similar to how items are dropped when you die.
 	throw_randomly?: boolean,
 	/// If `true`, the dropped items will have their `Thrower` NBT set as the `UUID` NBT of the entity that invoked the action.
@@ -927,7 +905,7 @@ dispatch origins:entity_action["origins:grant_power", "apoli:grant_power"] to st
 		#[match_regex(pattern="^([a-z0-9-_.]*|\\*):\\*?[a-z0-9-_.]*(\\/[a-z0-9-_.]*)*$")] string |
 	),
 	/// The namespace and ID of the source of the granted power.
-	source: (#[id(registry="origins:source", define=true)] #[match_regex(pattern="^([a-z0-9-_.]*|\\*):\\*?[a-z0-9-_.]*(\\/[a-z0-9-_.]*)*$")] string),
+	source: (#[id(registry="origins:source", define=true)] string |  #[match_regex(pattern="^([a-z0-9-_.]*|\\*):\\*?[a-z0-9-_.]*(\\/[a-z0-9-_.]*)*$")] string),
 }
 
 /// # Heal
@@ -1037,7 +1015,7 @@ dispatch origins:entity_action["origins:modify_inventory", "apoli:modify_invento
 	/// If specified, only items in the designated slots will be modified.
 	slots?: [ItemSlot],
 	/// If specified, the items in the inventory of this power will be modified instead of the items in the entity's inventory if `inventory_type` is set to `"power"`.
-	power?: #[id="origins:power"] string,
+	power?: (#[id="origins:power"] string | string),
 	/// Determines how the affected item stacks in the specified inventory are modified.
 	process_mode?: ProcessMode,
 	/// Determines the max amount of times the action should modify item stacks in the inventory. If the specified value is <= `0`, then there will be no limit.
@@ -1086,7 +1064,7 @@ dispatch origins:entity_action["origins:modify_resource", "apoli:modify_resource
 	/// This modifier will be applied to the current value of the target power.
 	modifier: AttributeModifier,
 	/// This power will have its value modified; as long as the power is using the [Resource (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/resource) or the [Cooldown (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/cooldown).
-	resource: #[id="origins:power"] string,
+	resource: (#[id="origins:power"] string | string),
 }
 
 /// #   Modify Stat
@@ -1386,7 +1364,7 @@ dispatch origins:entity_action["origins:raycast", "apoli:raycast"] to struct Ray
 	/// Determines whether the ray-cast should include entities.
 	entity?: boolean,
 	/// Determines how the ray-cast will handle blocks.
-	shape_type?: Shape,
+	shape_type?: ShapeType,
 	/// Determines how the ray-cast will handle fluids.
 	fluid_handling?: FluidHandling,
 	/// Determines how the direction will be calculated. <span style="color: goldenrod;"><b>Only used if <code>direction</code> is specified.</b></span>
@@ -1453,7 +1431,7 @@ dispatch origins:entity_action["origins:raycast", "apoli:raycast"] to struct Ray
 /// This example will remove the power itself from the entity.
 dispatch origins:entity_action["origins:remove_power", "apoli:remove_power"] to struct RemovePower {
 	/// The ID of the power to remove from the entity.
-	power: #[id="origins:power"] string,
+	power: (#[id="origins:power"] string | string),
 }
 
 /// #   Replace Inventory
@@ -1506,7 +1484,7 @@ dispatch origins:entity_action["origins:replace_inventory", "apoli:replace_inven
 	/// If specified, only items in the designated slots will be replaced.
 	slots?: [ItemSlot],
 	/// If specified, the items in the inventory of this power will be replaced instead of the items in the entity's inventory if `inventory_type` is set to `"power"`.
-	power?: #[id="origins:power"] string,
+	power?: (#[id="origins:power"] string | string),
 	/// The item to use as a replacement for the affected items.
 	stack: ItemStack,
 	/// Determines whether to merge the NBTs of the item that will be replaced and the NBTs of the item that will be used as a replacement.
@@ -1589,7 +1567,7 @@ dispatch origins:entity_action["origins:revoke_all_powers", "apoli:revoke_all_po
 /// This example will revoke the `origins:elytra` power from the `origins:elytrian` source from the entity.
 dispatch origins:entity_action["origins:revoke_power", "apoli:revoke_power"] to struct RevokePower {
 	/// The namespace and ID of the power to be revoked from the entity.
-	power: #[id="origins:power"] string,
+	power: (#[id="origins:power"] string | string),
 	/// The namespace and ID of the source of the power.
 	source: (#[id(registry="origins:source")] string | string),
 }
@@ -1915,7 +1893,7 @@ dispatch origins:entity_action["origins:swing_hand", "apoli:swing_hand"] to stru
 /// This example will toggle the state of the [`origins:phantomize`](https://github.com/apace100/origins-fabric/blob/1.17/src/main/resources/data/origins/powers/phantomize.json) (`data/origins/powers/phantomize.json`) power (e.g: ON --> OFF, OFF --> ON).
 dispatch origins:entity_action["origins:toggle", "apoli:toggle"] to struct Toggle {
 	/// The namespace and ID of the power that uses the [Toggle (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/toggle).
-	power: #[id="origins:power"] string,
+	power: (#[id="origins:power"] string | string),
 }
 
 /// # Trigger Cooldown
@@ -1956,7 +1934,7 @@ dispatch origins:entity_action["origins:toggle", "apoli:toggle"] to struct Toggl
 /// This example will trigger the cooldown of the 'Gift of the Winds' (`origins:launch_into_air` (`data/origins/powers/launch_into_air.json`)) power as if the entity had used that ability.
 dispatch origins:entity_action["origins:trigger_cooldown", "apoli:trigger_cooldown"] to struct TriggerCooldown {
 	/// The namespace and ID of the power that will be triggered.
-	power: #[id="origins:power"] string,
+	power: (#[id="origins:power"] string | string),
 }
 
 

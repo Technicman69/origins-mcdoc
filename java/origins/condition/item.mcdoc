@@ -302,7 +302,7 @@ dispatch origins:item_condition["origins:harvest_level", "apoli:harvest_level"] 
 /// This example will check if the item has Elytrian's Winged *(`origins:elytra`)* power embedded to it.
 dispatch origins:item_condition["origins:has_power", "apoli:has_power"] to struct HasPower {
 	/// The ID of the power to check for.
-	power: #[id="origins:power"] string,
+	power: (#[id="origins:power"] string | string),
 	/// If specified, this will check if the power embedded to the item is assigned to this equipment slot. Accepts one of `"head"`, `"chest"`, `"legs"`, `"feet"`, `"mainhand"` or `"offhand"`.
 	slot?: EquipmentSlot,
 }

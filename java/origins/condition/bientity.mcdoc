@@ -2,6 +2,7 @@ use ::java::origins::util::compare::Comparison
 use ::java::origins::util::FluidHandling
 use ::java::origins::util::Shape
 use ::java::origins::util::Axes
+use ::java::origins::util::ShapeType
 use super::EntityCondition
 
 struct BientityCondition {
@@ -120,7 +121,7 @@ dispatch origins:bientity_condition["origins:both", "apoli:both"] to struct Both
 /// This example will check if the straight path from the actor entity's eyes to the target entity's eyes is unobstructed. If the actor/target is behind a source/flowing fluid, is submerged in any kind of fluids, or behind a block that is not see-through (like Glass), the condition will return false.
 dispatch origins:bientity_condition["origins:can_see", "apoli:can_see"] to struct CanSee {
 	/// Determines how the ray-cast will handle blocks.
-	shape_type?: Shape,
+	shape_type?: ShapeType,
 	/// Determines how the ray-cast will handle fluids.
 	fluid_handling?: FluidHandling,
 }
@@ -251,7 +252,7 @@ dispatch origins:bientity_condition["origins:invert", "apoli:invert"] to struct 
 /// This example will check whether the target entity is either owned by the actor entity or if the target entity is within the `example:special_pets` (`data/example/powers/special_pets.json`) power.
 dispatch origins:bientity_condition["origins:in_set", "apoli:in_set"] to struct InSet {
 	/// The ID of the power to check whether the target entity is in.
-	set: #[id="origins:power"] string
+	set: (#[id="origins:power"] string | string)
 }
 
 /// # Owner

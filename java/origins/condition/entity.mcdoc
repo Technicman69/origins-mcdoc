@@ -9,6 +9,7 @@ use super::ItemCondition
 use ::java::origins::util::compare::Comparison
 use ::java::origins::util::FluidHandling
 use ::java::origins::util::Shape
+use ::java::origins::util::ShapeType
 use ::java::origins::util::Space
 use ::java::origins::util::Vector
 use ::java::origins::util::inventory::InventoryType
@@ -986,7 +987,7 @@ dispatch origins:entity_condition["origins:inventory", "apoli:inventory"] to str
 	/// If specified, only the item from this specified item slot is evaluated.
 	slot?: ItemSlot,
 	/// If specified and if `inventory_type` is `"power"`, the items in the inventory of this power will be evaluated instead.
-	power?: #[id="origins:power"] string,
+	power?: (#[id="origins:power"] string | string),
 	/// Determines how the amount of items/stacks that were evaluated should be compared to the specified value.
 	comparison?: Comparison,
 	/// The value at which the amount of items/stacks that were evaluated will be compared to.
@@ -1447,7 +1448,7 @@ dispatch origins:entity_condition["origins:passenger_recursive", "apoli:passenge
 /// This example will check if the player has the [`origins:damage_from_potions`](https://github.com/apace100/origins-fabric/blob/master/src/main/resources/data/origins/powers/damage_from_potions.json) power in its origin.
 dispatch origins:entity_condition["origins:power", "apoli:power"] to struct Power {
 	/// The namespace and ID of the power the entity needs to have to pass the check.
-	power: #[id="origins:power"] string,
+	power: (#[id="origins:power"] string | string),
 	/// If specified, the condition will check if the power is from the specified power source.
 	source?: (#[id(registry="origins:source")] string | string),
 }
@@ -1473,7 +1474,7 @@ dispatch origins:entity_condition["origins:power", "apoli:power"] to struct Powe
 /// This example will check if the [`origins:phantomize`](https://github.com/apace100/origins-fabric/blob/master/src/main/resources/data/origins/powers/phantomize.json) power is toggled on.
 dispatch origins:entity_condition["origins:power_active", "apoli:power_active"] to struct PowerActive {
 	/// The namespace and ID of the power which will be checked for being active.
-	power: #[id="origins:power"] string,
+	power: (#[id="origins:power"] string | string),
 }
 
 /// # Power Type
@@ -1580,7 +1581,7 @@ dispatch origins:entity_condition["origins:raycast", "apoli:raycast"] to struct 
 	/// Determines whether the ray-cast should include entities.
 	entity?: boolean,
 	/// Determines how the ray-cast will handle blocks.
-	shape_type?: Shape,
+	shape_type?: ShapeType,
 	/// Determines how the ray-cast will handle fluids.
 	fluid_handling?: FluidHandling,
 	/// Determines how the direction will be calculated. <span style="color: goldenrod;"><b>Only used if <code>direction</code> is specified.</b></span>
@@ -1665,7 +1666,7 @@ dispatch origins:entity_condition["origins:relative_health", "apoli:relative_hea
 /// This example will check if the player has a value of more than 50 in the `with_resource_subpower` sub-power of `example:a_multiple_power` power. (`data\example\powers\a_multiple_power.json`)
 dispatch origins:entity_condition["origins:resource", "apoli:resource"] to struct Resource {
 	/// The namespace and ID of a power that will be evaluated.
-	resource: #[id="origins:power"] string,
+	resource: (#[id="origins:power"] string | string),
 	/// Determines how the value of the specified power should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the value of the specified power will be compared to.
@@ -1909,7 +1910,7 @@ dispatch origins:entity_condition["origins:scoreboard", "apoli:scoreboard"] to s
 /// This example will check if the amount of entities stored in the `example:special_pets` (`data/example/powers/special_pets.json`) power is non-zero (e.g: if it's not empty).
 dispatch origins:entity_condition["origins:set_size", "apoli:set_size"] to struct SetSize {
 	/// The ID of the power.
-	set: #[id="origins:power"] string,
+	set: (#[id="origins:power"] string | string),
 	/// Determines how the amount of referenced entities in the specified power should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the amount of referenced entities in the specified power will be compared to.

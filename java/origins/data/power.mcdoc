@@ -76,7 +76,7 @@ dispatch minecraft:resource["origins:power"] to struct Power {
 
 struct OptionalCooldown {
     /// Interval of ticks this power needs to recharge before the power can be triggered again.
-    cooldown?: int @ 1..,
+    cooldown?: int @ 0..,
     /// Determines how the cooldown of this power is visualized on the HUD.
     hud_render?: HudRender,
 }
@@ -1643,7 +1643,7 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 	/// If specified, will only make the item edible and the specified actions will only be executed if this condition is fulfilled by the item.
 	item_condition?: ItemCondition,
 	/// The food component that the item grants upon eating it.
-	food_component: "FoodComponent",
+	food_component: FoodComponent,
 	/// If specified, this item stack will be given to the player.
     result_stack?: ItemStack,
 	/// If specified, this item stack will be given to the player.
@@ -1662,6 +1662,23 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 	consuming_time_modifiers?: [AttributeModifier],
 	/// Determines the priority of which the power will apply its modification to the item. Must be higher than 0 if the item is already edible.
 	priority?: int,
+}
+
+struct FoodComponent {
+	/// The amount of hunger shanks the food component recovers upon consumption.
+	hunger: int @ 0..,
+	/// The amount of saturation to give the player upon consumption.
+	saturation: float @ 0.0..,
+	/// Whether this food component counts as meat or not.
+	meat?: boolean,
+	/// Whether this food component is edible at full hunger or not.
+	always_edible?: boolean,
+	/// Whether this food component takes as long as dried kelp to eat (16 ticks) or not (32 ticks).
+	snack?: boolean,
+	/// A status effect and the chance of it triggering upon consuming something with this food component.
+	effect?: StatusEffectInstance,
+	/// A status effect and the chance of it triggering upon consuming something with this food component.
+	effects?: [StatusEffectInstance],
 }
 
 /// # Effect Immunity

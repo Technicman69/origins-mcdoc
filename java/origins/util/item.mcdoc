@@ -1,5 +1,7 @@
 use ::java::origins::util::inventory::PositionedItemSlot
 
+use super::NBT
+
 // Until 1.21
 struct ItemStack {
     /// ID of a registered item.
@@ -7,7 +9,7 @@ struct ItemStack {
     /// Size of the stack.
     amount?: byte,
     /// NBT data of the item.
-    tag?: #[nbt=minecraft:item[[item]]] string,
+    tag?: NBT<minecraft:item[[item]]>,
 }
 
 // Until 1.21
@@ -17,7 +19,7 @@ struct PositionedItemStack {
     /// Size of the stack.
     amount?: byte,
     /// NBT data of the item.
-    tag?: #[nbt=minecraft:item[[item]]] string,
+    tag?: NBT<minecraft:item[[item]]>,
     /// Inventory slot position of the stack. If not specified, will be the first free slot in the inventory. See [Positioned Item Stack Slots](https://origins.readthedocs.io/en/latest/misc/extras/positioned_item_stack_slots/) for possible values.
     slot?: PositionedItemSlot,
 }
