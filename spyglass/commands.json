@@ -210,7 +210,7 @@
                                         "source": {
                                             "type": "argument",
                                             "executable": true,
-                                            "parser": "minecraft:resource_location"
+                                            "parser": "origins:source"
                                         }
                                     }
                                 }
@@ -307,7 +307,7 @@
                                         "source": {
                                             "type": "argument",
                                             "executable": true,
-                                            "parser": "minecraft:resource_location"
+                                            "parser": "minecraft:power"
                                         }
                                     }
                                 }
@@ -329,7 +329,7 @@
                                 "source": {
                                     "type": "argument",
                                     "executable": true,
-                                    "parser": "minecraft:resource_location"
+                                    "parser": "minecraft:power"
                                 }
                             }
                         }
@@ -502,11 +502,10 @@
                                             "type": "argument",
                                             "parser": "minecraft:operation",
                                             "children": {
-                                                "sourceEntity": {
+                                                "source": {
                                                     "type": "argument",
-                                                    "parser": "minecraft:entity",
+                                                    "parser": "minecraft:score_holder",
                                                     "properties": {
-                                                        "type": "entities",
                                                         "amount": "single"
                                                     },
                                                     "children": {
@@ -1061,7 +1060,51 @@
                             }
                         }
                     }
-                }
+                },
+                "debug": {
+                    "type": "literal",
+                    "children": {
+                        "config": {
+                            "type": "literal",
+                            "children": {
+                                "sync": {
+                                    "type": "literal",
+                                    "executable": true
+                                },
+                                "save": {
+                                    "type": "literal",
+                                    "executable": true
+                                },
+                                "load": {
+                                    "type": "literal",
+                                    "executable": true
+                                },
+                                "delete": {
+                                    "type": "literal",
+                                    "executable": true
+                                },
+                                "get": {
+                                    "type": "literal",
+                                    "executable": true
+                                },
+                                "set": {
+                                    "type": "literal",
+                                    "executable": true
+                                },
+                                "reset": {
+                                    "type": "literal",
+                                    "executable": true
+                                }
+                            }
+                        },
+                        "delete_scale_data": {
+                        }
+                    }
+                },
+                "easing": {},
+                "modifier": {},
+                "power": {},
+                "randomize": {}
             }
         }
     }

@@ -3,5 +3,13 @@
     "bientity_condition": {
         "type": "apoli:in_set",
         "set": "origins:aquatic_asdasdas"
-    }
+    },
+    "badges": [
+        "tech:test",
+        {
+            "type": "origins:tooltip",
+            "sprite": "",
+            "text": "asdasds"
+        }
+    ]
 }

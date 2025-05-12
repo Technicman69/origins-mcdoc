@@ -4,7 +4,8 @@
       "@vanilla-datapack",
       "@vanilla-resourcepack",
       "@vanilla-mcdoc",
-      "./resources/origins/"
+      "./resources/origins/",
+      "./resources/apoli/"
     ],
     "mcmetaSummaryOverrides": {
       "commands": {
