@@ -22,6 +22,7 @@ use ::java::origins::util::inventory::InventoryType
 use ::java::origins::util::inventory::ItemSlot
 use ::java::origins::util::HeightmapType
 use ::java::origins::util::NBT
+use ::java::origins::util::particle::ParticleEffect
 
 struct EntityAction {
 	type: #[id] #[dispatcher_key="origins:entity_action"] string,
@@ -445,7 +446,7 @@ dispatch origins:entity_action["origins:damage", "apoli:damage"] to struct Damag
 	/// **DEPRICATED** Use `damage_type` instead. See [Damage Source (Data Type)](https://origins.readthedocs.io/en/latest/types/data_types/damage_source) for more details.
 	source?: DamageSource,
 	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
-	damage_type: #[id="damage_type"] string,
+	damage_type: (#[id="damage_type"] string | string),
 	/// If specified, this modifier will be applied to the damage taken by the entity.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the damage taken by the entity.
@@ -557,7 +558,7 @@ dispatch origins:entity_action["origins:drop_inventory", "apoli:drop_inventory"]
 /// This example will emit a `minecraft:ring_bell` game event, which has a redstone signal output of 6.
 dispatch origins:entity_action["origins:emit_game_event", "apoli:emit_game_event"] to struct EmitGameEvent {
 	/// The namespace and ID of a game event.
-	event: #[id="game_event"] string,
+	event: (#[id="game_event"] string | string),
 }
 
 /// # Ender Chest
@@ -762,7 +763,7 @@ dispatch origins:entity_action["origins:feed", "apoli:feed"] to struct Feed {
 /// This example will fire three snowballs at where the player is facing.
 dispatch origins:entity_action["origins:fire_projectile", "apoli:fire_projectile"] to struct FireProjectile {
 	/// The identifier of the projectile or entity that will be launched.
-	entity_type: #[id="entity_type"] string,
+	entity_type: (#[id="entity_type"] string | string),
 	/// Determines how much the projectile or entity that will be launched is affected by random spread.
 	divergence?: float,
 	/// Determines the speed of the projectile or entity that will be launched.
@@ -869,7 +870,7 @@ dispatch origins:entity_action["origins:give", "apoli:give"] to struct Give {
 /// This example will grant the player the Arbalistic advancement.
 dispatch origins:entity_action["origins:grant_advancement", "apoli:grant_advancement"] to struct GrantAdvancement {
 	/// The namespace and ID of the advancement to be granted to the player.
-	advancement: #[id="advancement"] string,
+	advancement: (#[id="advancement"] string | string),
 	/// If specified, determines the criteria to grant to the specified advancement.
 	criteria?: [#[advancement_criterion=(id=[advancement])] string],
 	/// If specified, determines the criterion to grant to the specified advancement.
@@ -1113,7 +1114,7 @@ dispatch origins:entity_action["origins:modify_resource", "apoli:modify_resource
 dispatch origins:entity_action["origins:modify_stat", "apoli:modify_stat"] to struct ModifyStat {
 	/// The type and name of the statistic to be modified.
 	stat: struct Stat {
-		type: #[id="stat_type"] string,
+		type: (#[id="stat_type"] string | string),
 		id: minecraft:statistic_type[[type]],
 	},
 	/// This modifier will be applied to the current value of the statistic specified.
@@ -1195,7 +1196,7 @@ dispatch origins:entity_action["origins:passenger_action", "apoli:passenger_acti
 /// This example will play the `minecraft:entity.enderman.death` sound event that can be heard within a 24 blocks distance. (`16 * 1.5 = 24`)
 dispatch origins:entity_action["origins:play_sound", "apoli:play_sound"] to struct PlaySound {
 	/// The ID of the sound event to play.
-	sound: #[id="sound_event"] string,
+	sound: (#[id="sound_event"] string | string),
 	/// If specified, this specifies the category and options the sound event falls under. Otherwise, uses the category specified in the entity that invoked this action. Accepts `"master"`, `"music"`, `"record"`, `"weather"`, `"block"`, `"hostile"`, `"neutral"`, `"players"`, `"ambient"` or `"voice"`.
 	category?: string,
 	/// The volume of the sound event.
@@ -1512,7 +1513,7 @@ dispatch origins:entity_action["origins:replace_inventory", "apoli:replace_inven
 /// This example will revoke the Arbalistic advancement from the player, if they have it.
 dispatch origins:entity_action["origins:revoke_advancement", "apoli:revoke_advancement"] to struct RevokeAdvancement {
 	/// The namespace and ID of the advancement to be revoked from the player.
-	advancement?: #[id="advancement"] string,
+	advancement?: (#[id="advancement"] string | string),
 	/// If specified, determines the criteria to revoke from the specified advancement.
 	criteria?: [#[advancement_criterion=(id=[advancement])] string],
 	/// If specified, determines the criterion to revoke from the specified advancement.
@@ -1780,7 +1781,7 @@ dispatch origins:entity_action["origins:spawn_effect_cloud", "apoli:spawn_effect
 /// This example will spawn a baby Zombie holding a Gold Block that has no AI at the position of the entity.
 dispatch origins:entity_action["origins:spawn_entity", "apoli:spawn_entity"] to struct SpawnEntity {
 	/// The namespace and ID of the entity type that will be spawned.
-	entity_type: #[id="entity_type"] string,
+	entity_type: (#[id="entity_type"] string | string),
 	/// If specified, this NBT data will be applied to the entity that will be spawned.
 	tag?: NBT<minecraft:entity[[entity_type]]>,
 	/// If specified, the specified entity action type will be executed on the entity that will be spawned when it is spawned.
@@ -1821,7 +1822,7 @@ dispatch origins:entity_action["origins:spawn_entity", "apoli:spawn_entity"] to 
 /// This example will spawn a particle cuboid that is about 5x0x5 in size that will use the Redstone Block texture.
 dispatch origins:entity_action["origins:spawn_particles", "apoli:spawn_particles"] to struct SpawnParticles {
 	/// The particle type that will be spawned.
-	particle: #[id="particle"] string,
+	particle: ParticleEffect,
 	/// If specified, the particle will only be visible if this bientity condition is fulfilled by either or both the entity that has the power and the entity looking at the entity that has the power.
 	bientity_condition?: BientityCondition,
 	/// How much of the specified particle type will be spawned.

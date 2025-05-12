@@ -1,5 +1,6 @@
 use super::EntityAction
 use ::java::origins::util::NBT
+use ::java::origins::util::enchant::Enchantment
 
 
 struct ItemAction {
@@ -151,7 +152,7 @@ dispatch origins:item_action["origins:merge_nbt", "apoli:merge_nbt"] to struct M
 /// This being the contents of the `example:stuff` (`data/example/item_modifiers/stuff.json`) item modifier.
 dispatch origins:item_action["origins:modify", "apoli:modify"] to struct Modify {
 	/// The ID of an item modifier.
-	modifier: #[id="item_modifier"] string,
+	modifier: (#[id="item_modifier"] string | string),
 }
 
 /// #   Remove Enchantment
@@ -176,9 +177,9 @@ dispatch origins:item_action["origins:modify", "apoli:modify"] to struct Modify 
 /// This example will remove the Mending enchantment from the item whilst resetting its 'repair cost'.
 dispatch origins:item_action["origins:remove_enchantment", "apoli:remove_enchantment"] to struct RemoveEnchantment {
 	/// If specified, this enchantment will be removed from the item.
-	enchantment?: #[id="enchantment"] string,
+	enchantment?: Enchantment,
 	/// If specified, these enchantments will be removed from the item.
-	enchantments?: [#[id="enchantment"] string],
+	enchantments?: [Enchantment],
 	/// If specified, only the enchantments that has the specified level will be removed from the item.
 	levels?: int,
 	/// Determines whether the 'repair cost' of the item should be reset.

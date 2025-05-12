@@ -131,7 +131,7 @@ dispatch origins:block_condition["origins:blast_resistance", "apoli:blast_resist
 /// This example will check if the block is either a Diamond Block or an Emerald Block.
 dispatch origins:block_condition["origins:block", "apoli:block"] to struct Block {
 	/// The namespace and ID of the block that this block needs to be to pass the check.
-	block: #[id="block"] string,
+	block: (#[id="block"] string | string),
 }
 
 /// #   Block Entity

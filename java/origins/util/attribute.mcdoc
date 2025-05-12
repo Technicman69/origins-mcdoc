@@ -49,7 +49,7 @@
 /// (For example: if the total value is 0.7, the new total value will be 1.05 since `0.7 * (1 + 0.5) = 1.05`)
 struct AttributedAttributeModifier {
 	/// ID of the attribute which will be modified by this modifier.
-	attribute: #[id="attribute"] string,
+	attribute: (#[id="attribute"] string | string),
 	/// The operation which will be performed by this modifier.
 	operation: AttributedAttributeModifierOperation,
 	/// The value to use for the modifier operation.
@@ -160,7 +160,7 @@ struct AttributeModifier {
 	/// The value to use for the modifier operation.
 	value: float,
 	/// If specified, the value of this power will be used instead of the value specified in the `value` field.
-	resource?: #[id="origins:resource"] string,
+	resource?: (#[id="origins:power"] string | string),
 	/// If specified, this modifier will be applied to the value of the modifier.
 	modifier?: AttributeModifier,
 }

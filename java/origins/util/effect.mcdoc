@@ -3,14 +3,12 @@ use ::java::util::effect::EffectId
 type EffectID = (
     #[until="1.20.2"] EffectId |
     #[since="1.20.2"] #[id="mob_effect"] string |
+    string |
 )
 
 struct StatusEffectInstance {
     /// The identifier of the status effect.
-    effect: (
-		#[until="1.20.2"] EffectId |
-		#[since="1.20.2"] #[id="mob_effect"] string |
-	),
+    effect: EffectID,
     /// Determines the duration of the status effect (in ticks).
     duration?: (
         int @ 1.. |

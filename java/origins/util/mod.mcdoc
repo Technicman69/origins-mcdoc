@@ -174,14 +174,6 @@ enum(string) HeightmapType {
 	WorldSurfaceWorldgen = "world_surface_wg",
 }
 
-type ParticleEffect = (
-    #[id="particle"] string |
-    struct {
-        type: #[id="particle"] string,
-        params: string,
-    } |
-)
-
 type NBT<T> = (
     #[nbt_path=T] string |
     T |

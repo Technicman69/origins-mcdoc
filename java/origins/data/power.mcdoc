@@ -18,6 +18,7 @@ use ::java::origins::util::attribute::AttributeModifier
 use ::java::origins::util::attribute::AttributedAttributeModifier
 use ::java::origins::util::inventory::PositionedItemSlot
 use ::java::origins::util::particle::ParticleEffect
+use ::java::origins::util::enchant::Enchantment
 
 use ::java::origins::action::BientityAction
 use ::java::origins::action::BlockAction
@@ -62,8 +63,8 @@ struct PowerBase {
     /// If set, it will display icon(s) after the name of the power.
     badges?: [(
 		#[id="origins:badge"] string |
-		Badge)
-	],
+		Badge |
+	)],
 }
 
 struct Conditioned {
@@ -1218,7 +1219,7 @@ dispatch origins:power["origins:attribute_modify_transfer", "apoli:attribute_mod
 	/// The ID of the class to transfer the value of an attribute modifier to. See [Value Modifying Power Classes](https://origins.readthedocs.io/en/latest//misc/extras/value_modifying_power_classes) for possible values.
 	class: ValueModifyingPowerClass,
 	/// The namespace and ID of the attribute to get the value from.
-	attribute: #[id="attribute"] string,
+	attribute: (#[id="attribute"] string | string),
 	/// Determines the multiplier for the value.
 	multiplier?: float,
 }
@@ -1548,9 +1549,9 @@ dispatch origins:power["origins:damage_over_time", "apoli:damage_over_time"] to 
 	/// **DEPRICATED** Use `damage_type` instead. See [Damage Source (Data Type)](https://origins.readthedocs.io/en/latest/types/data_types/damage_source) for more details.
 	damage_source?: DamageSource,
 	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
-	damage_type?: #[id="damage_type"] string,
+	damage_type?: (#[id="damage_type"] string | string),
 	/// If set, the total amount of levels of this enchantment will be counted on the player's armor to increase the `onset_delay`.
-	protection_enchantment?: #[id="enchantmnet"] string,
+	protection_enchantment?: Enchantment,
 	/// If `protection_enchantment` is set, this multiplier scales how effective it will be (1.0 = time the `onset_delay` is increased is the same as with Hydrophobia and Water Protection).
 	protection_effectiveness?: float,
 }
@@ -1656,9 +1657,9 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 	/// Determines whether the animation effect for consuming the item should be "eating" (`"eat"`, displays particle effects based on the item) or "drinking" (`"drink"`, no particle effects.)
 	use_action?: string,
 	/// If specified, the sound event with this namespace and ID will be played when the item is eaten.
-	consume_sound?: #[id="sound_event"] string,
+	consume_sound?: (#[id="sound_event"] string | string),
 	/// If specified, the sound event with this namespace and ID will be played when the item is eaten.
-	sound?: #[id="sound_event"] string,
+	sound?: (#[id="sound_event"] string | string),
 	/// If specified, this modifier will be applied on the maximum time the item is being consumed (in ticks).
 	consuming_time_modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied on the the maximum time the item is being consumed (in ticks).
@@ -2031,7 +2032,7 @@ dispatch origins:power["origins:fire_projectile", "apoli:fire_projectile"] to st
 	...Conditioned,
 	...OptionalCooldown,
 	/// The ID of the entity type that will be fired.
-	entity_type: #[id="entity_type"] string,
+	entity_type: (#[id="entity_type"] string | string),
 	/// Number of projectiles to be fired.
 	count?: int @ 1..,
 	/// Determines the interval for firing multiple projectiles consecutively (in ticks). If set to 0, it will fire all the projectiles at the same tick.
@@ -2043,7 +2044,7 @@ dispatch origins:power["origins:fire_projectile", "apoli:fire_projectile"] to st
 	/// How much each projectile fired is affected by random spread.
 	divergence?: float,
 	/// If set, the sound with this ID will be played when the power is used.
-	sound?: #[id="sound_event"] string,
+	sound?: (#[id="sound_event"] string | string),
 	/// NBT data of the entity.
 	tag?: NBT<minecraft:entity[[entity_type]]>,
 	/// Which active key this power should respond to. If none is specified, this power will use the primary active power key (by default G).
@@ -2144,7 +2145,7 @@ dispatch origins:power["origins:game_event_listener", "apoli:game_event_listener
 	/// If specified, only executes the actions if the game event or vibration is emitted by a block that fulfills the block condition.
 	block_condition?: BlockCondition,
 	/// If specified, will make the power only listen for the game events with this namespace and IDs.
-	event?: #[id="game_event"] string,
+	event?: (#[id="game_event"] string | string),
 	/// If specified, will make the power only listen for the game events with these namespace and IDs.
 	events?: [#[id="game_event"] string],
 	/// If specified, will make the power only listen for the game events inside game event tag.
@@ -2562,7 +2563,7 @@ dispatch origins:power["origins:launch", "apoli:launch"] to struct Launch {
 	/// The speed applied to the player in the upwards direction.
 	speed: float,
 	/// If specified, the sound event with this namespace and ID will be played when the power is triggered.
-	sound?: #[id="sound_event"] string,
+	sound?: (#[id="sound_event"] string | string),
 	/// Which active key this power should respond to.
 	key?: Key,
 }
@@ -2697,7 +2698,7 @@ dispatch origins:power["origins:modify_air_speed", "apoli:modify_air_speed"] to 
 dispatch origins:power["origins:modify_attribute", "apoli:modify_attribute"] to struct ModifyAttribute {
 	...Conditioned,
 	/// The namespace and ID of the attribute to apply the modifier(s) to.
-	attribute: #[id="attribute"] string,
+	attribute: (#[id="attribute"] string | string),
 	/// If specified, this modifier will be applied to the specified attribute.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the specified attribute.
@@ -2739,7 +2740,7 @@ dispatch origins:power["origins:modify_block_render", "apoli:modify_block_render
 	/// If specified, only modify how the blocks that fulfill this condition would look like.
 	block_condition?: BlockCondition,
 	/// The namespace and ID of the replacement block.
-	block: #[id="block"] string,
+	block: (#[id="block"] string | string),
 }
 
 /// # Modify Break Speed
@@ -2859,7 +2860,7 @@ type Submersion = ("none" | "water" | "lava")
 dispatch origins:power["origins:modify_crafting", "apoli:modify_crafting"] to struct ModifyCrafting {
 	...Conditioned,
 	/// If specified, modifies the result item of the recipe that matches the specified namespace and ID.
-	recipe?: #[id="recipe"] string,
+	recipe?: (#[id="recipe"] string | string),
 	/// If specified, this action will be executed on the result item of a recipe.
 	item_action?: ItemAction,
 	/// If specified, this action will be executed on the result item of a recipe after crafting the said recipe.
@@ -3083,7 +3084,7 @@ dispatch origins:power["origins:modify_damage_taken", "apoli:modify_damage_taken
 dispatch origins:power["origins:modify_enchantment_level", "apoli:modify_enchantment_level"] to struct ModifyEnchantmentLevel {
 	...Conditioned,
 	/// ID of the enchantment to apply/modify the level of to the entity., e.g. `minecraft:protection`.
-	enchantment: #[id="enchantment"] string,
+	enchantment: Enchantment,
 	/// If specified, only applies/modifies the level of the specified enchantment to/from the entity if the item condition is fulfilled by the item.
 	item_condition?: ItemCondition,
 	/// If specified, this modifier will be applied to the current level of the specified enchantment from the entity.
@@ -3195,7 +3196,7 @@ dispatch origins:power["origins:modify_fluid_render", "apoli:modify_fluid_render
 	/// If specified, only modify how the fluids that fulfills this condition would look like.
 	fluid_condition?: FluidCondition,
 	/// The namespace and ID of the replacement fluid.
-	fluid: #[id="fluid"] string,
+	fluid: (#[id="fluid"] string | string),
 }
 
 /// # Modify Food
@@ -3529,11 +3530,11 @@ dispatch origins:power["origins:modify_lava_speed", "apoli:modify_lava_speed"] t
 dispatch origins:power["origins:modify_player_spawn", "apoli:modify_player_spawn"] to struct ModifyPlayerSpawn {
 	...Conditioned,
 	/// The namespace and ID of the dimension the player should spawn in.
-	dimension: #[id="dimension"] string,
+	dimension: (#[id="dimension"] string | string),
 	/// If specified, the player will only spawn in the biome that matches the specified namespace and ID.
-	biome?: #[id="worldgen/biome"] string,
+	biome?: (#[id="worldgen/biome"] string | string),
 	/// If specified, the player will only spawn in the specified namespace and ID of the structure. **The structure needs to generate in the specified dimension.**
-	structure?: #[id="worldgen/structure"] string,
+	structure?: (#[id="worldgen/structure"] string | string),
 	/// Determines whether the player should spawn near the world spawnpoint (0, 0) of the dimension (`"center"`) or near the coordinates of the Overworld spawnpoint (whilst considering the value of the `dimension_distance_multiplier` field) (`"default"`).
 	spawn_strategy?: ("center" | "default"),
 	/// Defines the ratio of Overworld blocks to blocks in the specified dimension. e.g: for The Nether dimension, this would be set to `0.125`. **This needs to be set when `spawn_strategy` is set to `"default"`**
@@ -4475,9 +4476,9 @@ dispatch origins:power["origins:prevent_feature_render", "apoli:prevent_feature_
 dispatch origins:power["origins:prevent_game_event", "apoli:prevent_game_event"] to struct PreventGameEvent {
 	...Conditioned,
 	/// If specified, the game event with this namespace and ID will be prevent from being emitted by the entity.
-	event?: #[id="game_event"] string,
+	event?: (#[id="game_event"] string | string),
 	/// If specified, the game events with these namespace and IDs will be prevent from being emitted by the entity.
-	events?: [#[id="game_event"] string],
+	events?: [(#[id="game_event"] string | string)],
 	/// If specified, the game events inside game event tag will be prevented from being emitted by the entity.
 	tag?: #[id(registry="game_event",tags="implicit")] string,
 	/// If specified, this action will be executed on the entity upon preventing game events.
@@ -4771,7 +4772,7 @@ dispatch origins:power["origins:replace_loot_table", "apoli:replace_loot_table"]
 	...Conditioned,
 	/// An object with `"key": "value"` pairs that determine which loot table (`"key"`) will be replaced with a new loot table (`"value"`).
 	replace: struct {
-		[#[regex_pattern] string]: #[id="loot_table"] string,
+		[#[regex_pattern] string]: (#[id="loot_table"] string | string),
 	},
 	/// If specified, the loot tables will only be replaced if this condition is fulfilled by either or both '**actor**' and '**target**' entities.
 	bientity_condition?: BientityCondition,

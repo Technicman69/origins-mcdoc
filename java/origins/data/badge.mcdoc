@@ -46,7 +46,7 @@ struct CraftingRecipe {
 	id: #[id] string,
 	/// The result of the crafting. Note that vanilla does not support NBT tags in the result.
 	result: struct {
-		item: #[id="item"] string,
+		item: (#[id="item"] string | string),
 		count?: int @ 1..64,
 	},
 	...minecraft:recipe_serializer[[type]],

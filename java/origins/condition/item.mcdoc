@@ -1,5 +1,6 @@
 use ::java::origins::util::compare::Comparison
 use ::java::origins::util::NBT
+use ::java::origins::util::enchant::Enchantment
 
 use ::java::util::slot::EquipmentSlot
 
@@ -167,9 +168,9 @@ dispatch origins:item_condition["origins:enchantable", "apoli:enchantable"] to s
 /// ```
 /// 
 /// This example will check if the item has 3 or more enchantments.
-dispatch origins:item_condition["origins:enchantment", "apoli:enchantment"] to struct Enchantment {
+dispatch origins:item_condition["origins:enchantment", "apoli:enchantment"] to struct EnchantmentCondition {
 	/// If specified, the level of the enchantment that corresponds to this identifier will be compared. Otherwise, the amount of enchantments in the item stack will be compared instead.
-	enchantment?: #[id="enchantment"] string,
+	enchantment?: Enchantment,
 	/// Determines whether to account for enchantments that were added/modified by unnatural means (e.g: via the [Modify Enchantment Level (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/modify_enchantment_level).)
 	use_modifications?: boolean,
 	/// Determines how the level of the specified enchantment, or the amount of enchantments in the item stack, should be compared to the specified value.
@@ -367,7 +368,7 @@ dispatch origins:item_condition["origins:ingredient", "apoli:ingredient"] to str
 
 type Ingredient = (
 	struct {
-		item: #[id="item"] string,
+		item: (#[id="item"] string | string),
 	} |
 	struct {
 		tag: #[id(registry="item",tags="implicit")] string,

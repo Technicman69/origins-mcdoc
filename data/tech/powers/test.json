@@ -1,15 +1,4 @@
 {
-    "type": "apoli:modify_damage_taken",
-    "bientity_condition": {
-        "type": "apoli:in_set",
-        "set": "origins:aquatic_asdasdas"
-    },
-    "badges": [
-        "tech:test",
-        {
-            "type": "origins:tooltip",
-            "sprite": "",
-            "text": "asdasds"
-        }
-    ]
+    "type": "apoli:prevent_game_event",
+    "event": "minecraft:block_activate"
 }
