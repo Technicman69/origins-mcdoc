@@ -62,7 +62,7 @@ struct PowerBase {
     loading_priority?: int,
     /// If set, it will display icon(s) after the name of the power.
     badges?: [(
-		#[id="origins:badge"] string |
+		(#[id="origins:badge"] string | string) |
 		Badge |
 	)],
 }

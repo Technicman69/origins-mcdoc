@@ -6,7 +6,7 @@
             "type": "apoli:if-else",
             "condition": {
                 "type": "apoli:in_tag",
-                "tag": "apoli:material/tnt"
+                "tag": "apoli:material/aggregate"
             },
             "if_action": {
                 "type": "apoli:set_block",
