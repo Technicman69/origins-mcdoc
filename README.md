@@ -4,6 +4,13 @@ Mcdoc for mod Origins - definition files using the schema format, mcdoc, for des
 
 Dependencies: Datapack Helper Plus by Spyglass (ofc)
 
+
+## Credits
+The whole "resources" directory contains data types from other repositories, and owned by their respective owners!
+These embeded data types include:
+- [Origins](https://github.com/apace100/origins-fabric)
+- [Apoli](https://github.com/apace100/apoli)
+
 Reference mcdoc used: https://github.com/SpyglassMC/vanilla-mcdoc
 
 ## How to use
