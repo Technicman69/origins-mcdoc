@@ -115,7 +115,7 @@ dispatch origins:biome_condition["origins:high_humidity", "apoli:high_humidity"]
 /// This example will check if the biome is **not** included in the `#minecraft:is_forest` (`data/minecraft/tags/worldgen/biome/is_forest.json`) biome tag.
 dispatch origins:biome_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
 	/// The namespace and ID of the tag which the biome should be in to pass the check.
-	tag: #[id(registry="worldgen/biome",tags="implicit")] string,
+	tag: (#[id(registry="worldgen/biome",tags="implicit")] string | string),
 }
 
 /// # Precipitation

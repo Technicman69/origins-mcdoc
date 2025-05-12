@@ -14,7 +14,7 @@ dispatch minecraft:loot_condition[apoli:power] to struct PowerCondition {
   /// Checks if the entity has the specified power.
   power: #[id="origins:power"] string,
   /// If specified, checks if the specified power is from this power source.
-  source?: (#[id(registry="origins:source")] string | string),
+  source?: #[id(registry="origins:source")] string,
 }
 
 // Still waiting for it to work...

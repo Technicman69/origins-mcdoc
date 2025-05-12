@@ -1,4 +1,17 @@
 {
-    "type": "apoli:prevent_game_event",
-    "event": "minecraft:block_activate"
+    "type": "apoli:active_self",
+    "entity_action": {
+        "type": "apoli:block_action_at",
+        "block_action": {
+            "type": "apoli:if-else",
+            "condition": {
+                "type": "apoli:in_tag",
+                "tag": "apoli:material/tnt"
+            },
+            "if_action": {
+                "type": "apoli:set_block",
+                "block": "acacia_button"
+            }
+        }
+    }
 }

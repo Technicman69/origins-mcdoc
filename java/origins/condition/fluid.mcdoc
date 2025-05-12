@@ -44,7 +44,7 @@ dispatch origins:fluid_condition["origins:empty", "apoli:empty"] to struct Empty
 /// This example will check if the fluid is included in the `#minecraft:water` (`data\minecraft\tags\fluids`) block tag.
 dispatch origins:fluid_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
 	/// ID of the tag which the fluid should be in to pass the check.
-	tag: #[id(registry="fluid",tags="implicit")] string,
+	tag: (#[id(registry="fluid",tags="implicit")] string | string),
 }
 
 /// # Still

@@ -2149,7 +2149,7 @@ dispatch origins:power["origins:game_event_listener", "apoli:game_event_listener
 	/// If specified, will make the power only listen for the game events with these namespace and IDs.
 	events?: [#[id="game_event"] string],
 	/// If specified, will make the power only listen for the game events inside game event tag.
-	event_tag?: #[id(registry="game_event",tags="implicit")] string,
+	event_tag?: (#[id(registry="game_event",tags="implicit")] string | string),
 	/// Determines whether the vibration should emit a particle effect.
 	show_particle?: boolean,
 }
@@ -4480,7 +4480,7 @@ dispatch origins:power["origins:prevent_game_event", "apoli:prevent_game_event"]
 	/// If specified, the game events with these namespace and IDs will be prevent from being emitted by the entity.
 	events?: [(#[id="game_event"] string | string)],
 	/// If specified, the game events inside game event tag will be prevented from being emitted by the entity.
-	tag?: #[id(registry="game_event",tags="implicit")] string,
+	tag?: (#[id(registry="game_event",tags="implicit")] string | string),
 	/// If specified, this action will be executed on the entity upon preventing game events.
 	entity_action?: EntityAction,
 }
@@ -5643,5 +5643,5 @@ dispatch origins:power["origins:tooltip", "apoli:tooltip"] to struct Tooltip {
 dispatch origins:power["origins:walk_on_fluid", "apoli:walk_on_fluid"] to struct WalkOnFluid {
 	...Conditioned,
 	/// The namespace and ID of the fluid tag on which the player should be able to walk onto. Most important examples: `minecraft:water` and `minecraft:lava`.
-	fluid: #[id(registry="fluid",tags="implicit")] string,
+	fluid: (#[id(registry="fluid",tags="implicit")] string | string),
 }

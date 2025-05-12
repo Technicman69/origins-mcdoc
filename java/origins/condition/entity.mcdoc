@@ -825,7 +825,7 @@ dispatch origins:entity_condition["origins:fall_flying", "apoli:fall_flying"] to
 /// This example will check if the entity is not touching a lava fluid.
 dispatch origins:entity_condition["origins:fluid_height", "apoli:fluid_height"] to struct FluidHeight {
 	/// The namespace and ID of the fluid tag of which the height should be checked. Most important examples: `minecraft:water` and `minecraft:lava`.
-	fluid: #[id(registry="fluid",tags="implicit")] string,
+	fluid: (#[id(registry="fluid",tags="implicit")] string | string),
 	/// Determines how the height of the fluid should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the height of the fluid will be compared to.
@@ -1155,7 +1155,7 @@ dispatch origins:entity_condition["origins:in_snow", "apoli:in_snow"] to struct 
 /// This example will check if the entity is inside the `#minecraft:skeletons` entity type tag. (`data/minecraft/tags/entity_types/skeletons.json`)
 dispatch origins:entity_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
 	/// The namespace and ID of the entity type tag the entity type needs to be in to pass the check.
-	tag: #[id(registry="entity_type",tags="implicit")] string,
+	tag: (#[id(registry="entity_type",tags="implicit")] string | string),
 }
 
 /// # In Thunderstorm
@@ -2021,7 +2021,7 @@ dispatch origins:entity_condition["origins:status_effect", "apoli:status_effect"
 /// This example will check if the player is submerged in water.
 dispatch origins:entity_condition["origins:submerged_in", "apoli:submerged_in"] to struct SubmergedIn {
 	/// The namespace and ID of the fluid tag that should be checked. Most important examples: `minecraft:water` and `minecraft:lava`.
-	fluid: #[id(registry="fluid",tags="implicit")] string,
+	fluid: (#[id(registry="fluid",tags="implicit")] string | string),
 }
 
 /// # Swimming

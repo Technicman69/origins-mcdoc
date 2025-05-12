@@ -173,7 +173,7 @@ dispatch origins:damage_condition["origins:from_falling", "apoli:from_falling"] 
 /// This example will check if the damage is considered drowning damage.
 dispatch origins:damage_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
 	/// The namespace and ID of the tag which the damage type should be in to pass the check.
-	tag: #[id(registry="damage_type",tags="implicit")] string,
+	tag: (#[id(registry="damage_type",tags="implicit")] string | string),
 }
 
 /// # Name

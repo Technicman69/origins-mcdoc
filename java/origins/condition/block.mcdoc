@@ -417,7 +417,7 @@ dispatch origins:block_condition["origins:height", "apoli:height"] to struct Hei
 /// This example will check if the block is included in the `#minecraft:base_stone_overworld` (`data/minecraft/tags/blocks/base_stone_overworld.json`) block tag.
 dispatch origins:block_condition["origins:in_tag", "apoli:in_tag"] to struct InTag {
 	/// The namespace and ID of the tag which the block should be in to pass the check.
-	tag: #[id(registry="block",tags="implicit")] string,
+	tag: (#[id(registry="block",tags="implicit")] string | string),
 }
 
 /// # Light Blocking
