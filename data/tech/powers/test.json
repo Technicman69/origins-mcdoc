@@ -1,9 +1,12 @@
 {
     "type": "apoli:active_self",
+    "badges": [
+        "tech:test2"
+    ],
     "entity_action": {
         "type": "apoli:block_action_at",
         "block_action": {
-            "type": "apoli:if-else",
+            "type": "apoli:if_else",
             "condition": {
                 "type": "apoli:in_tag",
                 "tag": "apoli:material/aggregate"

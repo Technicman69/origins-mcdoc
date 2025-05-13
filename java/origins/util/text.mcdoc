@@ -1,5 +1,36 @@
 use ::java::util::text::Keybind
 
+use ::java::util::text::TextBase
+use ::java::util::text::NormalText
+use ::java::util::text::TranslatedText
+use ::java::util::text::ScoreText
+use ::java::util::text::SelectorText
+use ::java::util::text::BlockNbtText
+use ::java::util::text::EntityNbtText
+use ::java::util::text::StorageNbtText
+
+type Text = (
+	string |
+	TextObject |
+	[Text] |
+)
+
+type TextObject = (
+	NormalText |
+	TranslatedText |
+	ScoreText |
+	SelectorText |
+	struct KeybindText {
+		keybind: Key,
+		#[since="1.20.3"]
+		type?: "keybind",
+		...TextBase,
+	} |
+	BlockNbtText |
+	EntityNbtText |
+	StorageNbtText |
+)
+
 type Key = (
     AnyKeybind |
     struct KeyType {

@@ -9,7 +9,7 @@ use ::java::origins::data::badge::Badge
 use ::java::origins::data::badge::CraftingRecipe
 use ::java::origins::util::effect::EffectID
 use ::java::origins::util::effect::StatusEffectInstance
-use ::java::origins::util::key::Key
+use ::java::origins::util::text::Key
 use ::java::origins::util::sprite::ResourceBarFile
 use ::java::origins::util::item::ItemStack
 use ::java::origins::util::item::PositionedItemStack
