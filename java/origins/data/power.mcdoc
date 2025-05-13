@@ -1,4 +1,4 @@
-use ::java::util::text::Text
+use ::java::origins::util::text::Text
 
 use ::java::origins::util::Axes
 use ::java::origins::util::FeatureRenderer
