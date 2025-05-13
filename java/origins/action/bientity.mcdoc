@@ -65,12 +65,16 @@ dispatch origins:bientity_action["origins:actor_action", "apoli:actor_action"] t
 /// ```
 /// 
 /// This example will add the target entity to the `example:make_em_glow` (`data/example/powers/make_em_glow.json`) power temporarily for 10 seconds, after which the target entity will be removed.
+#[until="1.20.4"]
 dispatch origins:bientity_action["origins:add_to_set", "apoli:add_to_set"] to struct AddToSet {
 	/// The ID of the power to add the target entity into.
 	set: (#[id="origins:power"] string | string),
 	/// If specified, this will determine how long the target entity will be stored in the specified power in ticks.
 	time_limit?: int @ 1..
 }
+
+#[since="1.20.4"]
+dispatch origins:bientity_action["origins:add_to_entity_set", "apoli:add_to_entity_set"] to AddToSet
 
 /// # Add Velocity
 /// 
@@ -247,10 +251,14 @@ dispatch origins:bientity_action["origins:mount", "apoli:mount"] to struct Mount
 /// ```
 /// 
 /// This example will remove the target entity from the `example:entities_to_exclude` (`data/example/powers/entities_to_exclude.json`) power.
+#[until="1.20.4"]
 dispatch origins:bientity_action["origins:remove_from_set", "apoli:remove_from_set"] to struct RemoveFromSet {
 	/// The ID of the power to remove the target entity from.
 	set: (#[id="origins:power"] string | string),
 }
+
+#[since="1.20.4"]
+dispatch origins:bientity_action["origins:remove_from_entity_set", "apoli:remove_from_entity_set"] to RemoveFromSet
 
 /// # Set In Love
 /// 

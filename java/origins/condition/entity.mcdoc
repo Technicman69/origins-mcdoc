@@ -1908,6 +1908,7 @@ dispatch origins:entity_condition["origins:scoreboard", "apoli:scoreboard"] to s
 /// ```
 /// 
 /// This example will check if the amount of entities stored in the `example:special_pets` (`data/example/powers/special_pets.json`) power is non-zero (e.g: if it's not empty).
+#[unitl="1.20.4"]
 dispatch origins:entity_condition["origins:set_size", "apoli:set_size"] to struct SetSize {
 	/// The ID of the power.
 	set: (#[id="origins:power"] string | string),
@@ -1916,6 +1917,9 @@ dispatch origins:entity_condition["origins:set_size", "apoli:set_size"] to struc
 	/// The value at which the amount of referenced entities in the specified power will be compared to.
 	compare_to: int @ 0..,
 }
+
+#[since="1.20.4"]
+dispatch origins:entity_condition["origins:entity_set_size", "apoli:entity_set_size"] to SetSize
 
 /// # Sneaking
 /// 

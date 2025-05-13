@@ -250,10 +250,14 @@ dispatch origins:bientity_condition["origins:invert", "apoli:invert"] to struct 
 /// ```
 /// 
 /// This example will check whether the target entity is either owned by the actor entity or if the target entity is within the `example:special_pets` (`data/example/powers/special_pets.json`) power.
+#[unitl="1.20.4"]
 dispatch origins:bientity_condition["origins:in_set", "apoli:in_set"] to struct InSet {
 	/// The ID of the power to check whether the target entity is in.
 	set: (#[id="origins:power"] string | string)
 }
+
+#[since="1.20.4"]
+dispatch origins:bientity_condition["origins:in_entity_set", "apoli:in_entity_set"] to InSet
 
 /// # Owner
 /// 

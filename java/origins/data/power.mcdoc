@@ -470,7 +470,16 @@ dispatch origins:power["origins:action_on_block_use", "apoli:action_on_block_use
 	result_item_action?: ItemAction,
 	/// Determines the result of the 'use' action.
 	action_result?: ActionResult,
+	/// Determines at which point the actions should be executed/prevented.
+	#[since="1.20.4"]
+	usage_phases?: BlockUsagePhases
 }
+
+/// A block usage phase is a string that determines the phase when interacting with a block.
+type BlockUsagePhases = (
+	[("block" | "item")] @ 1 |
+	["block", "item"] |
+)
 
 /// # Action On Callback
 /// 
@@ -2393,6 +2402,23 @@ dispatch origins:power["origins:invulnerability", "apoli:invulnerability"] to st
 /// 
 ///     This power type currently does not work properly in Creative Mode.
 /// 
+/// !!! Note
+/// 
+/// Powers with a priority value of equal or greater than 1 will be executed and override the original action of clicking an item stack with the cursor item stack, or clicking an item stack in a slot...
+/// 
+/// ...while powers with a priority value of equal or less than -1 will only be executed if the original action of clicking an item stack with the cursor item stack, or clicking an item stack in a slot has failed (or if the item doesn't have any.)
+/// (This is a replacement for the click_type field, but the power type still supports it.)
+///
+///
+/// A stack click phase is a string that determines the phase when clicking an item on a slot in inventories.
+/// 
+/// !!! Note
+/// 
+/// The listed values are ordered based on priority, with "cursor" being first and "slot" being last.
+/// Name 	Description
+/// "cursor" 	Determines that the item stack held in the cursor is clicked to a slot.
+/// "slot" 	Determines that the item stack from a slot is being clicked.
+/// 
 /// 
 /// ### Examples
 /// 
@@ -2423,6 +2449,31 @@ dispatch origins:power["origins:invulnerability", "apoli:invulnerability"] to st
 /// This example will smelt smeltable items by using a Coal item on it.
 /// <br>
 /// 
+/// {
+///     type: "apoli:item_on_item",
+///     using_item_condition: {
+///         type: "apoli:ingredient",
+///         ingredient: {
+///             item: "minecraft:bundle"
+///         }
+///     },
+///     on_item_condition: {
+///         type: "apoli:empty",
+///         inverted: true
+///     },
+///     entity_action: {
+///         type: "apoli:execute_command",
+///         command: "tellraw @s {\"text\": \"Cannot place an item in the held bundle!\", \"color\": \"red\"}"
+///     },
+///     click_type: "secondary",
+///     click_phases: [
+///         "cursor"
+///     ],
+///     priority: 1
+/// }
+///
+/// This example will override the action of placing item stacks in a bundle when using the bundle on an item stack (since 1.20.4)
+///
 /// ```json
 /// {
 ///     "function": "minecraft:furnace_smelt"
@@ -2489,7 +2540,23 @@ dispatch origins:power["origins:item_on_item", "apoli:item_on_item"] to struct I
 	/// If specified, this action will be executed on the player after they used an item on an item.
 	entity_action?: EntityAction,
 	/// Determines whether to execute the actions if the player does a right-click (`0` or `"primary"`) or left-click (`1` or `"secondary"`) action.
-	click_type?: string,
+	click_type?: (0 | "primary" | 1 | "secondary"),
+	/// Determines whether the power should trigger when left-clicking ("primary"), right-clicking ("secondary"), or both, an item.
+	#[since="1.20.4"]
+	click_types?: (
+		[("curso" | "secondary")] @ 1 |
+		["primary", "secondary"] |
+		["secondary", "primary"] |
+	),
+	///Determines the click phase at which the actions should be executed.
+	#[since="1.20.4"]
+	click_phases?: (
+		[("cursor" | "slot")] @ 1 |
+		["cursor", "slot"] |
+	),
+	///Determines the execution priority of the power; powers are executed in the highest-to-lowest priority order.
+	#[since="1.20.4"]
+	priority?: int,
 }
 
 /// # Keep Inventory
@@ -4155,6 +4222,9 @@ dispatch origins:power["origins:prevent_block_use", "apoli:prevent_block_use"] t
 	...Conditioned,
 	/// If specified, only blocks that fulfill this condition are affected.
 	block_condition: BlockCondition,
+	/// Determines at which point the actions should be executed/prevented.
+	#[since="1.20.4"]
+	usage_phases?: BlockUsagePhases
 }
 
 /// # Prevent Death

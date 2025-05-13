@@ -88,6 +88,7 @@ dispatch origins:entity_action["origins:execute_command", "apoli:execute_command
 /// ```
 /// 
 /// This example will restore 2 hearts to entities that were added to the `example:special_pets` (`data/example/powers/special_pets.json`) power using the [Add to Set (Bientity Action Type)](https://origins.readthedocs.io/en/latest/types/bientity_action_types/add_to_set).
+#[until="1.20.4"]
 dispatch origins:entity_action["origins:action_on_set", "apoli:action_on_set"] to struct ActionOnSet {
 	/// The ID of the power.
 	set: (#[id="origins:power"] string | string),
@@ -100,6 +101,9 @@ dispatch origins:entity_action["origins:action_on_set", "apoli:action_on_set"] t
 	/// Determines whether to reverse the order of the entities within the power when processing.
 	reverse?: boolean,
 }
+
+#[since="1.20.4"]
+dispatch origins:entity_action["origins:action_on_entity_set", "apoli:action_on_entity_set"] to ActionOnSet
 
 /// # Add Velocity
 /// 
