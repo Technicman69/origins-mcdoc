@@ -37,14 +37,14 @@ dispatch origins:bientity_action["origins:delay", "apoli:delay"] to struct Bient
     /// The amount of ticks until the action is executed.
     ticks: int @ 0..,
 }
-dispatch origins:bientity_action["origins:if-else-list", "apoli:if-else-list"] to struct BientityActionIfElseList {
+dispatch origins:bientity_action["origins:if_else_list", "apoli:if_else_list"] to struct BientityActionIfElseList {
 	/// Each object has to have an element Action and a weight Integer.
  	actions: [struct {
         action: BientityAction,
         condition: BientityCondition,
     }],
 }
-dispatch origins:bientity_action["origins:if-else", "apoli:if-else"] to struct BientityActionIfElse {
+dispatch origins:bientity_action["origins:if_else", "apoli:if_else"] to struct BientityActionIfElse {
     /// A condition based on the type of action.
     condition: BientityCondition,
     /// The action which is executed when the condition evaluates to true.
@@ -85,14 +85,14 @@ dispatch origins:block_action["origins:delay", "apoli:delay"] to struct BlockAct
     /// The amount of ticks until the action is executed.
     ticks: int @ 0..,
 }
-dispatch origins:block_action["origins:if-else-list", "apoli:if-else-list"] to struct BlockActionIfElseList {
+dispatch origins:block_action["origins:if_else_list", "apoli:if_else_list"] to struct BlockActionIfElseList {
 	/// Each object has to have an element Action and a weight Integer.
  	actions: [struct {
         action: BlockAction,
         condition: BlockCondition,
     }],
 }
-dispatch origins:block_action["origins:if-else", "apoli:if-else"] to struct BlockActionIfElse {
+dispatch origins:block_action["origins:if_else", "apoli:if_else"] to struct BlockActionIfElse {
     /// A condition based on the type of action.
     condition: BlockCondition,
     /// The action which is executed when the condition evaluates to true.
@@ -133,14 +133,14 @@ dispatch origins:entity_action["origins:delay", "apoli:delay"] to struct EntityA
     /// The amount of ticks until the action is executed.
     ticks: int @ 0..,
 }
-dispatch origins:entity_action["origins:if-else-list", "apoli:if-else-list"] to struct EntityActionIfElseList {
+dispatch origins:entity_action["origins:if_else_list", "apoli:if_else_list"] to struct EntityActionIfElseList {
 	/// Each object has to have an element Action and a weight Integer.
  	actions: [struct {
         action: EntityAction,
         condition: EntityCondition,
     }],
 }
-dispatch origins:entity_action["origins:if-else", "apoli:if-else"] to struct EntityActionIfElse {
+dispatch origins:entity_action["origins:if_else", "apoli:if_else"] to struct EntityActionIfElse {
     /// A condition based on the type of action.
     condition: EntityCondition,
     /// The action which is executed when the condition evaluates to true.
@@ -181,14 +181,14 @@ dispatch origins:item_action["origins:delay", "apoli:delay"] to struct ItemActio
     /// The amount of ticks until the action is executed.
     ticks: int @ 0..,
 }
-dispatch origins:item_action["origins:if-else-list", "apoli:if-else-list"] to struct ItemActionIfElseList {
+dispatch origins:item_action["origins:if_else_list", "apoli:if_else_list"] to struct ItemActionIfElseList {
 	/// Each object has to have an element Action and a weight Integer.
  	actions: [struct {
         action: ItemAction,
         condition: ItemCondition,
     }],
 }
-dispatch origins:item_action["origins:if-else", "apoli:if-else"] to struct ItemActionIfElse {
+dispatch origins:item_action["origins:if_else", "apoli:if_else"] to struct ItemActionIfElse {
     /// A condition based on the type of action.
     condition: ItemCondition,
     /// The action which is executed when the condition evaluates to true.
