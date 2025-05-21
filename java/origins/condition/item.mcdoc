@@ -393,6 +393,21 @@ type Ingredient = (
 /// ```
 dispatch origins:item_condition["origins:is_damageable", "apoli:is_damageable"] to struct IsDamageable {}
 
+/// #   Item Cooldown
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Compares the cooldown duration of the item stack.
+/// 
+/// Type ID: `origins:item_cooldown`
+#[since="1.20.4"]
+dispatch origins:item_condition["origins:item_cooldown", "apoli:item_cooldown"] to struct ItemCooldown {
+	/// Determines how the cooldown duration of the item stack should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the cooldown duration of the item stack will be compared to.
+	compare_to:	int @ 0..,
+}
+
 /// #   Is Equippable
 /// 
 /// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
@@ -541,6 +556,22 @@ dispatch origins:item_condition["origins:relative_durability", "apoli:relative_d
 	comparison: Comparison,
 	/// The value at which the relative durability value of the item from the item stack will be compared to.
 	compare_to: float,
+}
+
+
+/// #   Relative Item Cooldown
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Compares the cooldown duration percentage of the item stack (a value ranging from 0.0 (0%) to 1.0 (100%).)
+/// 
+/// Type ID: `origins:relative_item_cooldown`
+#[since="1.20.4"]
+dispatch origins:item_condition["origins:relative_item_cooldown", "apoli:relative_item_cooldown"] to struct RelativeItemCooldown {
+	/// Determines how the cooldown duration percentage of the item stack should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the cooldown duration percentage of the item stack will be compared to.
+	compare_to:	float @ 0.0..1.0,
 }
 
 /// # Smeltable

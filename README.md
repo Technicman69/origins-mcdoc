@@ -39,6 +39,7 @@ The syntax checking currently includes data types and files listed below:
 - Origin keybinds need to be injected into vanilla ones (or modded keybinds need to be defined)
 - power type "origins:multiple" shouldn't be a subpower.
 - subpowers of a "origins:multiple" power type are not registered as a power resource.
+- Versioning is all wrong :((((
 
 ## Future:
 - specify which power types don't have condition fields

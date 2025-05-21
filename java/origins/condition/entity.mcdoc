@@ -644,6 +644,31 @@ enum(string) MobGroup {
 	Aquatic = "aquatic"
 }
 
+/// # Entity In Radius
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
+/// checks whether there's a specified number of entities that fulfill the specified bi-entity condition within the radius of an area relative to the entity's feet. It accepts these fields:
+///
+/// !!! Note
+///
+/// 	In the context of this entity condition type, the 'actor' is the entity while the 'target' are the entities within the radius of the specified area.
+/// 
+/// Type ID: `origins:entity_in_radius`
+/// 
+dispatch origins:entity_condition["origins:entity_in_radius", "apoli:entity_in_radius"] to struct EntityInRadius {
+	/// The bi-entity condition to evaluate on either or both the 'actor' and 'target(s)'
+	bientity_condition?: BientityCondition,
+	/// Determines the shape of the area used for checking how many entities fulfill the bi-entity condition. Accepts "cube", "star", or "sphere".
+	shape?: Shape,
+	/// Determines the radius of the area used for checking how many entities fulfill the bi-entity condition.
+	radius?: float @ 0.0..,
+	/// Determines how the amount of entities that fulfill the bi-entity condition should be compared to a specific value.
+	comparison?: Comparison,
+	/// The value at which the amount of entities that fulfill the bi-entity condition will be compared to.
+	compare_to?: int @ 0..,
+}
+
 /// # Entity Type
 /// 
 /// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)

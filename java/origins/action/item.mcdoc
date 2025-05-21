@@ -1,6 +1,7 @@
 use super::EntityAction
 use ::java::origins::util::NBT
 use ::java::origins::util::enchant::Enchantment
+use ::java::origins::util::attribute::AttributeModifier
 
 
 struct ItemAction {
@@ -153,6 +154,22 @@ dispatch origins:item_action["origins:merge_nbt", "apoli:merge_nbt"] to struct M
 dispatch origins:item_action["origins:modify", "apoli:modify"] to struct Modify {
 	/// The ID of an item modifier.
 	modifier: (#[id="item_modifier"] string | string),
+}
+
+/// #	Modify Item Cooldown
+///
+/// [Item Action Type](https://origins.readthedocs.io/en/latest/types/item_action_types)
+///
+/// Modifies the cooldown duration of the item stack.
+///
+/// Type ID: `origins:modify_item_cooldown`
+///
+#[since="1.20.4"]
+dispatch origins:item_action["origins:modify_item_cooldown", "apoli:modify_item_cooldown"] to struct ModifyItemCooldown {
+	/// If specified, this modifier will be applied to the cooldown duration of the item stack.
+	modifier?: AttributeModifier,
+	/// If specified, these modifiers will be applied to the cooldown duration of the item stack.
+	modifiers?: [AttributeModifier]
 }
 
 /// #   Remove Enchantment
