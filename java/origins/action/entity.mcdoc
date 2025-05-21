@@ -1777,6 +1777,12 @@ dispatch origins:entity_action["origins:spawn_effect_cloud", "apoli:spawn_effect
 	effect?: StatusEffectInstance,
 	/// If specified, these status effects will be applied by the cloud to entities inside of it.
 	effects?: [StatusEffectInstance],
+	///Determines how long the area effect cloud will last (after wait_time.)
+	#[since="1.20.4"]
+	duration?: int @ 0..,
+	///Determines the amount of change to the duration of the area effect cloud when applying the effects.
+	#[since="1.20.4"]
+	duration_on_use?: int,
 }
 
 /// # Spawn Entity

@@ -39,7 +39,7 @@ The syntax checking currently includes data types and files listed below:
 - Origin keybinds need to be injected into vanilla ones (or modded keybinds need to be defined)
 - power type "origins:multiple" shouldn't be a subpower.
 - subpowers of a "origins:multiple" power type are not registered as a power resource.
-- Versioning is all wrong :((((
+- Versioning is all wrong (support for #[since] and #[until] attributes in dispatch keys in `.mcdoc` language needed)
 
 ## Future:
 - specify which power types don't have condition fields
@@ -48,3 +48,4 @@ The syntax checking currently includes data types and files listed below:
 - support for particle params syntax
 - support for 1.21
 - support for earlier versions
+- Fabric load conditions

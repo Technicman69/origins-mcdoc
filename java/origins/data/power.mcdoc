@@ -4071,6 +4071,59 @@ dispatch origins:power["origins:phasing", "apoli:phasing"] to struct Phasing {
 	phase_down_condition?: EntityCondition,
 }
 
+/// # Pose
+/// 
+/// [Power Type](https://origins.readthedocs.io/en/latest/types/power_types)
+/// 
+/// Modifies the general and/or arm pose(s) of an entity.
+///
+/// Type ID: `origins:pose`
+/// 
+#[since="1.20.4"]
+dispatch origins:power["origins:pose", "apoli:pose"] to struct Pose {
+	...Conditioned,
+	/// Determines the general pose to use. Accepts "standing", "fall_flying" (elytra flight), "sleeping", "swimming" (swimming or crawling), "spin_attack" (trident with riptide), "crouching", "long_jumping", "dying", "croaking", "using_tongue", "sitting", "roaring", "sniffing", "emerging", "digging", "sliding", "shooting", or "inhaling".
+	entity_pose?: EntityPose,
+	/// Determines the arm pose to use. Accepts "empty", "item", "block" (blocking with a shield), "bow_and_arrow" (charging a bow with an arrow), "throw_spear" (charging a trident), "crossbow_charge", "crossbow_hold", "spyglass", "toot_horn", or "brush".
+	arm_pose?: ArmPose,
+	/// Determines the placement priority of the power. The power with the highest value will be used for modifying the entity's pose.
+	priority?: int,
+}
+
+enum(string) EntityPose {
+	Standing = "standing",
+	FallFlying = "fall_flying",
+	Sleeping = "sleeping",
+	Swimming = "swimming",
+	SpinAttack = "spin_attack",
+	Crouching = "crouching",
+	LongJumping = "long_jumping",
+	Dying = "dying",
+	Croaking = "croaking",
+	UsingTongue = "using_tongue",
+	Sitting = "sitting",
+	Roaring = "roaring",
+	Sniffing = "sniffing",
+	Emerging = "emerging",
+	Digging = "digging",
+	Sliding = "sliding",
+	Shooting = "shooting",
+	Inhaling = "inhaling",
+}
+
+enum(string) ArmPose {
+	Empty = "empty",
+	Item = "item",
+	Block = "block",
+	BowAndArrow = "bow_and_arrow",
+	ThrowSpear = "throw_spear",
+	CrossbowCharge = "crossbow_charge",
+	CrossbowHold = "crossbow_hold",
+	Spyglass = "spyglass",
+	TootHorn = "toot_horn",
+	Brush = "brush",
+}
+
 /// # Prevent Being Used
 /// 
 /// [Power Type](https://origins.readthedocs.io/en/latest/types/power_types)
@@ -4445,6 +4498,30 @@ dispatch origins:power["origins:prevent_entity_render", "apoli:prevent_entity_re
 	/// If specified, only entities which fulfills this condition will be affected.
 	entity_condition?: EntityCondition,
 	/// If specified, the power will only be active if this condition is fulfilled by either or both the 'actor' (the player that has the power) and 'target' (the entity that will not render) entities.
+	bientity_condition?: BientityCondition,
+}
+
+/// # Prevent Entity Selection
+/// 
+/// [Power Type](https://origins.readthedocs.io/en/latest/types/power_types)
+/// 
+/// Prevents the selection of entities for the player that has the power.
+///
+/// Type ID: `origins:prevent_entity_selection`
+///
+/// !!! Note
+/// 
+/// 	Preventing the "selection" of entities means that the player won't be able to attack or interact with the affected entities by passing it through whatever behind the said entities.
+/// 
+/// 	In the context of this power type, the 'actor' is the player that has the power while the 'target' is the entity at the crosshair of the player.
+/// 
+/// !!! Warning
+/// 
+/// 	The bi-entity condition specified in the bientity_condition field is only evaluated on the client-side, therefore, using bi-entity condition types that only work on the server-side will not work.
+#[since="1.20.4"]
+dispatch origins:power["origins:prevent_entity_selection", "apoli:prevent_entity_selection"] to struct PreventEntitySelection {
+	...Conditioned,
+	/// If specified, the 'target' will only be prevented from being selected if this bi-entity condition is fulfilled by either or both the 'actor' and 'target'.
 	bientity_condition?: BientityCondition,
 }
 
@@ -5265,6 +5342,21 @@ dispatch origins:power["origins:shaking", "apoli:shaking"] to struct Shaking {
 /// This example will do nothing. However, it's still visible in the origin's power list GUI.
 dispatch origins:power["origins:simple", "apoli:simple"] to struct Simple {
 	...Conditioned,
+}
+
+/// # Sprinting
+/// 
+/// [Power Type](https://origins.readthedocs.io/en/latest/types/power_types)
+/// 
+/// Forces the entity to sprint.
+///
+/// Type ID: `origins:sprinting`
+/// 
+#[since="1.20.4"]
+dispatch origins:power["origins:sprinting", "apoli:sprinting"] to struct Sprinting {
+	...Conditioned,
+	/// Determines whether to check for sprinting inputs (e.g: double-tapping the key.forward keybinding, or pressing the key.sprint keybinding) before applying.
+	requires_input?: boolean,
 }
 
 /// # Stacking Status Effect
