@@ -214,6 +214,10 @@ dispatch origins:bientity_action["origins:invert", "apoli:invert"] to struct Inv
 	action: BientityAction,
 }
 
+/// Leashes target entity to the entity that has the power
+#[since="1.20.4"]
+dispatch origins:bientity_action["origins:leash", "apoli:leash"] to struct Leash {}
+
 /// # Mount
 /// 
 /// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)

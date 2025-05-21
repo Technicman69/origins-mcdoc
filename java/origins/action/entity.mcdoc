@@ -23,6 +23,7 @@ use ::java::origins::util::inventory::ItemSlot
 use ::java::origins::util::HeightmapType
 use ::java::origins::util::NBT
 use ::java::origins::util::particle::ParticleEffect
+use ::java::origins::util::text::Text
 
 struct EntityAction {
 	type: #[id] #[dispatcher_key="origins:entity_action"] string,
@@ -1723,6 +1724,21 @@ dispatch origins:entity_action["origins:set_fall_distance", "apoli:set_fall_dist
 dispatch origins:entity_action["origins:set_on_fire", "apoli:set_on_fire"] to struct SetOnFire {
 	/// The amount of seconds the entity should burn.
 	duration: int @ 1..,
+}
+
+/// Displays a toast with configurable text and duration
+#[since="1.20.4"]
+dispatch origins:entity_action["origins:show_toast", "apoli:show_toast"] to struct ShowToast {
+	/// The text to be used as the title of the toast.
+	title: Text,
+	/// The text to be used as the description of the toast.
+	description: Text,
+	/// If specified, the texture with this ID will be used as the texture of the toast. If the texture does not exist, the default texture will be used instead.
+	texture?: #[id(registry="texture",path="gui/sprites/")] string,
+	/// The item stack to be used as the icon of the toast.
+	icon?: ItemStack,
+	/// Determines how long the toast will stay on the screen in ticks.
+	duration?: int @ 0..,
 }
 
 /// # Spawn Effect Cloud
