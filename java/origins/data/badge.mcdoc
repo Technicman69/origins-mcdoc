@@ -3,7 +3,7 @@ use ::java::origins::util::text::Text
 use ::java::origins::util::sprite::BadgeFile
 
 dispatch minecraft:resource["origins:badge"] to struct Badge {
-	type: #[id(registery="origins:badge",definition=true)] #[dispatcher_key="origins:badge"] string,
+	type?: #[id(registery="origins:badge",definition=true)] #[dispatcher_key="origins:badge"] string,
 	...origins:badge[[type]],
 }
 
@@ -17,7 +17,7 @@ dispatch origins:badge["origins:crafting_recipe"] to struct CraftingRecipeBadge 
 	prefix?: Text,
 }
 
-dispatch origins:badge["origins:keybind"] to struct Keybind {
+dispatch origins:badge["origins:keybind", %unknown] to struct Keybind {
 	...BadgeBase,
 	/// The string to use in the tooltip.
 	text: string,
