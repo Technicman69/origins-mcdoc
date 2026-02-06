@@ -1662,9 +1662,9 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 	/// If specified, this item stack will be given to the player.
 	return_stack?: ItemStack,
 	/// Determines whether the animation effect for consuming the item should be "eating" (`"eat"`, displays particle effects based on the item) or "drinking" (`"drink"`, no particle effects.)
-	consume_animation?: string,
+	consume_animation?: ("eat" | "drink"),
 	/// Determines whether the animation effect for consuming the item should be "eating" (`"eat"`, displays particle effects based on the item) or "drinking" (`"drink"`, no particle effects.)
-	use_action?: string,
+	use_action?: ("eat" | "drink"),
 	/// If specified, the sound event with this namespace and ID will be played when the item is eaten.
 	consume_sound?: (#[id="sound_event"] string | string),
 	/// If specified, the sound event with this namespace and ID will be played when the item is eaten.
