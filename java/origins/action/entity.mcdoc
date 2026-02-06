@@ -23,6 +23,8 @@ use ::java::origins::util::inventory::ItemSlot
 use ::java::origins::util::HeightmapType
 use ::java::origins::util::NBT
 use ::java::origins::util::particle::ParticleEffect
+use ::java::origins::util::text::Text
+use ::java::origins::util::SoundEventCategory
 
 struct EntityAction {
 	type: #[id] #[dispatcher_key="origins:entity_action"] string,
@@ -604,7 +606,7 @@ dispatch origins:entity_action["origins:ender_chest", "apoli:ender_chest"] to st
 /// This example will "consume" (remove) 1 item from the item stack in the mainhand equipment slot.
 dispatch origins:entity_action["origins:equipped_item_action", "apoli:equipped_item_action"] to struct EquippedItemAction {
 	/// Which equipped item to execute the action on. One of: `"mainhand"`, `"offhand"`, `"head"`, `"chest"`, `"legs"`, `"feet"`.
-	equipment_slot: string,
+	equipment_slot: EquipmentSlot,
 	/// The item action type to execute on the item stack in the specified equipment slot.
 	action: ItemAction,
 }
@@ -1198,7 +1200,7 @@ dispatch origins:entity_action["origins:play_sound", "apoli:play_sound"] to stru
 	/// The ID of the sound event to play.
 	sound: (#[id="sound_event"] string | string),
 	/// If specified, this specifies the category and options the sound event falls under. Otherwise, uses the category specified in the entity that invoked this action. Accepts `"master"`, `"music"`, `"record"`, `"weather"`, `"block"`, `"hostile"`, `"neutral"`, `"players"`, `"ambient"` or `"voice"`.
-	category?: string,
+	category?: SoundEventCategory,
 	/// The volume of the sound event.
 	volume?: float,
 	/// The pitch of the sound event.

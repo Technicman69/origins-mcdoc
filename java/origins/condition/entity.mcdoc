@@ -526,7 +526,7 @@ dispatch origins:entity_condition["origins:distance_from_coordinates", "apoli:di
 	/// Determines whether to consider the Z axis to be 0.
 	ignore_z?: boolean,
 	/// Determines the shape of the check. Accepts `"cube"`, `"star"` or `"sphere"`.
-	shape?: string,
+	shape?: Shape,
 	/// Determines whether to check for the reference point whilst considering the coordinate scale of the dimension.
 	scale_reference_to_dimension?: boolean,
 	/// If specified, this value will override the result of the comparison if the entity being tested is not in the reference's dimension.
