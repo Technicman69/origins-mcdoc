@@ -187,8 +187,8 @@
     "text.autoconfig.origins.option.phantomizedOverlayStrength":"幻化时叠加层视觉效果强度",
 
     "item.origins.orb_of_origin":"起源之球",
-    "item.origins.orb_of_origin.layer_generic": "让你能够选择一个新的%s",
-    "item.origins.orb_of_origin.layer_specific": "将你的%1$s设置为“%2$s”",
+    "component.item.origins.origin.layer": "让你能够选择一个新的%s",
+    "component.item.origins.origin.layer_and_origin": "将你的%1$s设置为“%2$s”",
     
     "enchantment.origins.water_protection":"防水",
     

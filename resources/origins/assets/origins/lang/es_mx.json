@@ -187,8 +187,8 @@
 	"text.autoconfig.origins.option.phantomizedOverlayStrength": "Phantomized Overlay Strength",
 
 	"item.origins.orb_of_origin": "Orbe de Orígenes",
-	"item.origins.orb_of_origin.layer_generic": "Te deja escoger un nuevo %s.",
-	"item.origins.orb_of_origin.layer_specific": "Asigna tu %1$s a \"%2$s\".",
+	"component.item.origins.origin.layer": "Te deja escoger un nuevo %s.",
+	"component.item.origins.origin.layer_and_origin": "Asigna tu %1$s a \"%2$s\".",
 
 	"enchantment.origins.water_protection": "Protección Acuática",
 	"enchantment.origins.water_protection.desc": "Retrasa el daño por hidrofobia.",

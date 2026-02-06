@@ -187,8 +187,8 @@
   "text.autoconfig.origins.option.phantomizedOverlayStrength": "Сила Оверлею Фантомної форми",
 
   "item.origins.orb_of_origin": "Сфера походження",
-  "item.origins.orb_of_origin.layer_generic": "Дозволяє вам обрати нове %s.",
-  "item.origins.orb_of_origin.layer_specific": "Встановить вашу %1$s на \"%2$s\".",
+  "component.item.origins.origin.layer": "Дозволяє вам обрати нове %s.",
+  "component.item.origins.origin.layer_and_origin": "Встановить вашу %1$s на \"%2$s\".",
 
   "enchantment.origins.water_protection": "Водяний захист",
   "enchantment.origins.water_protection.desc": "Знижує шкоду від гідрофобії.",

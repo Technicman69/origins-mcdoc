@@ -187,8 +187,8 @@
   "text.autoconfig.origins.option.phantomizedOverlayStrength": "팬텀 상태 오버레이 강도",
 
   "item.origins.orb_of_origin": "종족 구슬",
-  "item.origins.orb_of_origin.layer_generic": "새 %s을(를) 선택할 수 있습니다",
-  "item.origins.orb_of_origin.layer_specific": "%1$s을(를) \"%2$s\"(으)로 설정합니다.",
+  "component.item.origins.origin.layer": "새 %s을(를) 선택할 수 있습니다",
+  "component.item.origins.origin.layer_and_origin": "%1$s을(를) \"%2$s\"(으)로 설정합니다.",
 
   "enchantment.origins.water_protection": "물 보호",
   "enchantment.origins.water_protection.desc": "공수병으로 인한 손상을 지연시킵니다.",

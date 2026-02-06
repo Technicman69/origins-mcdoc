@@ -187,8 +187,8 @@
   "text.autoconfig.origins.option.phantomizedOverlayStrength": "Aave muodon voimakkuus",
 
   "item.origins.orb_of_origin": "Alkuperän pallo",
-  "item.origins.orb_of_origin.layer_generic": "Antaa sinun valita uuden %sn.",
-  "item.origins.orb_of_origin.layer_specific": "Asettaa sinun %1$sn arvoksi \"%2$s\".",
+  "component.item.origins.origin.layer": "Antaa sinun valita uuden %sn.",
+  "component.item.origins.origin.layer_and_origin": "Asettaa sinun %1$sn arvoksi \"%2$s\".",
 
   "enchantment.origins.water_protection": "Vesisuojaus",
   "enchantment.origins.water_protection.desc": "Viivästyttää vesikammon aiheuttamaa vahinkoa.",

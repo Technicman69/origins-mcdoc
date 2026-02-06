@@ -1,9 +1,9 @@
 {
-  "type": "origins:attribute",
-  "modifier": {
-    "name": "Natural Armor health bonus",
-    "attribute": "minecraft:generic.armor",
-    "value": 8.0,
-    "operation": "addition"
-  }
+	"type": "origins:attribute",
+	"modifier": {
+		"id": "*:*",
+		"attribute": "minecraft:generic.armor",
+		"amount": 8.0,
+		"operation": "add_value"
+	}
 }

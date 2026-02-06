@@ -10,7 +10,7 @@
 		"origins:damage_from_potions"
 	],
 	"icon": {
-		"item": "minecraft:blaze_powder"
+		"id": "minecraft:blaze_powder"
 	},
 	"order": 1,
 	"impact": 3

@@ -187,8 +187,8 @@
   "text.autoconfig.origins.option.phantomizedOverlayStrength": "Fantom Formu Arayüz Görünürlüğü",
 
   "item.origins.orb_of_origin": "Köken Küresi",
-  "item.origins.orb_of_origin.layer_generic": "Yeni bir %s şeçmenizi sağlar.",
-  "item.origins.orb_of_origin.layer_specific": "%1$s'nızı \"%2$s\"ye ayarlar.",
+  "component.item.origins.origin.layer": "Yeni bir %s şeçmenizi sağlar.",
+  "component.item.origins.origin.layer_and_origin": "%1$s'nızı \"%2$s\"ye ayarlar.",
 
   "enchantment.origins.water_protection": "Su Koruması",
   "enchantment.origins.water_protection.desc": "Hidrofobi hasarını geciktirir.",
