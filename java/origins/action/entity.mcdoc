@@ -25,6 +25,7 @@ use ::java::origins::util::HeightmapType
 use ::java::origins::util::NBT
 use ::java::origins::util::particle::ParticleEffect
 use ::java::origins::util::text::Text
+use ::java::origins::util::SoundEventCategory
 
 struct EntityAction {
 	type: #[id] #[dispatcher_key="origins:entity_action"] string,
@@ -1204,7 +1205,7 @@ dispatch origins:entity_action["origins:play_sound", "apoli:play_sound"] to stru
 	/// The ID of the sound event to play.
 	sound: (#[id="sound_event"] string | string),
 	/// If specified, this specifies the category and options the sound event falls under. Otherwise, uses the category specified in the entity that invoked this action. Accepts `"master"`, `"music"`, `"record"`, `"weather"`, `"block"`, `"hostile"`, `"neutral"`, `"players"`, `"ambient"` or `"voice"`.
-	category?: string,
+	category?: SoundEventCategory,
 	/// The volume of the sound event.
 	volume?: float,
 	/// The pitch of the sound event.
