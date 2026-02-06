@@ -1,0 +1,19 @@
+use ::java::util::slot::EquipmentSlotGroup
+
+dispatch minecraft:data_component["apoli:powers"] to [struct Power {
+	/// The namespace and ID of the power that will be added to the entity.
+	power: #[id="origins:power"] string,
+	/// Determines if the item should add the power to the entity if held/equipped in the specified equipment slot. Accepts head, chest, legs, feet, mainhand or offhand.
+	slot: EquipmentSlotGroup,
+	/// Determines if the tooltip for the power should be hidden or not.
+	/// Defaults to false.
+	hidden?: boolean,
+	/// Determines if the color of the tooltip should be blue (false) or red (true).
+	/// Defaults to false.
+	negative?: boolean,
+}]
+
+dispatch minecraft:data_component["origins:origin"] to [struct Origin {
+	origin: #[id="origins:origin"] string,
+	layer?: #[id="origins:origin_layer"] string,
+}]

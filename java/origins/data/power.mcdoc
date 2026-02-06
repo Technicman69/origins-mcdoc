@@ -1180,7 +1180,7 @@ dispatch origins:power["origins:attacker_action_when_hit", "apoli:attacker_actio
 /// {
 /// 	"type": "origins:attribute",
 /// 	"modifier": {
-/// 		"name": "Max health increase",
+/// 		"id": "example:max_health_increase",
 /// 		"attribute": "minecraft:generic.max_health",
 /// 		"value": 4,
 /// 		"operation": "addition"
@@ -1357,9 +1357,9 @@ dispatch origins:power["origins:climbing", "apoli:climbing"] to struct Climbing 
 ///     "type": "origins:conditioned_attribute",
 ///     "modifier": {
 ///         "attribute": "minecraft:generic.movement_speed",
-///         "operation": "addition",
+///         "operation": "add_value",
 ///         "value": 0.4,
-///         "name": "Increased sprinting speed"
+///         "id": "example:increased_sprinting_speed"
 ///     },
 ///     "tick_rate": 20,
 ///     "condition": {

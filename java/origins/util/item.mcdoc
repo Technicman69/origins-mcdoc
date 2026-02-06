@@ -1,25 +1,32 @@
 use ::java::origins::util::inventory::PositionedItemSlot
+use ::java::world::component::DataComponentPatch
 
 use super::NBT
 
-// Until 1.21
 struct ItemStack {
     /// ID of a registered item.
     item: (#[id="item"] string | string),
     /// Size of the stack.
     amount?: byte,
     /// NBT data of the item.
+	#[until="1.21"]
     tag?: NBT<minecraft:item[[item]]>,
+    /// Components data of the item.
+	#[since="1.21"]
+    components?: DataComponentPatch,
 }
 
-// Until 1.21
 struct PositionedItemStack {
     /// ID of a registered item.
     item: (#[id="item"] string | string),
     /// Size of the stack.
     amount?: byte,
     /// NBT data of the item.
+	#[until="1.21"]
     tag?: NBT<minecraft:item[[item]]>,
+    /// Components of the item.
+	#[since="1.21"]
+    components?: DataComponentPatch,
     /// Inventory slot position of the stack. If not specified, will be the first free slot in the inventory. See [Positioned Item Stack Slots](https://origins.readthedocs.io/en/latest/misc/extras/positioned_item_stack_slots/) for possible values.
     slot?: PositionedItemSlot,
 }

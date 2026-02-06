@@ -15,8 +15,9 @@
 /// 
 /// ```json
 /// "modifier": {
+///     "id": "example:more_damage",
 ///     "attribute": "minecraft:generic.attack_damage",
-///     "operation": "addition",
+///     "operation": "add_value",
 ///     "value": 9
 /// }
 /// ```
@@ -27,8 +28,9 @@
 /// 
 /// ```json
 /// "modifier": {
+///     "id": "example:tripple_health",
 ///     "attribute": "minecraft:generic.max_health",
-///     "operation": "multiply_base",
+///     "operation": "add_multiplied_base",
 ///     "value": 2
 /// }
 /// ```
@@ -39,8 +41,9 @@
 /// 
 /// ```json
 /// "modifier": {
+///     "id": "example:faster",
 ///     "attribute": "minecraft:generic.movement_speed",
-///     "operation": "multiply_total",
+///     "operation": "add_multiplied_total",
 ///     "value": 0.5
 /// }
 /// ```
@@ -54,8 +57,8 @@ struct AttributedAttributeModifier {
 	operation: AttributedAttributeModifierOperation,
 	/// The value to use for the modifier operation.
 	value: float,
-	/// A descriptive name for the modifier, describing where it comes from.
-	name?: string,
+	/// ID of the modifier, describing where it comes from.
+	id: (#[id(registry="origins:attributed_attribute_modifier", define=true)] string | #[match_regex(pattern="^([a-z0-9-_.]*|\\*):\\*?[a-z0-9-_.]*(\\/[a-z0-9-_.]*)*$")] string),
 }
 
 /// #   Attributed Attribute Modifier Operation
@@ -66,14 +69,14 @@ struct AttributedAttributeModifier {
 /// 
 /// !!! note
 /// 
-///     The listed values are ordered based on the order of priority; with `addition` being applied before `multiply_base` and `multiply_total` being applied last.
+///     The listed values are ordered based on the order of priority; with `add_value` being applied before `add_multiplied_base` and `add_multiplied_total` being applied last.
 enum(string) AttributedAttributeModifierOperation {
 	/// Adds (or subtracts) the modifier value to the base value. (`NewValue = BaseValue + ModifierValue`)
-	Addition = "addition",
+	AddValue = "add_value",
 	/// Adds (or subtracts) the base value multiplied by the modifier value to the base value. (`NewValue = BaseValue + (BaseValue * ModifierValue)`)
-	MultiplyBase = "multiply_base",
+	AddMultipliedBase = "add_multiplied_base",
 	/// Multiplies the total value by the modifier value + 1. (`NewTotalValue = TotalValue * (1 + ModifierValue)`)
-	MultiplyTotal = "multiply_total",
+	AddMultipliedTotal = "add_multiplied_total",
 }
 
 /// # Attribute Modifier

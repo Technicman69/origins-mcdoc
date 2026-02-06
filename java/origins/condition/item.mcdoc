@@ -1,6 +1,7 @@
 use ::java::origins::util::compare::Comparison
 use ::java::origins::util::NBT
 use ::java::origins::util::enchant::Enchantment
+use ::java::world::component::CustomData
 
 use ::java::util::slot::EquipmentSlot
 
@@ -179,23 +180,26 @@ dispatch origins:item_condition["origins:enchantment", "apoli:enchantment"] to s
 	compare_to: int,
 }
 
-/// # Fireproof
+/// # Fire Resistant
 /// 
 /// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
 /// 
-/// Checks if the item stack is fireproof.
+/// Checks if the item stack is resistant to fire.
 /// 
-/// Type ID: `origins:fireproof`
+/// Type ID: `origins:fire_resistant`
 /// 
 /// 
 /// ### Examples
 /// 
 /// ```json
 /// "item_condition": {
-///     "type": "origins:fireproof"
+///     "type": "origins:fire_resistant"
 /// }
 /// ```
-dispatch origins:item_condition["origins:fireproof", "apoli:fireproof"] to struct Fireproof {}
+#[since="1.21"]
+dispatch origins:item_condition["origins:fire_resistant", "apoli:fire_resistant"] to struct FireResistant {}
+//#[until="1.21"]
+//dispatch origins:item_condition["origins:fireproof", "apoli:fireproof"] to struct Fireproof {}
 
 /// # Food
 /// 
@@ -242,33 +246,6 @@ dispatch origins:item_condition["origins:fuel", "apoli:fuel"] to struct Fuel {
 	comparison?: Comparison,
 	/// The value at which the fuel time value (in ticks) of the item stack will be compared to.
 	compare_to?: int,
-}
-
-/// # Harvest Level
-/// 
-/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
-/// 
-/// Checks whether the material of the item has a certain harvest level value. Refer to [Minecraft Wiki: Tiers](https://minecraft.wiki/w/Tiers) for the harvest level of the materials (there it's called "mining level"). Items without a material are considered to have a harvest level of 0.
-/// 
-/// Type ID: `origins:harvest_level`
-/// 
-/// 
-/// ### Examples
-/// 
-/// ```json
-/// "item_condition": {
-///     "type": "origins:harvest_level",
-///     "comparison": ">",
-///     "compare_to": 1
-/// }
-/// ```
-/// 
-/// This example checks if the item has a harvest level higher than 1, which is the value for stone tools.
-dispatch origins:item_condition["origins:harvest_level", "apoli:harvest_level"] to struct HarvestLevel {
-	/// Determines how the harvest level of the material from the item stack should be compared to the specified value.
-	comparison: Comparison,
-	/// The value at which the harvest level of the material from the item stack will be compared to.
-	compare_to: int,
 }
 
 /// #   Has Power
@@ -461,29 +438,35 @@ dispatch origins:item_condition["origins:is_equippable", "apoli:is_equippable", 
 /// This example will check if the item is considered meat by Minecraft.
 dispatch origins:item_condition["origins:meat", "apoli:meat"] to struct Meat {}
 
-/// # NBT
+/// # Custom Data
 /// 
 /// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
 /// 
-/// Checks the item's NBT.
+/// Checks the item's `minecraft:custom_data` component nbt.
 /// 
-/// Type ID: `origins:nbt`
+/// Type ID: `origins:custom_data`
 /// 
 /// 
 /// ### Examples
 /// 
 /// ```json
 /// "item_condition": {
-///     "type": "origins:nbt",
+///     "type": "origins:custom_data",
 ///     "nbt": "{exampleCustomTag: 1b}"
 /// }
 /// ```
 /// 
-/// This example will check if the item stack has the `exampleCustomTag: 1b` NBT.
-dispatch origins:item_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
-	/// The NBT data to check for.
-	nbt: NBT<minecraft:item[%fallback]>,
+/// This example will check if the item stack has the `exampleCustomTag: 1b` nbt in `minecraft:custom_data` component.
+#[since="1.21"]
+dispatch origins:item_condition["origins:custom_data", "apoli:custom_data"] to struct Nbt {
+	/// The `minecraft:custom_data` component nbt to check for.
+	nbt: CustomData,
 }
+// #[until="1.21"]
+// dispatch origins:item_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
+// 	/// The NBT data to check for.
+// 	nbt: NBT<minecraft:item[%fallback]>,
+// }
 
 /// #   Power Count
 /// 

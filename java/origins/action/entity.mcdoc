@@ -1,4 +1,5 @@
 use ::java::util::slot::EquipmentSlot
+use ::java::world::component::item::PotionContents
 
 use super::BientityAction
 use super::BlockAction
@@ -609,7 +610,7 @@ dispatch origins:entity_action["origins:ender_chest", "apoli:ender_chest"] to st
 /// This example will "consume" (remove) 1 item from the item stack in the mainhand equipment slot.
 dispatch origins:entity_action["origins:equipped_item_action", "apoli:equipped_item_action"] to struct EquippedItemAction {
 	/// Which equipped item to execute the action on. One of: `"mainhand"`, `"offhand"`, `"head"`, `"chest"`, `"legs"`, `"feet"`.
-	equipment_slot: string,
+	equipment_slot: EquipmentSlot,
 	/// The item action type to execute on the item stack in the specified equipment slot.
 	action: ItemAction,
 }
@@ -820,8 +821,8 @@ dispatch origins:entity_action["origins:gain_air", "apoli:gain_air"] to struct G
 /// "entity_action": {
 ///   	"type": "origins:give",
 ///   	"stack": {
-/// 	  "item": "minecraft:egg",
-/// 	  "amount": 3
+/// 	  		"item": "minecraft:egg",
+/// 	  		"amount": 3
 ///   	}
 /// }
 /// ```
@@ -1774,9 +1775,14 @@ dispatch origins:entity_action["origins:spawn_effect_cloud", "apoli:spawn_effect
 	/// How many ticks to wait until the cloud takes effect.
 	wait_time?: int @ 0..,
 	/// If specified, this status effect will be applied by the cloud to entities inside of it.
+	#[until="1.21"]
 	effect?: StatusEffectInstance,
 	/// If specified, these status effects will be applied by the cloud to entities inside of it.
+	#[until="1.21"]
 	effects?: [StatusEffectInstance],
+	///It specifies the area effect cloud's base potion effect (potion, optional), custom color (custom_color, optional), or bonus status effects (custom_effects, optional.) 
+	#[since="1.21"]
+	effect_component?: PotionContents,
 	///Determines how long the area effect cloud will last (after wait_time.)
 	#[since="1.20.4"]
 	duration?: int @ 0..,
