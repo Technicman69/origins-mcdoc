@@ -5577,7 +5577,8 @@ dispatch origins:power["origins:starting_equipment", "apoli:starting_equipment"]
 /// This example will replace the full (`assets/minecraft/textures/gui/sprites/hud/heart/full.png`), and half (`assets/minecraft/textures/gui/sprites/hud/heart/half.png`) heart status bar texture sprites with `example:hud/custom_heart/full` (`assets/example/textures/gui/sprites/hud/custom_heart/full.png`) and `example:hud/custom_heart/half` (`assets/example/textures/gui/sprites/hud/custom_heart/half.png`) custom status bar texture sprites respectively.
 dispatch origins:power["origins:status_bar_texture", "apoli:status_bar_texture"] to struct StatusBarTexture {
 	...Conditioned,
-	/// **DEPRECATED** The identifier (including the `textures` directory and the `.png` file extension) of the status bar sprite sheet to replace the default one with (e.g: [the vanilla status bar sprite sheet](https://raw.githubusercontent.com/misode/mcmeta/6d496b1a91476c4fdd45fdb093d0319141f9c109/assets/minecraft/textures/gui/icons.png)). <span style="color: darkred"><b>Use <code>texture_map</code> instead.</b></span>
+	/// The identifier (including the `textures` directory and the `.png` file extension) of the status bar sprite sheet to replace the default one with (e.g: [the vanilla status bar sprite sheet](https://raw.githubusercontent.com/misode/mcmeta/6d496b1a91476c4fdd45fdb093d0319141f9c109/assets/minecraft/textures/gui/icons.png)). <span style="color: darkred"><b>Use <code>texture_map</code> instead.</b></span>
+	#[deprecated]
 	texture?: string,
 	/// An object with `"key": "value"` [identifier](https://origins.readthedocs.io/en/latest/types/data_types/identifier) pairs that determine which status bar texture sprite (`"key"`) will be replaced by a new status bar texture sprite (`"value"`).
 	texture_map?: struct {
