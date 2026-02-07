@@ -114,7 +114,7 @@ dispatch origins:block_condition["origins:blast_resistance", "apoli:blast_resist
 /// 
 /// ```json
 /// "block_condition": {
-///     "type": "origins:or",
+///     "type": "origins:any_of",
 ///     "conditions": [
 ///         {
 ///             "type": "origins:block",
@@ -170,7 +170,7 @@ dispatch origins:block_condition["origins:block_entity", "apoli:block_entity"] t
 /// 
 /// ```json
 /// "block_condition": {
-///     "type": "origins:and",
+///     "type": "origins:sequence",
 ///     "conditions": [
 ///         {
 ///             "type": "origins:block",
@@ -556,7 +556,7 @@ dispatch origins:block_condition["origins:movement_blocking", "apoli:movement_bl
 /// 
 /// ```json
 /// "block_condition": {
-///     "type": "origins:and",
+///     "type": "origins:sequence",
 ///     "conditions": [
 ///         {
 ///             "type": "origins:block",

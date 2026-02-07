@@ -223,7 +223,7 @@ dispatch origins:damage_condition["origins:out_of_world", "apoli:out_of_world"] 
 /// "damage_condition": {
 ///     "type": "origins:projectile",
 ///     "projectile_condition": {
-///       "type": "origins:and",
+///       "type": "origins:sequence",
 ///       "conditions": [
 ///         {
 ///           "type": "origins:entity_type",

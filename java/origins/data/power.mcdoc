@@ -136,30 +136,27 @@ dispatch origins:power["origins:multiple", "apoli:multiple"] to struct Multiple 
 /// ```json
 /// {
 /// 	"type": "origins:active_self",
-/// 	"entity_action": {
-/// 		"type": "origins:and",
-/// 		"actions": [
-/// 			{
-/// 				"type": "origins:equipped_item_action",
-/// 				"equipment_slot": "mainhand",
-/// 				"action": {
-/// 					"type": "origins:consume",
-/// 					"amount": 1
-/// 				}
-/// 			},
-/// 			{
-/// 				"type": "origins:apply_effect",
-/// 				"effect": {
-/// 					"effect": "minecraft:speed",
-/// 					"duration": 100,
-/// 					"amplifier": 1,
-/// 					"is_ambient": true,
-/// 					"show_particles": true,
-/// 					"show_icon": true
-/// 				}
-/// 			}
-/// 		]
-/// 	},
+/// 	"entity_action": [
+///			{
+///				"type": "origins:equipped_item_action",
+///				"equipment_slot": "mainhand",
+///				"action": {
+///					"type": "origins:consume",
+///					"amount": 1
+///				}
+///			},
+///			{
+///				"type": "origins:apply_effect",
+///				"effect": {
+///					"effect": "minecraft:speed",
+///					"duration": 100,
+///					"amplifier": 1,
+///					"is_ambient": true,
+///					"show_particles": true,
+///					"show_icon": true
+///				}
+///			}
+/// 	],
 /// 	"cooldown": 1,
 /// 	"hud_render": {
 /// 		"should_render": false
@@ -345,24 +342,21 @@ dispatch origins:power["origins:action_on_block_break", "apoli:action_on_block_b
 /// ```json
 /// {
 /// 	"type": "origins:action_on_block_place",
-/// 	"place_to_action": {
-/// 		"type": "origins:and",
-/// 		"actions": [
-/// 			{
-/// 				"type": "origins:area_of_effect",
-/// 				"block_action": {
-/// 					"type": "origins:set_block",
-/// 					"block": "minecraft:air"
-/// 				},
-/// 				"radius": 4,
-/// 				"shape": "star"
-/// 			},
-/// 			{
-/// 				"type": "origins:set_block",
-/// 				"block": "minecraft:magma_block"
-/// 			}
-/// 		]
-/// 	},
+/// 	"place_to_action": [
+///			{
+///				"type": "origins:area_of_effect",
+///				"block_action": {
+///					"type": "origins:set_block",
+///					"block": "minecraft:air"
+///				},
+///				"radius": 4,
+///				"shape": "star"
+///			},
+///			{
+///				"type": "origins:set_block",
+///				"block": "minecraft:magma_block"
+///			}
+/// 	],
 /// 	"place_to_condition": {
 /// 		"type": "origins:fluid",
 /// 		"fluid_condition": {
@@ -569,18 +563,13 @@ dispatch origins:power["origins:action_on_callback", "apoli:action_on_callback"]
 /// {
 ///     "type": "origins:action_on_death",
 ///     "bientity_action": {
-///         "type": "origins:and",
-///         "actions": [
-///             {
-///                 "type": "origins:target_action",
-///                 "action": {
-///                     "type": "origins:explode",
-///                     "power": 5,
-///                     "destruction_type": "none",
-///                     "damage_self": false
-///                 }
-///             }
-///         ]
+///         "type": "origins:target_action",
+///         "action": {
+///             "type": "origins:explode",
+///             "power": 5,
+///             "destruction_type": "none",
+///             "damage_self": false
+///         }
 ///     }
 /// }
 /// ```
@@ -616,19 +605,16 @@ dispatch origins:power["origins:action_on_death", "apoli:action_on_death"] to st
 ///     "type": "origins:action_on_entity_use",
 ///     "bientity_action": {
 ///         "type": "origins:target_action",
-///         "action": {
-///             "type": "origins:and",
-///             "actions": [
-///                 {
-///                     "type": "origins:heal",
-///                     "amount": 2
-///                 },
-///                 {
-///                     "type": "origins:execute_command",
-///                     "command": "particle heart ~ ~0.5 ~ 0.3 0.3 0.3 0.009 4 normal @a"
-///                 }
-///             ]
-///         }
+///         "action": [
+///             {
+///                 "type": "origins:heal",
+///                 "amount": 2
+///             },
+///             {
+///                 "type": "origins:execute_command",
+///                 "command": "particle heart ~ ~0.5 ~ 0.3 0.3 0.3 0.009 4 normal @a"
+///             }
+///         ]
 ///     },
 ///     "bientity_condition": {
 ///         "type": "origins:owner"
@@ -655,7 +641,7 @@ dispatch origins:power["origins:action_on_death", "apoli:action_on_death"] to st
 ///         "type": "origins:mount"
 ///     },
 ///     "bientity_condition": {
-///         "type": "origins:and",
+///         "type": "origins:sequence",
 ///         "conditions": [
 ///             {
 ///                 "type": "origins:riding",
@@ -791,32 +777,29 @@ dispatch origins:power["origins:action_on_hit", "apoli:action_on_hit"] to struct
 /// 				"type": "origins:exists"
 /// 			}
 /// 		},
-/// 		"if_action": {
-/// 			"type": "origins:and",
-/// 			"actions": [
-/// 				{
-/// 					"type": "origins:actor_action",
-/// 					"action": {
-/// 						"type": "apoli:execute_command",
-/// 						"command": "tag @s add item_thrower"
-/// 					}
-/// 				},
-/// 				{
-/// 					"type": "origins:target_action",
-/// 					"action": {
-/// 						"type": "origins:execute_command",
-/// 						"command": "tellraw @a [{\"selector\": \"@s\", \"color\": \"yellow\"}, {\"text\": \"has picked up an item thrown by \", \"color\": \"green\"}, {\"selector\": \"@e[tag = item_thrower]\"}]"
-/// 					}
-/// 				},
-/// 				{
-/// 					"type": "origins:actor_action",
-/// 					"action": {
-/// 						"type": "apoli:execute_command",
-/// 						"command": "tag @s remove item_thrower"
-/// 					}
-/// 				}
-/// 			]
-/// 		}
+/// 		"if_action": [
+///				{
+///					"type": "origins:actor_action",
+///					"action": {
+///						"type": "apoli:execute_command",
+///						"command": "tag @s add item_thrower"
+///					}
+///				},
+///				{
+///					"type": "origins:target_action",
+///					"action": {
+///						"type": "origins:execute_command",
+///						"command": "tellraw @a [{\"selector\": \"@s\", \"color\": \"yellow\"}, {\"text\": \"has picked up an item thrown by \", \"color\": \"green\"}, {\"selector\": \"@e[tag = item_thrower]\"}]"
+///					}
+///				},
+///				{
+///					"type": "origins:actor_action",
+///					"action": {
+///						"type": "apoli:execute_command",
+///						"command": "tag @s remove item_thrower"
+///					}
+///				}
+///			]
 /// 	}
 /// }
 /// ```
@@ -963,36 +946,33 @@ dispatch origins:power["origins:action_on_land", "apoli:action_on_land"] to stru
 /// ```json
 /// {
 ///     "type": "origins:action_on_wake_up",
-///     "entity_action": {
-///         "type": "origins:and",
-///         "actions": [
-///             {
-///                 "type": "origins:execute_command",
-///                 "command": "title @s actionbar {\"translate\": \"You feel %1$s but %2$s\", \"color\": \"yellow\", \"with\": [{\"text\": \"rejuvenated\", \"color\": \"green\"}, {\"text\": \"hungry...\", \"color\": \"red\"}]}"
-///             },
-///             {
-///                 "type": "origins:apply_effect",
-///                 "effects": [
-///                     {
-///                         "effect": "minecraft:regeneration",
-///                         "duration": 100,
-///                         "amplifier": 1,
-///                         "is_ambient": true,
-///                         "show_particles": true,
-///                         "show_icon": true
-///                     },
-///                     {
-///                         "effect": "minecraft:hunger",
-///                         "duration": 100,
-///                         "amplifier": 2,
-///                         "is_ambient": true,
-///                         "show_particles": true,
-///                         "show_icon": true
-///                     }
-///                 ]
-///             }
-///         ]
-///     },
+///     "entity_action": [
+///         {
+///             "type": "origins:execute_command",
+///             "command": "title @s actionbar {\"translate\": \"You feel %1$s but %2$s\", \"color\": \"yellow\", \"with\": [{\"text\": \"rejuvenated\", \"color\": \"green\"}, {\"text\": \"hungry...\", \"color\": \"red\"}]}"
+///         },
+///         {
+///             "type": "origins:apply_effect",
+///             "effects": [
+///                 {
+///                     "effect": "minecraft:regeneration",
+///                     "duration": 100,
+///                     "amplifier": 1,
+///                     "is_ambient": true,
+///                     "show_particles": true,
+///                     "show_icon": true
+///                 },
+///                 {
+///                     "effect": "minecraft:hunger",
+///                     "duration": 100,
+///                     "amplifier": 2,
+///                     "is_ambient": true,
+///                     "show_particles": true,
+///                     "show_icon": true
+///                 }
+///             ]
+///         }
+///     ],
 ///     "block_condition": {
 ///         "type": "origins:block",
 ///         "block": "minecraft:red_bed"
@@ -1529,7 +1509,7 @@ dispatch origins:power["origins:creative_flight", "apoli:creative_flight"] to st
 ///   	"protection_enchantment": "origins:water_protection",
 ///   	"protection_effectiveness": 1.0,
 ///   	"condition": {
-///     	"type": "origins:or",
+///     	"type": "origins:any_of",
 ///     	"conditions": [
 /// 	      	{
 /// 	        	"type": "origins:fluid_height",
@@ -1800,7 +1780,7 @@ dispatch origins:power["origins:elytra_flight", "apoli:elytra_flight"] to struct
 /// {
 /// 	"type": "origins:entity_glow",
 ///     "entity_condition": {
-///       	"type": "origins:and",
+///       	"type": "origins:sequence",
 ///       	"conditions": [
 ///         	{
 ///           		"type": "origins:in_block_anywhere",
@@ -3054,7 +3034,7 @@ dispatch origins:power["origins:modify_damage_dealt", "apoli:modify_damage_dealt
 ///             "type": "origins:equipped_item",
 ///             "equipment_slot": "mainhand",
 ///             "item_condition": {
-///                 "type": "origins:or",
+///                 "type": "origins:any_of",
 ///                 "conditions": [
 ///                     {
 ///                         "type": "origins:enchantment",
@@ -3092,7 +3072,7 @@ dispatch origins:power["origins:modify_damage_dealt", "apoli:modify_damage_dealt
 ///             "type": "origins:equipped_item",
 ///             "equipment_slot": "mainhand",
 ///             "item_condition": {
-///                 "type": "origins:or",
+///                 "type": "origins:any_of",
 ///                 "conditions": [
 ///                     {
 ///                         "type": "origins:enchantment",
@@ -4094,7 +4074,7 @@ dispatch origins:power["origins:particle", "apoli:particle"] to struct Particle 
 ///     	"tag": "origins:unphasable"
 ///   	},
 ///   	"phase_down_condition": {
-///     	"type": "origins:and",
+///     	"type": "origins:sequence",
 ///     	"conditions": [
 ///       		{
 ///         		"type": "origins:sneaking"
@@ -4362,34 +4342,31 @@ dispatch origins:power["origins:prevent_block_use", "apoli:prevent_block_use"] t
 /// 
 /// ```json
 /// {
-///     "type": "origins:prevent_death",
-///     "entity_action": {
-/// 		"type": "origins:and",
-/// 		"actions": [
-/// 			{
-/// 				"type": "origins:clear_effect"
-/// 			},
-/// 			{
-/// 				"type": "origins:apply_effect",
-/// 				"effects": [
-/// 					{
-/// 						"effect": "minecraft:regeneration",
-/// 						"amplifier": 1,
-/// 						"duration": 900
-/// 					},
-/// 					{
-/// 						"effect": "minecraft:fire_resistance",
-/// 						"duration": 800
-/// 					},
-/// 					{
-/// 						"effect": "minecraft:absorption",
-/// 						"amplifier": 1,
-/// 						"duration": 100
-/// 					}
-/// 				]
-/// 			}
-/// 		]
-/// 	}
+/// 	"type": "origins:prevent_death",
+/// 	"entity_action": [
+/// 		{
+/// 			"type": "origins:clear_effect"
+/// 		},
+/// 		{
+/// 			"type": "origins:apply_effect",
+/// 			"effects": [
+/// 				{
+/// 					"effect": "minecraft:regeneration",
+/// 					"amplifier": 1,
+/// 					"duration": 900
+/// 				},
+/// 				{
+/// 					"effect": "minecraft:fire_resistance",
+/// 					"duration": 800
+/// 				},
+/// 				{
+/// 					"effect": "minecraft:absorption",
+/// 					"amplifier": 1,
+/// 					"duration": 100
+/// 				}
+/// 			]
+/// 		}
+/// 	]
 /// }
 /// ```
 /// 
@@ -4520,7 +4497,7 @@ dispatch origins:power["origins:prevent_entity_collision", "apoli:prevent_entity
 /// {
 ///     "type": "origins:prevent_entity_render",
 ///     "bientity_condition": {
-///         "type": "origins:and",
+///         "type": "origins:sequence",
 ///         "conditions": [
 ///             {
 ///                 "type": "origins:distance",

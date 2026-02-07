@@ -265,7 +265,7 @@ dispatch origins:entity_condition["origins:biome", "apoli:biome"] to struct Biom
 /// 
 /// ```json
 /// "condition": {
-///     "type": "origins:or",
+///     "type": "origins:any_of",
 ///     "conditions": [
 ///         {
 ///             "type": "origins:block_collision",
@@ -1015,7 +1015,7 @@ dispatch origins:entity_condition["origins:invisible", "apoli:invisible"] to str
 /// "condition": {
 ///     "type": "origins:in_block",
 ///     "block_condition": {
-///         "type": "origins:and",
+///         "type": "origins:sequence",
 ///         "conditions": [
 ///             {
 ///                 "type": "origins:block",
@@ -2053,7 +2053,7 @@ dispatch origins:entity_condition["origins:tamed", "apoli:tamed"] to struct Tame
 /// 
 /// ```json
 /// "condition": {
-///     "type": "origins:and",
+///     "type": "origins:sequence",
 ///     "conditions": [
 ///         {
 ///             "type": "origins:time_of_day",
