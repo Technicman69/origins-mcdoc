@@ -82,6 +82,7 @@ dispatch origins:damage_condition["origins:attacker", "apoli:attacker"] to struc
 ///     "type": "origins:bypasses_armor"
 /// }
 /// ```
+#[deprecated]
 dispatch origins:damage_condition["origins:bypasses_armor", "apoli:bypasses_armor"] to struct BypassesArmor {}
 
 /// #   Explosive
@@ -103,6 +104,7 @@ dispatch origins:damage_condition["origins:bypasses_armor", "apoli:bypasses_armo
 ///     "type": "origins:explosive"
 /// }
 /// ```
+#[deprecated]
 dispatch origins:damage_condition["origins:explosive", "apoli:explosive"] to struct Explosive {}
 
 /// # Fire
@@ -124,6 +126,7 @@ dispatch origins:damage_condition["origins:explosive", "apoli:explosive"] to str
 ///     "type": "origins:fire"
 /// }
 /// ```
+#[deprecated]
 dispatch origins:damage_condition["origins:fire", "apoli:fire"] to struct Fire {}
 
 /// #   From Falling
@@ -145,6 +148,7 @@ dispatch origins:damage_condition["origins:fire", "apoli:fire"] to struct Fire {
 ///     "type": "origins:from_falling"
 /// }
 /// ```
+#[deprecated]
 dispatch origins:damage_condition["origins:from_falling", "apoli:from_falling"] to struct FromFalling {}
 
 /// # In Tag
@@ -220,6 +224,7 @@ dispatch origins:damage_condition["origins:name", "apoli:name"] to struct Name {
 ///     "type": "origins:out_of_world"
 /// }
 /// ```
+#[deprecated]
 dispatch origins:damage_condition["origins:out_of_world", "apoli:out_of_world"] to struct OutOfWorld {}
 
 /// # Projectile
@@ -312,6 +317,7 @@ dispatch origins:damage_condition["origins:type", "apoli:type"] to struct Type {
 ///     "type": "origins:unblockable"
 /// }
 /// ```
+#[deprecated]
 dispatch origins:damage_condition["origins:unblockable", "apoli:unblockable"] to struct Unblockable {}
 
 

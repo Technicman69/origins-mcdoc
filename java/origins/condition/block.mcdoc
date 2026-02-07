@@ -498,10 +498,13 @@ dispatch origins:block_condition["origins:light_level", "apoli:light_level"] to 
 /// ```
 /// 
 /// This example will check if the block classifies as "wood".
+#[deprecated]
 dispatch origins:block_condition["origins:material", "apoli:material"] to struct MaterialCondition {
 	/// If specified, checks if the block classifies as this material.
+	#[deprecated]
 	material?: Material,
 	/// If specified, checks if the block classifies as one of these materials.
+	#[deprecated]
 	materials?: [Material],
 }
 
