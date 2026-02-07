@@ -1,4 +1,4 @@
-use ::java::origins::util::inventory::PositionedItemSlot
+use ::java::origins::util::inventory::ItemSlot
 
 use ::java::world::component::DataComponentPatch
 
@@ -28,5 +28,5 @@ struct ItemStack {
 struct PositionedItemStack {
     ...ItemStack,
     /// Inventory slot position of the stack. If not specified, will be the first free slot in the inventory. See [Positioned Item Stack Slots](https://origins.readthedocs.io/en/latest/misc/extras/positioned_item_stack_slots/) for possible values.
-    slot?: PositionedItemSlot,
+    slot?: ItemSlot,
 }
