@@ -23,3 +23,11 @@ struct StatusEffectInstance {
     /// Determines whether the status effect would display an icon on the HUD.
     show_icon?: boolean,
 }
+
+struct StatusEffectChance {
+    /// The effect to be applied with the specified chance.
+    effect: StatusEffectInstance,
+    /// The chance of applying the effect
+    /// Defaults to 1.
+    chance?: float @ 0.0<..1.0
+}

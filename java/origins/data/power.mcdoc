@@ -9,6 +9,7 @@ use ::java::origins::data::badge::Badge
 use ::java::origins::data::badge::CraftingRecipe
 use ::java::origins::util::effect::EffectID
 use ::java::origins::util::effect::StatusEffectInstance
+use ::java::origins::util::effect::StatusEffectChance
 use ::java::origins::util::text::Key
 use ::java::origins::util::sprite::ResourceBarFile
 use ::java::origins::util::item::ItemStack
@@ -1689,9 +1690,9 @@ struct FoodComponent {
 	/// Whether this food component takes as long as dried kelp to eat (16 ticks) or not (32 ticks).
 	snack?: boolean,
 	/// A status effect and the chance of it triggering upon consuming something with this food component.
-	effect?: StatusEffectInstance,
+	effect?: StatusEffectChance,
 	/// A status effect and the chance of it triggering upon consuming something with this food component.
-	effects?: [StatusEffectInstance],
+	effects?: [StatusEffectChance],
 }
 
 /// # Effect Immunity
