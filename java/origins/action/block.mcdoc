@@ -89,7 +89,10 @@ dispatch origins:block_action["origins:add_block", "apoli:add_block"] to struct 
 /// This example will replace all blocks that aren't included in the `#minecraft:dragon_immune` block tag with air within a 4 blocks radius with a shape of a diamond.
 dispatch origins:block_action["origins:area_of_effect", "apoli:area_of_effect"] to struct AreaOfEffect {
 	/// Determines the radius of the area.
-	radius?: int @ 1..,
+	radius?: (
+		#[until="1.21"] int @ 1.. |
+		#[since="1.21"] int @ 0.. |
+	),
 	/// Determines the shape of the area.
 	shape?: Shape,
 	/// The block action to execute on the blocks within the specified radius.

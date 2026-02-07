@@ -173,6 +173,7 @@ dispatch origins:item_action["origins:modify", "apoli:modify"] to struct Modify 
 ///
 #[since="1.20.4"]
 dispatch origins:item_action["origins:modify_item_cooldown", "apoli:modify_item_cooldown"] to struct ModifyItemCooldown {
+	// One of them is now required ig
 	/// If specified, this modifier will be applied to the cooldown duration of the item stack.
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the cooldown duration of the item stack.

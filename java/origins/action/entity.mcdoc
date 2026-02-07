@@ -274,7 +274,10 @@ dispatch origins:entity_action["origins:apply_effect", "apoli:apply_effect"] to 
 /// This example will set entities within a 32 block radius on fire for 5 seconds if the entities that are within the radius can be "seen" by the entity that invoked the action.
 dispatch origins:entity_action["origins:area_of_effect", "apoli:area_of_effect"] to struct AreaOfEffect {
 	/// Determines the radius of the area.
-	radius?: float @ 0.0<..,
+	radius?: (
+		#[until="1.21"] float @ 0.0<.. |
+		#[since="1.21"] float @ 0.0.. |
+	),
 	/// Determines the shape of the area.
 	shape?: Shape,
 	/// The bientity action to execute on either or both the '**actor**' or the '**target(s)**'.
