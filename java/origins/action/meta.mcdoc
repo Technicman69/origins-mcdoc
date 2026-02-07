@@ -18,7 +18,11 @@ dispatch origins:bientity_action["origins:and", "apoli:and"] to struct BientityA
 }
 dispatch origins:bientity_action["origins:chance", "apoli:chance"] to struct BientityActionChance {
 	/// The action which might be executed.
+    #[until="1.21"]
  	action: BientityAction,
+    /// The action which might be executed.
+    #[since="1.21"]
+ 	success_action: BientityAction,
     /// The chance that the action will execute, from 0 to 1. (E.g. 0.1 means 10% chance, 0.95 means 95% chance).
     chance: float @ 0.0..1.0,
     /// The action to execute if the specified action in the action field is not executed.
@@ -66,7 +70,11 @@ dispatch origins:block_action["origins:and", "apoli:and"] to struct BlockActionA
 }
 dispatch origins:block_action["origins:chance", "apoli:chance"] to struct BlockActionChance {
 	/// The action which might be executed.
+    #[until="1.21"]
  	action: BlockAction,
+    /// The action which might be executed.
+    #[since="1.21"]
+ 	success_action: BlockAction,
     /// The chance that the action will execute, from 0 to 1. (E.g. 0.1 means 10% chance, 0.95 means 95% chance).
     chance: float @ 0.0..1.0,
     /// The action to execute if the specified action in the action field is not executed.
@@ -114,7 +122,11 @@ dispatch origins:entity_action["origins:and", "apoli:and"] to struct EntityActio
 }
 dispatch origins:entity_action["origins:chance", "apoli:chance"] to struct EntityActionChance {
 	/// The action which might be executed.
+    #[until="1.21"]
  	action: EntityAction,
+    /// The action which might be executed.
+    #[since="1.21"]
+ 	success_action: EntityAction,
     /// The chance that the action will execute, from 0 to 1. (E.g. 0.1 means 10% chance, 0.95 means 95% chance).
     chance: float @ 0.0..1.0,
     /// The action to execute if the specified action in the action field is not executed.
@@ -162,7 +174,11 @@ dispatch origins:item_action["origins:and", "apoli:and"] to struct ItemActionAnd
 }
 dispatch origins:item_action["origins:chance", "apoli:chance"] to struct ItemActionChance {
 	/// The action which might be executed.
+    #[until="1.21"]
  	action: ItemAction,
+    /// The action which might be executed.
+    #[since="1.21"]
+ 	success_action: ItemAction,
     /// The chance that the action will execute, from 0 to 1. (E.g. 0.1 means 10% chance, 0.95 means 95% chance).
     chance: float @ 0.0..1.0,
     /// The action to execute if the specified action in the action field is not executed.

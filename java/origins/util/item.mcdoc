@@ -1,13 +1,22 @@
 use ::java::origins::util::inventory::PositionedItemSlot
+
 use ::java::world::component::DataComponentPatch
 
 use super::NBT
 
 struct ItemStack {
     /// ID of a registered item.
+	#[until="1.21"]
     item: (#[id="item"] string | string),
+    /// ID of a registered item.
+	#[since="1.21"]
+    id: (#[id="item"] string | string),
     /// Size of the stack.
+	#[until="1.21"]
     amount?: byte,
+    /// Size of the stack.
+	#[since="1.21"]
+    count?: byte,
     /// NBT data of the item.
 	#[until="1.21"]
     tag?: NBT<minecraft:item[[item]]>,

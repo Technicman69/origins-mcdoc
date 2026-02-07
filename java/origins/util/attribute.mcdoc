@@ -56,7 +56,11 @@ struct AttributedAttributeModifier {
 	/// The operation which will be performed by this modifier.
 	operation: AttributedAttributeModifierOperation,
 	/// The value to use for the modifier operation.
+	#[until="1.21"]
 	value: float,
+	/// The amount to use for the modifier operation.
+	#[since="1.21"]
+	amount: float,
 	/// ID of the modifier, describing where it comes from.
 	id: (#[id(registry="origins:attributed_attribute_modifier", define=true)] string | #[match_regex(pattern="^([a-z0-9-_.]*|\\*):\\*?[a-z0-9-_.]*(\\/[a-z0-9-_.]*)*$")] string),
 }
@@ -152,21 +156,52 @@ enum(string) AttributedAttributeModifierOperation {
 /// 
 /// This example will add the value of the `example:resource` (`data/example/powers/resource.json`) power to the base value of the modifier and multiply it by 0.01.
 /// (For example: if the current base value is 0.1 and the value of the `example:resource` power is 25, the new base value will be 0.125 since `0.1 + (25 * (1 - 0.999)) = 0.125`)
-struct AttributeModifier {
-	/// UNUSED
-	name?: string,
-	/// The operation which will be performed by this modifier.
-	operation: (
-		AttributeModifierOperation |
-		AttributedAttributeModifierOperation |
-	),
-	/// The value to use for the modifier operation.
-	value: float,
-	/// If specified, the value of this power will be used instead of the value specified in the `value` field.
-	resource?: (#[id="origins:power"] string | string),
-	/// If specified, this modifier will be applied to the value of the modifier.
-	modifier?: AttributeModifier,
-}
+type AttributeModifier = (
+	#[until="1.21"]
+	struct {
+		/// UNUSED
+		name?: string,
+		/// The operation which will be performed by this modifier.
+		operation: (
+			AttributeModifierOperation |
+			AttributedAttributeModifierOperation |
+		),
+		/// The value to use for the modifier operation.
+		value: float,
+		/// If specified, the value of this power will be used instead of the value specified in the `value` field.
+		resource?: (#[id="origins:power"] string | string),
+		/// If specified, this modifier will be applied to the value of the modifier.
+		modifier?: AttributeModifier,
+	} |
+	#[since="1.21"]
+	struct {
+		/// The operation which will be performed by this modifier.
+		operation: (
+			AttributeModifierOperation |
+			AttributedAttributeModifierOperation |
+		),
+		/// The amount to use for the modifier operation.
+		amount: float,
+		/// If specified, the value of this power will be used instead of the value specified in the `value` field.
+		resource?: (#[id="origins:power"] string | string),
+		/// If specified, this modifier will be applied to the value of the modifier.
+		modifier?: AttributeModifier,
+	} |
+	#[since="1.21"]
+	struct {
+		/// The operation which will be performed by this modifier.
+		operation: (
+			AttributeModifierOperation |
+			AttributedAttributeModifierOperation |
+		),
+		/// The amount to use for the modifier operation.
+		amount?: float,
+		/// If specified, the value of this power will be used instead of the value specified in the `value` field.
+		resource: (#[id="origins:power"] string | string),
+		/// If specified, this modifier will be applied to the value of the modifier.
+		modifier?: AttributeModifier,
+	} |
+)
 
 /// # Modifier Operation
 /// 

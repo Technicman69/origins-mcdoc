@@ -1,0 +1,52 @@
+use ::java::world::component::DataComponentPatch
+
+
+type Ingredient = (
+	struct {
+		item: (#[id="item"] string | string),
+	} |
+	struct {
+		tag: (#[id(registry="item",tags="implicit")] string | string),
+	} |
+	#[since="1.21"]
+  FabricIngredient |
+)
+
+struct FabricIngredient {
+	"fabric:type": #[id] #[dispatcher_key="fabric:ingredient"] string,
+	...fabric:ingredient[["fabric:type"]],
+}
+
+dispatch fabric:ingredient["fabric:all"] to struct All {
+	/// Creates an ingredient that matches when its sub-ingredients all match
+	ingredients: [Ingredient] @ 1..,
+}
+
+dispatch fabric:ingredient["fabric:any"] to struct Any {
+	/// Creates an ingredient that matches when any of its sub-ingredients matches
+	ingredients: [Ingredient] @ 1..,
+}
+
+dispatch fabric:ingredient["fabric:difference"] to struct Difference {
+	/// Creates an ingredient that matches if its base ingredient matches. 
+	base: Ingredient,
+	/// Creates an ingredient that matches if its subtracted ingredient **does not** match. 
+	subtracted: Ingredient,
+}
+
+dispatch fabric:ingredient["fabric:components"] to struct Components {
+	/// Creates an ingredient that wraps another ingredient to also check for matching components.
+	base: Ingredient,
+	/// Components to be checked
+	components: DataComponentPatch,
+}
+
+dispatch fabric:ingredient["fabric:custom_data"] to struct CustomData {
+	/// Creates an ingredient that wraps another ingredient to also check for stack's custom data.
+	/// This check is non-strict; the ingredient custom data must be a subset of the stack custom data.
+	/// This is useful for mods that still rely on NBT-based custom data instead of custom components,
+	/// such as those requiring vanilla compatibility or interacting with another data packs. 
+	base: Ingredient,
+	/// NBT tag to match, either in JSON directly or a string representation
+	nbt: CustomData,
+}

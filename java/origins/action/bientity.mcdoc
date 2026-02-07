@@ -1,6 +1,5 @@
 use super::EntityAction
 use super::super::condition::EntityCondition
-use ::java::origins::util::DamageSource
 use ::java::origins::util::attribute::AttributeModifier
 
 struct BientityAction {
@@ -35,20 +34,20 @@ dispatch origins:bientity_action["origins:actor_action", "apoli:actor_action"] t
 	action: EntityAction,
 }
 
-/// #	Add to Set
+/// #	Add to Entity Set
 /// 
 /// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
 /// 
 /// Add the target entity to the power that uses the [Entity Set (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/entity_set) of the actor entity.
 /// 
-/// Type ID: `origins:add_to_set`
+/// Type ID: `origins:add_to_entity_set`
 /// 
 /// 
 /// ###	Examples
 /// 
 /// ```json
 /// "bientity_action": {
-/// 	"type": "origins:add_to_set",
+/// 	"type": "origins:add_to_entity_set",
 /// 	"set": "example:entities_to_exclude"
 /// }
 /// ```
@@ -58,23 +57,21 @@ dispatch origins:bientity_action["origins:actor_action", "apoli:actor_action"] t
 /// 
 /// ```json
 /// "bientity_action": {
-/// 	"type": "origins:add_to_set",
+/// 	"type": "origins:add_to_entity_set",
 /// 	"set": "example:make_em_glow",
 /// 	"time_limit": 200
 /// }
 /// ```
 /// 
 /// This example will add the target entity to the `example:make_em_glow` (`data/example/powers/make_em_glow.json`) power temporarily for 10 seconds, after which the target entity will be removed.
-#[until="1.20.4"]
-dispatch origins:bientity_action["origins:add_to_set", "apoli:add_to_set"] to struct AddToSet {
+#[since="1.20.4"]
+dispatch origins:bientity_action["origins:add_to_entity_set", "apoli:add_to_entity_set"] to struct AddToSet {
 	/// The ID of the power to add the target entity into.
 	set: (#[id="origins:power"] string | string),
 	/// If specified, this will determine how long the target entity will be stored in the specified power in ticks.
 	time_limit?: int @ 1..
 }
 
-#[since="1.20.4"]
-dispatch origins:bientity_action["origins:add_to_entity_set", "apoli:add_to_entity_set"] to AddToSet
 
 /// # Add Velocity
 /// 
@@ -108,10 +105,6 @@ dispatch origins:bientity_action["origins:add_velocity", "apoli:add_velocity"] t
 	z?: float,
 	/// Determines whether to use the target entity's `"position"` or `"rotation"` when calculating the velocity that will be applied to the target entity.
 	reference?: ("position" | "rotation"),
-	/// If this is false, the action will not execute on the client.
-	client?: boolean,
-	/// If this is false, the action will not execute on the server.
-	server?: boolean,
 	/// If this is true, the action will act as a "set" velocity action, overriding the entity's current velocity instead of adding to it.
 	set?: boolean,
 }
@@ -178,8 +171,6 @@ dispatch origins:bientity_action["origins:add_velocity", "apoli:add_velocity"] t
 dispatch origins:bientity_action["origins:damage", "apoli:damage"] to struct Damage {
 	/// The amount of damage to deal.
 	amount: float,
-	/// **DEPRICATED** Use `damage_type` instead. See [Damage Source (Data Type)](https://origins.readthedocs.io/en/latest/types/data_types/damage_source) for more details.
-	source?: DamageSource,
 	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
 	damage_type: (#[id="damage_type"] string | string),
 	/// If specified, this modifier will be applied to the damage taken by the '**target**' entity.
@@ -236,33 +227,31 @@ dispatch origins:bientity_action["origins:leash", "apoli:leash"] to struct Leash
 /// ```
 dispatch origins:bientity_action["origins:mount", "apoli:mount"] to struct Mount {}
 
-/// #	Remove from Set
+/// #	Remove from Entity Set
 /// 
 /// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
 /// 
 /// Removes the target entity from the power that uses the [Entity Set (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types) of the actor entity.
 /// 
-/// Type ID: `origins:remove_from_set`
+/// Type ID: `origins:remove_from_entity_set`
 /// 
 /// 
 /// ###	Examples
 /// 
 /// ```json
 /// "bientity_action": {
-/// 	"type": "origins:remove_from_set",
+/// 	"type": "origins:remove_from_entity_set",
 /// 	"set": "example:entities_to_exclude"
 /// }
 /// ```
 /// 
 /// This example will remove the target entity from the `example:entities_to_exclude` (`data/example/powers/entities_to_exclude.json`) power.
-#[until="1.20.4"]
-dispatch origins:bientity_action["origins:remove_from_set", "apoli:remove_from_set"] to struct RemoveFromSet {
+#[since="1.20.4"]
+dispatch origins:bientity_action["origins:remove_from_entity_set", "apoli:remove_from_entity_set"] to struct RemoveFromSet {
 	/// The ID of the power to remove the target entity from.
 	set: (#[id="origins:power"] string | string),
 }
 
-#[since="1.20.4"]
-dispatch origins:bientity_action["origins:remove_from_entity_set", "apoli:remove_from_entity_set"] to RemoveFromSet
 
 /// # Set In Love
 /// 

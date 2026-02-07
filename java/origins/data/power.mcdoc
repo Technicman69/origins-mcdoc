@@ -14,7 +14,6 @@ use ::java::origins::util::text::Key
 use ::java::origins::util::sprite::ResourceBarFile
 use ::java::origins::util::item::ItemStack
 use ::java::origins::util::item::PositionedItemStack
-use ::java::origins::util::DamageSource
 use ::java::origins::util::attribute::AttributeModifier
 use ::java::origins::util::attribute::AttributedAttributeModifier
 use ::java::origins::util::inventory::PositionedItemSlot
@@ -1556,8 +1555,6 @@ dispatch origins:power["origins:damage_over_time", "apoli:damage_over_time"] to 
 	damage: float,
 	/// How much damage will be dealt each interval on Easy difficulty. If not set, this will be equal to `damage`.
 	damage_easy?: float,
-	/// **DEPRICATED** Use `damage_type` instead. See [Damage Source (Data Type)](https://origins.readthedocs.io/en/latest/types/data_types/damage_source) for more details.
-	damage_source?: DamageSource,
 	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
 	damage_type?: (#[id="damage_type"] string | string),
 	/// If set, the total amount of levels of this enchantment will be counted on the player's armor to increase the `onset_delay`.
@@ -1606,9 +1603,8 @@ dispatch origins:power["origins:disable_regen", "apoli:disable_regen"] to struct
 ///         }
 ///     },
 ///     "food_component": {
-///         "hunger": 4,
-///         "saturation": 1,
-///         "meat": true
+///         "nutrition": 4,
+///         "saturation": 1
 ///     },
 ///     "use_action": "eat",
 ///     "result_stack": {
@@ -1618,7 +1614,7 @@ dispatch origins:power["origins:disable_regen", "apoli:disable_regen"] to struct
 /// }
 /// ```
 /// 
-/// This example will grant the players the ability to eat axolotls in buckets. It will give 4 hunger shanks and 8 saturation (4 * 1 * 2), it also counts as meat. This returns a water bucket upon consumption and uses the eat action.
+/// This example will grant the players the ability to eat axolotls in buckets. It will give 4 hunger shanks and 8 saturation (4 * 1 * 2). This returns a water bucket upon consumption and uses the eat action.
 /// <br>
 /// 
 /// 
@@ -1632,9 +1628,9 @@ dispatch origins:power["origins:disable_regen", "apoli:disable_regen"] to struct
 ///         }
 ///     },
 ///     "food_component": {
-///         "hunger": 4.0,
+///         "nutrition": 4.0,
 ///         "saturation": 0.4,
-///         "snack": true
+///         "eat_seconds": 0.8
 ///     },
 ///     "use_action": "eat",
 ///     "consuming_time_modifier": {
@@ -1645,7 +1641,7 @@ dispatch origins:power["origins:disable_regen", "apoli:disable_regen"] to struct
 /// }
 /// ```
 /// 
-/// This example will replace the food component of Cookies, making it take 3 times longer to eat while also giving 4 hunger shanks and 3.2 saturation (4.0 * 0.4 * 2).
+/// This example will replace the food component of Cookies, making it take 0.8 seconds to eat (same as kelp) while also giving 4 hunger shanks and 3.2 saturation (4.0 * 0.4 * 2).
 dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct EdibleItem {
 	...Conditioned,
 	/// If specified, this action will be executed on the player upon consuming an item.
@@ -1659,7 +1655,7 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 	/// The food component that the item grants upon eating it.
 	food_component: FoodComponent,
 	/// If specified, this item stack will be given to the player.
-    result_stack?: ItemStack,
+  result_stack?: ItemStack,
 	/// If specified, this item stack will be given to the player.
 	return_stack?: ItemStack,
 	/// Determines whether the animation effect for consuming the item should be "eating" (`"eat"`, displays particle effects based on the item) or "drinking" (`"drink"`, no particle effects.)
@@ -1671,8 +1667,10 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 	/// If specified, the sound event with this namespace and ID will be played when the item is eaten.
 	sound?: (#[id="sound_event"] string | string),
 	/// If specified, this modifier will be applied on the maximum time the item is being consumed (in ticks).
+	#[until="1.21"]
 	consuming_time_modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied on the the maximum time the item is being consumed (in ticks).
+	#[until="1.21"]
 	consuming_time_modifiers?: [AttributeModifier],
 	/// Determines the priority of which the power will apply its modification to the item. Must be higher than 0 if the item is already edible.
 	priority?: int,
@@ -1680,15 +1678,28 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 
 struct FoodComponent {
 	/// The amount of hunger shanks the food component recovers upon consumption.
+	#[until="1.21"]
 	hunger: int @ 0..,
+	/// The amount of hunger shanks the food component recovers upon consumption.
+	#[since="1.21"]
+	nutrition: int @ 0..,
 	/// The amount of saturation to give the player upon consumption.
 	saturation: float @ 0.0..,
 	/// Whether this food component counts as meat or not.
 	meat?: boolean,
 	/// Whether this food component is edible at full hunger or not.
+	#[until="1.21"]
 	always_edible?: boolean,
+	/// Whether this food component is edible at full hunger or not.
+	#[since="1.21"]
+	can_always_eat?: boolean,
 	/// Whether this food component takes as long as dried kelp to eat (16 ticks) or not (32 ticks).
+	#[until="1.21"]
 	snack?: boolean,
+	/// The time in seconds it takes to eat this food component (normal food takes 1.6 seconds, dried kelp takes 0.8 seconds).
+	/// Defaults to 1.6
+	#[since="1.21"]
+	eat_seconds?: float @ 0.0<..,
 	/// A status effect and the chance of it triggering upon consuming something with this food component.
 	effect?: StatusEffectChance,
 	/// A status effect and the chance of it triggering upon consuming something with this food component.
@@ -3321,6 +3332,12 @@ dispatch origins:power["origins:modify_food", "apoli:modify_food"] to struct Mod
 	saturation_modifier?: AttributeModifier,
 	/// If specified, these modifiers will apply to the saturation amount gained by eating a food item.
 	saturation_modifiers?: [AttributeModifier],
+	/// If specified, this modifier will be applied on the maximum time the item is being consumed (in ticks).
+	#[since="1.21"]
+	eat_ticks_modifier?: AttributeModifier,
+	/// If specified, these modifiers will be applied on the the maximum time the item is being consumed (in ticks).
+	#[since="1.21"]
+	eat_ticks_modifiers?: [AttributeModifier],
 	/// If specified, this action will be executed on the player that has ate a food item.
 	entity_action?: EntityAction,
 	/// Determines whether a food item can be eaten regardless of the player's hunger bar being full.
@@ -3805,6 +3822,32 @@ dispatch origins:power["origins:modify_swim_speed", "apoli:modify_swim_speed"] t
 	modifiers?: [AttributeModifier],
 }
 
+/// # Modify Type Tag
+/// 
+/// [Power Type](https://origins.readthedocs.io/en/latest/types/power_types)
+/// 
+/// Modifies whether an entity is considered to be included in the specified entity type tag.
+/// 
+/// Type ID: `origins:modify_type_tag`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// {
+///     "type": "origins:modify_type_tag",
+///     "tag": "arthropod"
+/// }
+/// ```
+/// 
+/// This power will make the entity that has the power take more damage from Bane of Arthropods enchant.
+#[since="1.21"]
+dispatch origins:power["origins:modify_type_tag", "apoli:modify_type_tag"] to struct ModifyTypeTag {
+	...Conditioned,
+	/// The ID of the entity type tag to consider the entity to be in.
+	tag: (#[id(registry="entity_type",tags="implicit")] string | string),
+}
+
 /// # Modify Velocity
 /// 
 /// [Power Type](https://origins.readthedocs.io/en/latest/types/power_types)
@@ -3950,7 +3993,11 @@ dispatch origins:power["origins:night_vision", "apoli:night_vision"] to struct N
 dispatch origins:power["origins:overlay", "apoli:overlay"] to struct Overlay {
 	...Conditioned,
 	/// The namespace and ID of the texture to use as an overlay.
+	#[until="1.21"]
 	texture: string,
+	/// The namespace and ID of the texture to use as an overlay.
+	#[since="1.21"]
+	texture: (#[id(registry="texture",path="overlay/sprites/")] string | string),
 	/// If the `"texture"` draw mode is used, it determines the alpha (transparency) value of the texture. If the `"nausea"` draw mode is used, it determines the value of how the texture is stretched (1.0 = screen size). Range: 0.0 to 1.0.
 	strength?: float @ 0.0..1.0,
 	/// Value by which the red component of the texture will be multiplied. Range: 0.0 to 1.0.
@@ -5459,60 +5506,20 @@ dispatch origins:power["origins:stacking_status_effect", "apoli:stacking_status_
 ///   	"type": "origins:starting_equipment",
 ///   	"stacks": [
 ///     	{
-///       		"item": "minecraft:compass"
+///       		"id": "minecraft:compass"
 ///     	},
 ///     	{
-///       		"item": "minecraft:clock"
+///       		"id": "minecraft:clock"
 ///     	},
 ///     	{
-///       		"item": "minecraft:map",
-/// 	    	"amount": 9
+///       		"id": "minecraft:map",
+/// 	    	  "count": 9
 ///     	}
 ///   	]
 /// }
 /// ```
 /// 
 /// This example will give the player the "Explorer Kit" known from Origins: Classes that consists of a compass, a clock and 9 empty maps.
-/// <br>
-/// 
-/// ```json
-/// {
-///     "type": "origins:starting_equipment",
-///     "stacks": [
-///         {
-///             "item": "minecraft:white_stained_glass",
-///             "amount": 1,
-///             "slot": 39
-///         },
-///         {
-///             "item": "minecraft:leather_chestplate",
-///             "amount": 1,
-///             "tag": "{display: {color: 16383998}}",
-///             "slot": 38
-///         },
-///         {
-///             "item": "minecraft:leather_leggings",
-///             "amount": 1,
-///             "tag": "{display: {color: 16383998}}",
-///             "slot": 37
-///         },
-///         {
-///             "item": "minecraft:leather_boots",
-///             "amount": 1,
-///             "tag": "{display: {color: 16383998}}",
-///             "slot": 36
-///         },
-///         {
-///             "item": "minecraft:written_book",
-///             "amount": 1,
-///             "tag": "{display: {Name: '{\"text\": \"Example Book\", \"color\": \"light_purple\", \"italic\": false}'}, title: \"Example Book\", author: \"eggohito\", pages: ['{\"text\": \"This is page one.\"}', '{\"text\": \"This is page two, the last page.\"}']}",
-///             "slot": 8
-///         }
-///     ]
-/// }
-/// ```
-/// 
-/// This example will give the player a White Stained Glass Block in its head equipment slot, a white-colored Leather Chestplate, Leggings and Boots in its chest, legs, and feet equipment slots respectively and a Written Book with two pages in the 9th hotbar slot.
 dispatch origins:power["origins:starting_equipment", "apoli:starting_equipment"] to struct StartingEquipment {
 	...Conditioned,
 	/// If specified, this item will be given to the player (can be specified in an inventory slot).

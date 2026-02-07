@@ -1,8 +1,9 @@
 use ::java::origins::util::compare::Comparison
 use ::java::origins::util::NBT
 use ::java::origins::util::enchant::Enchantment
-use ::java::world::component::CustomData
+use ::java::origins::util::ingredient::Ingredient
 
+use ::java::world::component::CustomData
 use ::java::util::slot::EquipmentSlot
 
 struct ItemCondition {
@@ -343,32 +344,23 @@ dispatch origins:item_condition["origins:ingredient", "apoli:ingredient"] to str
 	),
 }
 
-type Ingredient = (
-	struct {
-		item: (#[id="item"] string | string),
-	} |
-	struct {
-		tag: (#[id(registry="item",tags="implicit")] string | string),
-	} |
-)
-
-/// #   Is Damageable
+/// #   Damageable
 /// 
 /// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
 /// 
 /// Checks if the item is damageable.
 /// 
-/// Type ID: `origins:is_damageable`
+/// Type ID: `origins:damageable`
 /// 
 /// 
 /// ### Examples
 /// 
 /// ```json
 /// "item_condition": {
-///     "type": "origins:is_damageable"
+///     "type": "origins:damageable"
 /// }
 /// ```
-dispatch origins:item_condition["origins:is_damageable", "apoli:is_damageable"] to struct IsDamageable {}
+dispatch origins:item_condition["origins:damageable", "apoli:damageable"] to struct Damageable {}
 
 /// #   Item Cooldown
 /// 
@@ -385,20 +377,20 @@ dispatch origins:item_condition["origins:item_cooldown", "apoli:item_cooldown"] 
 	compare_to:	int @ 0..,
 }
 
-/// #   Is Equippable
+/// #   Equippable
 /// 
 /// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
 /// 
 /// Checks if the item is equippable.
 /// 
-/// Type ID: [`origins:is_equippable`](## "Aliases: ["origins:equippable"]")
+/// Type ID: `origins:equippable`
 /// 
 /// 
 /// ### Examples
 /// 
 /// ```json
 /// "item_condition": {
-///     "type": "origins:is_equippable"
+///     "type": "origins:equippable"
 /// }
 /// ```
 /// 
@@ -407,36 +399,16 @@ dispatch origins:item_condition["origins:item_cooldown", "apoli:item_cooldown"] 
 /// 
 /// ```json
 /// "item_condition": {
-///     "type": "origins:is_equippable",
+///     "type": "origins:equippable",
 ///     "equipment_slot": "chest"
 /// }
 /// ```
 /// 
 /// This example will check if the item can be equipped in the chest equipment slot.
-dispatch origins:item_condition["origins:is_equippable", "apoli:is_equippable", "origins:equippable", "apoli:equippable"] to struct IsEquippable {
+dispatch origins:item_condition["origins:equippable", "apoli:equippable"] to struct Equippable {
 	/// If specified, checks if the item is equippable in the specified equipment slot. Accepts `"head"`, `"chest"`, `"legs"`, `"feet"`, or `"offhand"`.
 	equipment_slot?: EquipmentSlot,
 }
-
-/// # Meat
-/// 
-/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
-/// 
-/// Checks whether the item is considered meat by Minecraft (usable for breeding wolves).
-/// 
-/// Type ID: `origins:meat`
-/// 
-/// 
-/// ### Examples
-/// 
-/// ```json
-/// "item_condition": {
-///     "type": "origins:meat"
-/// }
-/// ```
-/// 
-/// This example will check if the item is considered meat by Minecraft.
-dispatch origins:item_condition["origins:meat", "apoli:meat"] to struct Meat {}
 
 /// # Custom Data
 /// 
