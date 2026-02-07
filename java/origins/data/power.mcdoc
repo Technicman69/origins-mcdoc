@@ -2054,24 +2054,24 @@ dispatch origins:power["origins:fire_projectile", "apoli:fire_projectile"] to st
 	...OptionalCooldown,
 	/// The ID of the entity type that will be fired.
 	entity_type: (#[id="entity_type"] string | string),
+	/// How much each projectile fired is affected by random spread.
+	divergence?: float,
+	/// The speed applied to the fired projectile.
+	speed?: float,
 	/// Number of projectiles to be fired.
 	count?: int @ 1..,
+	/// NBT data of the entity.
+	tag?: NBT<minecraft:entity[[entity_type]]>,
+	/// If specified, this entity action will be executed on the projectile or entity that will be launched.
+	projectile_action?: EntityAction,
 	/// Determines the interval for firing multiple projectiles consecutively (in ticks). If set to 0, it will fire all the projectiles at the same tick.
 	interval?: int @ 1..,
 	/// Determines how long the start of the firing process is delayed (in ticks).
 	start_delay?: int @ 1..,
-	/// The speed applied to the fired projectile.
-	speed?: float,
-	/// How much each projectile fired is affected by random spread.
-	divergence?: float,
 	/// If set, the sound with this ID will be played when the power is used.
 	sound?: (#[id="sound_event"] string | string),
-	/// NBT data of the entity.
-	tag?: NBT<minecraft:entity[[entity_type]]>,
 	/// Which active key this power should respond to. If none is specified, this power will use the primary active power key (by default G).
 	key?: Key,
-	/// If specified, this entity action will be executed on the projectile or entity that will be launched.
-	projectile_action?: EntityAction,
 	/// If specified, this entity action will be executed on the entity that has the power.
 	shooter_action?: EntityAction,
 }

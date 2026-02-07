@@ -310,26 +310,16 @@
                                             "parser": "minecraft:power"
                                         }
                                     }
-                                }
-                            }
-                        }
-                    }
-                },
-                "revokeall": {
-                    "type": "literal",
-                    "children": {
-                        "targets": {
-                            "type": "argument",
-                            "parser": "minecraft:entity",
-                            "properties": {
-                                "type": "entities",
-                                "amount": "multiple"
-                            },
-                            "children": {
-                                "source": {
-                                    "type": "argument",
-                                    "executable": true,
-                                    "parser": "minecraft:power"
+                                },
+                                "all": {
+                                    "type": "literal",
+                                    "children": {
+                                        "source": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:power"
+                                        }
+                                    }
                                 }
                             }
                         }
