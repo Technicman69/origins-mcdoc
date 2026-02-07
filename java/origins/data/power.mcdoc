@@ -162,7 +162,7 @@ dispatch origins:power["origins:multiple", "apoli:multiple"] to struct Multiple 
 /// 		"should_render": false
 /// 	},
 /// 	"key": {
-/// 		"key": "key.use",
+/// 		"id": "key.use",
 /// 		"continuous": true
 /// 	},
 /// 	"condition": {
@@ -2002,7 +2002,7 @@ dispatch origins:power["origins:fire_immunity", "apoli:fire_immunity"] to struct
 /// 	},
 /// 	"tag": "{pickup:0b}",
 /// 	"key": {
-/// 		"key": "key.attack",
+/// 		"id": "key.attack",
 /// 		"continuous": true
 /// 	}
 /// }
@@ -2023,7 +2023,7 @@ dispatch origins:power["origins:fire_immunity", "apoli:fire_immunity"] to struct
 ///     "interval": 5,
 ///     "tag": "{Item: {id: 'minecraft:slime_ball', Count: 1b}}",
 ///     "key": {
-///         "key": "key.use",
+///         "id": "key.use",
 ///         "continuous": false
 ///     }
 /// }
@@ -2182,7 +2182,7 @@ dispatch origins:power["origins:game_event_listener", "apoli:game_event_listener
 ///     "activate": {
 ///         "type": "origins:active_self",
 ///         "key": {
-/// 			"key": "key.origins.primary_active"
+/// 			"id": "key.origins.primary_active"
 /// 		},
 /// 		"cooldown": 200,
 /// 		"entity_action": {
@@ -2267,7 +2267,7 @@ dispatch origins:power["origins:ignore_water", "apoli:ignore_water"] to struct I
 /// 	"container_type": "hopper",
 /// 	"drop_on_death": false,
 /// 	"key": {
-/// 		"key": "key.hotbar.9"
+/// 		"id": "key.hotbar.9"
 /// 	}
 /// }
 /// ```
@@ -2314,6 +2314,27 @@ enum(string) ContainerType {
 	Dispenser = "dispenser",
 	/// Determines that the inventory will be similar to the inventory of a double Chest block.
 	Double_Chest = "double_chest",
+	/// Determines that the inventory will have 9 columns and 1 row
+	#[since="1.21"]
+	Generic9x1 = "generic_9x1",
+	/// Determines that the inventory will have 9 columns and 2 rows
+	#[since="1.21"]
+	Generic9x2 = "generic_9x2",
+	/// Determines that the inventory will have 9 columns and 3 rows, similar to the inventory of a single Chest block.
+	#[since="1.21"]
+	Generic9x3 = "generic_9x3",
+	/// Determines that the inventory will have 9 columns and 4 rows
+	#[since="1.21"]
+	Generic9x4 = "generic_9x4",
+	/// Determines that the inventory will have 9 columns and 5 rows
+	#[since="1.21"]
+	Generic9x5 = "generic_9x5",
+	/// Determines that the inventory will have 9 columns and 6 rows, similar to the inventory of a double Chest block.
+	#[since="1.21"]
+	Generic9x6 = "generic_9x6",
+	/// Determines that the inventory will have 3 columns and 3 row, similar to the inventory of a Dropper/Dispenser block
+	#[since="1.21"]
+	Generic3x3 = "generic_3x3",
 }
 
 /// # Invisibility
@@ -2613,7 +2634,7 @@ dispatch origins:power["origins:keep_inventory", "apoli:keep_inventory"] to stru
 ///   	"sound": "minecraft:entity.parrot.fly",
 ///   	"speed": 2,
 ///   	"key": {
-///     	"key": "key.origins.primary_active",
+///     	"id": "key.origins.primary_active",
 ///     	"continuous": true
 ///   	}
 /// }
@@ -5652,7 +5673,7 @@ dispatch origins:power["origins:target_action_on_hit", "apoli:target_action_on_h
 ///     "type": "origins:toggle",
 ///     "active_by_default": false,
 ///     "key": {
-///         "key": "key.use"
+///         "id": "key.use"
 ///     }
 /// }
 /// ```
@@ -5666,7 +5687,7 @@ dispatch origins:power["origins:target_action_on_hit", "apoli:target_action_on_h
 ///     "active_by_default": true,
 ///     "retain_state": true,
 ///     "key": {
-///         "key": "key.attack"
+///         "id": "key.attack"
 ///     },
 ///     "condition": {
 ///         "type": "origins:sneaking"
