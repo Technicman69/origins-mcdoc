@@ -16,6 +16,7 @@ use ::java::origins::util::item::ItemStack
 use ::java::origins::util::item::PositionedItemStack
 use ::java::origins::util::attribute::AttributeModifier
 use ::java::origins::util::attribute::AttributedAttributeModifier
+use ::java::origins::util::inventory::ItemSlot
 use ::java::origins::util::inventory::PositionedItemSlot
 use ::java::origins::util::particle::ParticleEffect
 use ::java::origins::util::enchant::Enchantment
@@ -101,7 +102,7 @@ dispatch origins:power["origins:multiple", "apoli:multiple"] to struct Multiple 
 /// 
 /// Executes an [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types) on the entity that has the power upon pressing the specified [Key](https://origins.readthedocs.io/en/latest/types/data_types/key).
 /// 
-/// Type ID: `origins:active_self`
+/// Type ID: `origins:active_self` (alias: `origins:action_on_key_press`)
 /// 
 /// 
 /// ### Examples
@@ -182,7 +183,7 @@ dispatch origins:power["origins:multiple", "apoli:multiple"] to struct Multiple 
 /// 
 /// This example will allow the player that has the power to essentially consume a Sugar item if the player is holding a Sugar item, which would then apply a Speed II status effect that would last for 5 seconds upon pressing the `key.use` keybind.
 /// (The example is bound to the `key.use` keybind, as seen inside the [`key`](https://origins.readthedocs.io/en/latest/types/data_types/key) object field.)
-dispatch origins:power["origins:active_self", "apoli:active_self"] to struct ActiveSelf {
+dispatch origins:power["origins:active_self", "apoli:active_self", "origins:action_on_key_press", "apoli:action_on_key_press"] to struct ActiveSelf {
 	...Conditioned,
     ...OptionalCooldown,
     /// The action to execute on the player.
@@ -2605,7 +2606,10 @@ dispatch origins:power["origins:keep_inventory", "apoli:keep_inventory"] to stru
 	/// If specified, only make the items that fulfill the specified item condition type persist in the entity's inventory.
 	item_condition?: ItemCondition,
 	/// If specified, only make the items that are in the listed inventory slots persist in the entity's inventory. See [Positioned Item Stack Slots](https://origins.readthedocs.io/en/latest/types/../misc/extras/positioned_item_stack_slots) for possible values.
-	slots?: [PositionedItemSlot],
+	slots?: [(
+		#[until="1.21"] PositionedItemSlot |
+		#[since="1.21"] ItemSlot |
+	)],
 }
 
 /// # Launch
@@ -5371,7 +5375,7 @@ dispatch origins:power["origins:shaking", "apoli:shaking"] to struct Shaking {
 /// 
 /// Does nothing.
 /// 
-/// Type ID: `origins:simple`
+/// Type ID: `origins:simple` (alias: `origins:dummy`)
 /// 
 /// !!! note
 /// 
@@ -5387,7 +5391,7 @@ dispatch origins:power["origins:shaking", "apoli:shaking"] to struct Shaking {
 /// ```
 /// 
 /// This example will do nothing. However, it's still visible in the origin's power list GUI.
-dispatch origins:power["origins:simple", "apoli:simple"] to struct Simple {
+dispatch origins:power["origins:simple", "apoli:simple", "origins:dummy", "apoli:dummy"] to struct Simple {
 	...Conditioned,
 }
 
