@@ -3993,11 +3993,10 @@ dispatch origins:power["origins:night_vision", "apoli:night_vision"] to struct N
 dispatch origins:power["origins:overlay", "apoli:overlay"] to struct Overlay {
 	...Conditioned,
 	/// The namespace and ID of the texture to use as an overlay.
-	#[until="1.21"]
-	texture: string,
-	/// The namespace and ID of the texture to use as an overlay.
-	#[since="1.21"]
-	texture: (#[id(registry="texture",path="overlay/sprites/")] string | string),
+	texture: (
+		#[since="1.21"] #[id(registry="texture",path="overlay/sprites/")] string |
+		string |
+		),
 	/// If the `"texture"` draw mode is used, it determines the alpha (transparency) value of the texture. If the `"nausea"` draw mode is used, it determines the value of how the texture is stretched (1.0 = screen size). Range: 0.0 to 1.0.
 	strength?: float @ 0.0..1.0,
 	/// Value by which the red component of the texture will be multiplied. Range: 0.0 to 1.0.

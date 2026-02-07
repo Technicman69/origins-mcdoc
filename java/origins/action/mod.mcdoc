@@ -1,4 +1,16 @@
-type BientityAction = bientity::BientityAction
-type BlockAction = block::BlockAction
-type EntityAction = entity::EntityAction
-type ItemAction = item::ItemAction
+type BientityAction = (
+	bientity::BientityAction |
+	#[since="1.21"] [bientity::BientityAction] |
+)
+type BlockAction = (
+	block::BlockAction |
+	#[since="1.21"] [block::BlockAction] |
+)
+type EntityAction = (
+	entity::EntityAction |
+	#[since="1.21"] [entity::EntityAction] |
+)
+type ItemAction = (
+	item::ItemAction |
+	#[since="1.21"] [item::ItemAction] |
+)
