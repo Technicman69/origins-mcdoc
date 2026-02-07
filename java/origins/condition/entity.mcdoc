@@ -868,13 +868,20 @@ dispatch origins:entity_condition["origins:gamemode", "apoli:gamemode"] to struc
 /// ```
 dispatch origins:entity_condition["origins:glowing", "apoli:glowing"] to struct Glowing {}
 
+
+/// #   Has Command Tag
+/// 
+/// [Entity Condition Type](https://origins.readthedocs.io/en/latest/types/entity_condition_types)
+/// 
 /// Checks if an entity has (the specified) command tags.
+/// 
+/// Type ID: `origins:has_command_tag`
 #[since="1.20.4"]
-dispatch origins:entity_condition["origins:has_command_tag"] to struct HasCommandTag {
+dispatch origins:entity_condition["origins:has_command_tag", "apoli:has_command_tag"] to struct HasCommandTag {
 	///If specified, checks if the entity has this command tag.
-	command_tag?: string,
+	command_tag?: #[tag] string,
 	///If specified, checks if the entity has these command tags.
-	command_tags?: [string],
+	command_tags?: [#[tag] string],
 }
 
 /// # Health
