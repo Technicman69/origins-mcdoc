@@ -34,8 +34,10 @@ struct BiomeCondition {
 /// ```
 /// 
 /// This example will check if the player is inside a Forest-like biome.
+#[deprecated]
 dispatch origins:biome_condition["origins:category", "apoli:category"] to struct Category {
-	/// **DEPRICATED** Which category the biome must be in order to succeed the check.
+	/// Which category the biome must be in order to succeed the check.
+	#[deprecated]
 	category: BiomeCategory,
 }
 
