@@ -1,0 +1,7 @@
+struct LoadCondition {
+	condition: #[dispatcher_key="fabric:load_condition"] string,
+	...fabric:load_condition[[condition]]
+}
+
+/// A condition that always passes
+dispatch fabric:load_condition["fabric:true"] to struct True {}

@@ -210,7 +210,10 @@
                                         "source": {
                                             "type": "argument",
                                             "executable": true,
-                                            "parser": "origins:source"
+                                            "parser": "minecraft:resource",
+                                            "properties": {
+                                                "registry": "origins:source"
+                                            }
                                         }
                                     }
                                 }
@@ -307,7 +310,10 @@
                                         "source": {
                                             "type": "argument",
                                             "executable": true,
-                                            "parser": "minecraft:power"
+                                            "parser": "minecraft:resource",
+                                            "properties": {
+                                                "registry": "origins:source"
+                                            }
                                         }
                                     }
                                 },
@@ -317,7 +323,10 @@
                                         "source": {
                                             "type": "argument",
                                             "executable": true,
-                                            "parser": "minecraft:power"
+                                            "parser": "minecraft:resource",
+                                            "properties": {
+                                                "registry": "origins:source"
+                                            }
                                         }
                                     }
                                 }

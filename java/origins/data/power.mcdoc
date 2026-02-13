@@ -33,6 +33,8 @@ use ::java::origins::condition::EntityCondition
 use ::java::origins::condition::FluidCondition
 use ::java::origins::condition::ItemCondition
 
+use ::java::fabric::load_condition::LoadCondition
+
 
 
 struct HudRender {
@@ -63,9 +65,10 @@ struct PowerBase {
     loading_priority?: int,
     /// If set, it will display icon(s) after the name of the power.
     badges?: [(
-		(#[id="origins:badge"] string | string) |
-		Badge |
-	)],
+			(#[id="origins:badge"] string | string) |
+			Badge |
+		)],
+		"fabric:load_conditions"?: [LoadCondition]
 }
 
 struct Conditioned {
