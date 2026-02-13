@@ -9,6 +9,7 @@ use super::super::condition::BientityCondition
 use super::super::condition::EntityCondition
 use super::super::condition::ItemCondition
 use ::java::origins::util::item::ItemStack
+use ::java::origins::util::DamageSource
 use ::java::origins::util::FluidHandling
 use ::java::origins::util::attribute::AttributeModifier
 use ::java::origins::util::Shape
@@ -104,6 +105,44 @@ dispatch origins:entity_action["origins:action_on_entity_set", "apoli:action_on_
 	reverse?: boolean,
 }
 
+/// #	Action on Set
+/// 
+/// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
+/// 
+/// Executes an action on entities stored within the power that uses the [Entity Set (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/entity_set).
+/// 
+/// Type ID: `origins:action_on_set`
+/// 
+/// 
+/// !!!	note
+/// 
+/// 	In the context of this entity action type, the actor will be the entity that invoked the entity action while the target will be the entities within the power.
+/// 
+/// !!!	note
+/// 
+/// 	The action will be executed on the entities stored within the power regardless of their dimension.
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "entity_action": {
+/// 	"type": "origins:action_on_set",
+/// 	"set": "example:special_pets",
+/// 	"bientity_action": {
+/// 		"type": "origins:target_action",
+/// 		"action": {
+/// 			"type": "origins:heal",
+/// 			"amount": 4
+/// 		}
+/// 	}
+/// }
+/// ```
+/// 
+/// This example will restore 2 hearts to entities that were added to the `example:special_pets` (`data/example/powers/special_pets.json`) power using the [Add to Set (Bientity Action Type)](https://origins.readthedocs.io/en/latest/types/bientity_action_types/add_to_set).
+#[until="1.20.4"]
+dispatch origins:entity_action["origins:action_on_set", "apoli:action_on_set"] to ActionOnSet
+
 /// # Add Velocity
 /// 
 /// [Entity Action Type](https://origins.readthedocs.io/en/latest/types/entity_action_types)
@@ -136,6 +175,12 @@ dispatch origins:entity_action["origins:add_velocity", "apoli:add_velocity"] to 
 	z?: float,
 	/// Determines how the direction of the velocity to add/set will be calculated.
 	space?: Space,
+	/// If this is false, the action will not execute on the client.
+	#[until="1.21"]
+	client?: boolean,
+	/// If this is false, the action will not execute on the server.
+	#[until="1.21"]
+	server?: boolean,
 	/// If this is true, the action will act as a "set" velocity action, overriding the entity's current velocity instead of adding to it.
 	set?: boolean,
 }
@@ -443,6 +488,9 @@ dispatch origins:entity_action["origins:crafting_table", "apoli:crafting_table"]
 /// 
 /// This example will deal `2 * (1 + example:damage_multiplier)` amount of `out_of_world` damage to the entity, with `2` used for overriding the base value for the modifiers, and the value of the `example:damage_multiplier` (`data/example/powers/damage_multipler.json`) power as the "multiplier". If the value of the said power is `3`, the amount of damage that will be dealt will be `8` (`2 * (1 + 3) = 8`.)
 dispatch origins:entity_action["origins:damage", "apoli:damage"] to struct Damage {
+	/// The damage source to be used. Controls e.g. the death message, invulnerabilities (e.g. towards fire), or whether armor is taken into account. Since 1.20.2 use `damage_type` instead. See [Damage Source (Data Type)](https://origins.readthedocs.io/en/latest/types/data_types/damage_source) for more details.
+	#[deprecated="1.19.4"] #[until="1.21"]
+	source?: DamageSource,
 	/// The amount of damage to deal.
 	#[until="1.21"]
 	amount: float,
@@ -451,10 +499,13 @@ dispatch origins:entity_action["origins:damage", "apoli:damage"] to struct Damag
 	amount?: float,
 	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
 	// It's required now ig
+	#[since="1.19.4"]
 	damage_type: (#[id="damage_type"] string | string),
 	/// If specified, this modifier will be applied to the damage taken by the entity.
+	#[since="1.20.2"]
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the damage taken by the entity.
+	#[since="1.20.2"]
 	modifiers?: [AttributeModifier],
 }
 

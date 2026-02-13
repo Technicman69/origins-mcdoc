@@ -199,8 +199,25 @@ dispatch origins:item_condition["origins:enchantment", "apoli:enchantment"] to s
 /// ```
 #[since="1.21"]
 dispatch origins:item_condition["origins:fire_resistant", "apoli:fire_resistant"] to struct FireResistant {}
-//#[until="1.21"]
-//dispatch origins:item_condition["origins:fireproof", "apoli:fireproof"] to struct Fireproof {}
+
+/// # Fireproof
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks if the item stack is fireproof.
+/// 
+/// Type ID: `origins:fireproof`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:fireproof"
+/// }
+/// ```
+#[until="1.21"]
+dispatch origins:item_condition["origins:fireproof", "apoli:fireproof"] to struct Fireproof {}
 
 /// # Food
 /// 
@@ -247,6 +264,34 @@ dispatch origins:item_condition["origins:fuel", "apoli:fuel"] to struct Fuel {
 	comparison?: Comparison,
 	/// The value at which the fuel time value (in ticks) of the item stack will be compared to.
 	compare_to?: int,
+}
+
+/// # Harvest Level
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks whether the material of the item has a certain harvest level value. Refer to [Minecraft Wiki: Tiers](https://minecraft.wiki/w/Tiers) for the harvest level of the materials (there it's called "mining level"). Items without a material are considered to have a harvest level of 0.
+/// 
+/// Type ID: `origins:harvest_level`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:harvest_level",
+///     "comparison": ">",
+///     "compare_to": 1
+/// }
+/// ```
+/// 
+/// This example checks if the item has a harvest level higher than 1, which is the value for stone tools.
+#[until="1.21"]
+dispatch origins:item_condition["origins:harvest_level", "apoli:harvest_level"] to struct HarvestLevel {
+	/// Determines how the harvest level of the material from the item stack should be compared to the specified value.
+	comparison: Comparison,
+	/// The value at which the harvest level of the material from the item stack will be compared to.
+	compare_to: int,
 }
 
 /// #   Has Power
@@ -360,7 +405,27 @@ dispatch origins:item_condition["origins:ingredient", "apoli:ingredient"] to str
 ///     "type": "origins:damageable"
 /// }
 /// ```
+#[since="1.21"]
 dispatch origins:item_condition["origins:damageable", "apoli:damageable"] to struct Damageable {}
+
+/// #   Is Damageable
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks if the item is damageable.
+/// 
+/// Type ID: `origins:is_damageable`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:is_damageable"
+/// }
+/// ```
+#[until="1.21"]
+dispatch origins:item_condition["origins:is_damageable", "apoli:is_damageable"] to struct IsDamageable {}
 
 /// #   Item Cooldown
 /// 
@@ -405,10 +470,63 @@ dispatch origins:item_condition["origins:item_cooldown", "apoli:item_cooldown"] 
 /// ```
 /// 
 /// This example will check if the item can be equipped in the chest equipment slot.
+#[since="1.21"]
 dispatch origins:item_condition["origins:equippable", "apoli:equippable"] to struct Equippable {
 	/// If specified, checks if the item is equippable in the specified equipment slot. Accepts `"head"`, `"chest"`, `"legs"`, `"feet"`, or `"offhand"`.
 	equipment_slot?: EquipmentSlot,
 }
+
+/// #   Is Equippable
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks if the item is equippable.
+/// 
+/// Type ID: [`origins:is_equippable`](## "Aliases: ["origins:equippable"]")
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:is_equippable"
+/// }
+/// ```
+/// 
+/// This example will check if the item is generally equippable.
+/// <br>
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:is_equippable",
+///     "equipment_slot": "chest"
+/// }
+/// ```
+/// 
+/// This example will check if the item can be equipped in the chest equipment slot.
+#[until="1.21"]
+dispatch origins:item_condition["origins:is_equippable", "apoli:is_equippable"] to Equippable
+
+/// # Meat
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks whether the item is considered meat by Minecraft (usable for breeding wolves).
+/// 
+/// Type ID: `origins:meat`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:meat"
+/// }
+/// ```
+/// 
+/// This example will check if the item is considered meat by Minecraft.
+#[until="1.21"]
+dispatch origins:item_condition["origins:meat", "apoli:meat"] to struct Meat {}
 
 /// # Custom Data
 /// 
@@ -434,11 +552,31 @@ dispatch origins:item_condition["origins:custom_data", "apoli:custom_data"] to s
 	/// The `minecraft:custom_data` component nbt to check for.
 	nbt: CustomData,
 }
-// #[until="1.21"]
-// dispatch origins:item_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
-// 	/// The NBT data to check for.
-// 	nbt: NBT<minecraft:item[%fallback]>,
-// }
+
+/// # NBT
+/// 
+/// [Item Condition Type](https://origins.readthedocs.io/en/latest/types/item_condition_types)
+/// 
+/// Checks the item's NBT.
+/// 
+/// Type ID: `origins:nbt`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "item_condition": {
+///     "type": "origins:nbt",
+///     "nbt": "{exampleCustomTag: 1b}"
+/// }
+/// ```
+/// 
+//
+#[until="1.21"]
+dispatch origins:item_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
+	/// The NBT data to check for.
+	nbt: NBT<minecraft:item[%fallback]>,
+}
 
 /// #   Power Count
 /// 

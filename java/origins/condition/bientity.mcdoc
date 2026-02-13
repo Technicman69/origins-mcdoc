@@ -256,6 +256,35 @@ dispatch origins:bientity_condition["origins:in_entity_set", "apoli:in_entity_se
 	set: (#[id="origins:power"] string | string)
 }
 
+/// #	In Set
+/// 
+/// [Bientity Condition Type](https://origins.readthedocs.io/en/latest/types/bientity_condition_types)
+/// 
+/// Checks whether the target entity is within a power that uses the [Entity Set (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/entity_set) of the actor entity.
+/// 
+/// Type ID: `origins:in_set`
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "bientity_condition": {
+/// 	"type": "origins:any_of",
+/// 	"conditions": [
+/// 		{
+/// 			"type": "origins:owner"
+/// 		},
+/// 		{
+/// 			"type": "origins:in_set",
+/// 			"set": "example:special_pets"
+/// 		}
+/// 	]
+/// }
+/// ```
+/// 
+/// This example will check whether the target entity is either owned by the actor entity or if the target entity is within the `example:special_pets` (`data/example/powers/special_pets.json`) power.
+#[until="1.20.4"]
+dispatch origins:bientity_condition["origins:in_set", "apoli:in_set"] to InSet
 
 /// # Owner
 /// 

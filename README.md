@@ -36,18 +36,15 @@ The syntax checking currently includes data types and files listed below:
 - Condition types
  
 ## Problems:
-- Origin keybinds need to be injected into vanilla ones (or modded keybinds need to be defined)
 - power type "origins:multiple" shouldn't be a subpower.
 - subpowers of a "origins:multiple" power type are not registered as a power resource.
-- Versioning is all wrong (support for #[since] and #[until] attributes in dispatch keys in `.mcdoc` language needed)
 - Some field requirements are not met (ex. in `apoli:damage` one of `amount`, `modifier`, `modifiers` should be defined, in the meantime all are just set to optional)
 
 ## Future:
 - add cardinal component nbt
-- specify which power types don't have condition fields
 - Alias fields
-- support for texture/model/shader paths
+- support for texture/model/shader paths auto-completing
 - support for particle params syntax
-- support for 1.21
 - support for earlier versions
 - Fabric load conditions
+- maybe add versioned comments (changes in 1.21)

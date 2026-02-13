@@ -61,7 +61,11 @@ struct AttributedAttributeModifier {
 	/// The amount to use for the modifier operation.
 	#[since="1.21"]
 	amount: float,
+	/// A descriptive name for the modifier, describing where it comes from.
+	#[until="1.21"]
+	name?: string,
 	/// ID of the modifier, describing where it comes from.
+	#[since="1.21"]
 	id: (#[id(registry="origins:attributed_attribute_modifier", define=true)] string | #[match_regex(pattern="^([a-z0-9-_.]*|\\*):\\*?[a-z0-9-_.]*(\\/[a-z0-9-_.]*)*$")] string),
 }
 
@@ -76,11 +80,17 @@ struct AttributedAttributeModifier {
 ///     The listed values are ordered based on the order of priority; with `add_value` being applied before `add_multiplied_base` and `add_multiplied_total` being applied last.
 enum(string) AttributedAttributeModifierOperation {
 	/// Adds (or subtracts) the modifier value to the base value. (`NewValue = BaseValue + ModifierValue`)
-	AddValue = "add_value",
+	#[until="1.21"] Addition = "addition",
+	/// Adds (or subtracts) the modifier value to the base value. (`NewValue = BaseValue + ModifierValue`)
+	#[since="1.21"] AddValue = "add_value",
 	/// Adds (or subtracts) the base value multiplied by the modifier value to the base value. (`NewValue = BaseValue + (BaseValue * ModifierValue)`)
-	AddMultipliedBase = "add_multiplied_base",
+	#[until="1.21"] MultiplyBase = "multiply_base",
+	/// Adds (or subtracts) the base value multiplied by the modifier value to the base value. (`NewValue = BaseValue + (BaseValue * ModifierValue)`)
+	#[since="1.21"] AddMultipliedBase = "add_multiplied_base",
 	/// Multiplies the total value by the modifier value + 1. (`NewTotalValue = TotalValue * (1 + ModifierValue)`)
-	AddMultipliedTotal = "add_multiplied_total",
+	#[until="1.21"] MultiplyTotal = "multiply_total",
+	/// Multiplies the total value by the modifier value + 1. (`NewTotalValue = TotalValue * (1 + ModifierValue)`)
+	#[since="1.21"] AddMultipliedTotal = "add_multiplied_total",
 }
 
 /// # Attribute Modifier
@@ -159,7 +169,7 @@ enum(string) AttributedAttributeModifierOperation {
 type AttributeModifier = (
 	#[until="1.21"]
 	struct {
-		/// UNUSED
+		/// A descriptive name for the modifier, describing where it comes from.
 		name?: string,
 		/// The operation which will be performed by this modifier.
 		operation: (

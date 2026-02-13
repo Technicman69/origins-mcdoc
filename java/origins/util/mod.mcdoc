@@ -176,3 +176,192 @@ enum(string) SoundEventCategory {
     Ambient = "ambient", 
     Voice = "voice",
 }
+
+#[until="1.21"]
+struct DamageSource {
+    /// The name of the damage source. Controls death message as well as other interactions. Consider the List of Damage Source Names when picking a name.
+    name: DamageSourceName,
+    /// When true, armor values are not taken into account when calculating the actual damage amount taken.
+    bypasses_armor?: boolean,
+    /// When true, the damage will be considered fire damage.
+    fire?: boolean,
+    /// When true, the damage will be unblockable (not reduced by resistance effects or protection enchantments).
+    unblockable?: boolean,
+    /// When true, the damage will be considered magic damage.
+    magic?: boolean,
+    /// When true, the damage will be considered "out of world" damage, i.e. damage from falling into the void.
+    out_of_world?: boolean,
+}
+
+enum(string) DamageSourceName {
+	/// Being hit by a falling Anvil.
+	anvil = "anvil",
+	/// Being hit by a falling Anvil while fighting a player/mob.
+	anvilPlayer = "anvil.player",
+	/// Being shot by a player/mob.
+	arrow = "arrow",
+	/// Being shot by a player/mob using a renamed Bow or Crossbow.
+	arrowItem = "arrow.item",
+	/// Being hit by an explosion caused by Beds from attempting to use it in The End, The Nether or custom dimensions that has Beds disabled.
+	badRespawnPoint = "badRespawnPoint",
+	/// Making contact with a Cactus.
+	cactus = "cactus",
+	/// Making contact with a Cactus while fighting a player/mob.
+	cactusPlayer = "cactus.player",
+	/// Being in the same spot as many other entities.
+	cramming = "cramming",
+	/// Being in the same spot as many other entities while fighting a player/mob.
+	crammingPlayer = "cramming.player",
+	/// Being damaged by the Dragon's breath. Unused in vanilla. (Dragon breath deals magic damage).
+	dragonBreath = "dragonBreath",
+	/// Being damaged by the Dragon's breath while fighting a player/mob. Unused in vanilla. (Dragon breath deals magic damage).
+	dragonBreathPlayer = "dragonBreath.player",
+	/// Drowning.
+	drown = "drown",
+	/// Drowning while fighting a player/mob.
+	drownPlayer = "drown.player",
+	/// Drying out. Unused in vanilla.
+	dryout = "dryout",
+	/// Drying out while fighting a player/mob. Unused in vanilla.
+	dryoutPlayer = "dryout.player",
+	/// If the death message is too large to send. Unused in vanilla.
+	even_more_magic = "even_more_magic",
+	/// Being hit by a regular explosion.
+	explosion = "explosion",
+	/// Being hit by an explosion from a mob that explodes or TNT lit by a player/mob.
+	explosionPlayer = "explosion.player",
+	/// Falling from a high place.
+	fall = "fall",
+	/// Falling from a high place while fighting a player/mob.
+	fallPlayer = "fall.player",
+	/// Being hit by a falling block that's not an Anvil block.
+	fallingBlock = "fallingBlock",
+	/// Being hit by a falling block that's not an Anvil block while fighting a player/mob.
+	fallingBlockPlayer = "fallingBlock.player",
+	/// Being hit by a falling Stalactite block.
+	fallingStalactite = "fallingStalactite",
+	/// Being hit by a falling Stalactite block while fighting a player/mob.
+	fallingStalactitePlayer = "fallingStalactite.player",
+	/// Being hit by a fireball shot by a player/mob.
+	fireball = "fireball",
+	/// Being hit by a fireball shot by a player/mob holding a renamed item.
+	fireballItem = "fireball.item",
+	/// Being hit by a firework explosion of a firework rocket.
+	fireworks = "fireworks",
+	/// Being hit by a firework explosion of a firework rocket while fighting with a player/mob.
+	fireworksPlayer = "fireworks.player",
+	/// Being hit by a firework explosion of a firework rocket shot by a player/mob using a renamed Crossbow.
+	fireworksItem = "fireworks.item",
+	/// Flying into a wall at high speed using an Elytra.
+	flyIntoWall = "flyIntoWall",
+	/// Flying into a wall at high speed using an Elytra while fighting a player/mob.
+	flyIntoWallPlayer = "flyIntoWall.player",
+	/// Being in Powder Snow for too long.
+	freeze = "freeze",
+	/// Being in Powder Snow for too long while fighting a player/mob.
+	freezePlayer = "freeze.player",
+	/// Being damaged by a damage source which doesn't have a specific type.
+	generic = "generic",
+	/// Being damaged by a damage source which doesn't have a specific type while fighting a player/mob.
+	genericPlayer = "generic.player",
+	/// Standing on Magma.
+	hotFloor = "hotFloor",
+	/// Standing on Magma while fighting a player/mob.
+	hotFloorPlayer = "hotFloor.player",
+	/// Being damaged by a damage source considered as indirect magic damage such as from thrown Splash Potions.
+	indirectMagic = "indirectMagic",
+	/// Being damaged by a damage source considered as indirect magic damage such as from thrown Splash Potions whilst fighting a player/mob holding a renamed item.
+	indirectMagicItem = "indirectMagic.item",
+	/// Standing inside Fire.
+	inFire = "inFire",
+	/// Standing inside Fire whilst fighting a player/mob.
+	inFirePlayer = "inFire.player",
+	/// Being inside a solid block.
+	inWall = "inWall",
+	/// Being inside a solid block while fighting a player/mob.
+	inWallPlayer = "inWall.player",
+	/// Being in Lava.
+	lava = "lava",
+	/// Being in Lava while fighting a player/mob.
+	lavaPlayer = "lava.player",
+	/// Being struck by a Lightning Bolt.
+	lightningBolt = "lightningBolt",
+	/// Being struck by a Lightning Bolt while fighting a player/mob.
+	lightningBoltPlayer = "lightningBolt.player",
+	/// Being damaged by a damage source considered as magic damage such as from Conduits or harmful status effects like Instant Damage or Poison.
+	magic = "magic",
+	/// Being damaged by a damage source considered as magic damage such as from Conduits or harmful status effects like Instant Damage or Poison while fighting a player/mob.
+	magicPlayer = "magic.player",
+	/// Being hit by a mob.
+	mob = "mob",
+	/// Being hit by a mob holding a renamed item.
+	mobItem = "mob.item",
+	/// Burning.
+	onFire = "onFire",
+	/// Burning while fighting a player/mob.
+	onFirePlayer = "onFire.player",
+	/// Falling into the void.
+	outOfWorld = "outOfWorld",
+	/// Falling into the void while fighting a player/mob.
+	outOfWorldPlayer = "outOfWorld.player",
+	/// Being hit by a player.
+	player = "player",
+	/// Being hit by a player holding a renamed item.
+	playerItem = "player.item",
+	/// Being hit by a Warden's Sonic Boom.
+	sonic_boom = "sonic_boom",
+	/// Being hit by a Warden's Sonic Boom whilst fighting a player/mob.
+	sonic_boomPlayer = "sonic_boom.player",
+	/// Being hit by a Warden's Sonic Boom whilst fighting a player/mob using a renamed item.
+	sonic_boomItem = "sonic_boom.item",
+	/// Falling onto a Stalagmite.
+	stalagmite = "stalagmite",
+	/// Falling onto a Stalagmite while fighting a player/mob.
+	stalagmitePlayer = "stalagmite.player",
+	/// Being damaged by starvation.
+	starve = "starve",
+	/// Being damaged by starvation while fighting a player/mob.
+	starvePlayer = "starve.player",
+	/// Being stung by a bee.
+	sting = "sting",
+	/// Being stung by a player/mob. Unused in vanilla.
+	stingPlayer = "sting.player",
+	/// Being stung by a player/mob holding a renamed item. Unused in vanilla.
+	stingItem = "sting.item",
+	/// Walking through a Sweet Berry Bush.
+	sweetBerryBush = "sweetBerryBush",
+	/// Walking through a Sweet Berry Bush while fighting a player/mob.
+	sweetBerryBushPlayer = "sweetBerryBush.player",
+	/// Hitting a player/mob that is wearing an armor with the Thorns enchantment. Also applies to hurting Guardians/Elder Guardians.
+	thorns = "thorns",
+	/// Hitting a player/mob that is wearing an armor with the Thorns enchantment, and holding a renamed item. Also applies to hurting Guardians/Elder Guardians.
+	thornsItem = "thorns.item",
+	/// Being hit by a projectile thrown by a player/mob. Unused in vanilla.
+	thrownItem = "thrown.item",
+	/// Being hit by a Trident thrown by a player/mob.
+	trident = "trident",
+	/// Being hit by a Trident thrown by a player/mob holding a renamed item.
+	tridentItem = "trident.item",
+	/// Being damaged by the Wither status effect.
+	wither = "wither",
+	/// Being damaged by the Wither status effect while fighting a player/mob.
+	witherPlayer = "wither.player",
+	/// Being hit by a Wither Skull shot by a player/mob.
+	witherSkull = "witherSkull",
+	/// f Origins damage source names
+	List = "List",
+	/// Description
+	Name = "Name",
+	/// Being damaged by a power that uses the origins:damage_over_time power type with no specified damage source name.
+	genericDamageOverTime = "genericDamageOverTime",
+	/// Being damaged by a power that uses the origins:damage_over_time power type with no specified damage source name while fighting a player/mob.
+	genericDamageOverTimePlayer = "genericDamageOverTime.player",
+	/// Being damaged by the origins:water_vulnerability power.
+	hurt_by_water = "hurt_by_water",
+	/// Being damaged by the origins:water_vulnerability power whilst fighting a player/mob.
+	hurt_by_waterPlayer = "hurt_by_water.player",
+	/// Losing air with the origins:water_breathing power.
+	no_water_for_gills = "no_water_for_gills",
+	/// Losing air with the origins:water_breathing power while fighting a player/mob.
+	no_water_for_gillsPlayer = "no_water_for_gills.player",
+}

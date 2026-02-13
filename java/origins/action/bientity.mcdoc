@@ -1,6 +1,7 @@
 use super::EntityAction
 use super::super::condition::EntityCondition
 use ::java::origins::util::attribute::AttributeModifier
+use ::java::origins::util::DamageSource
 
 struct BientityAction {
 	type: #[id] #[dispatcher_key="origins:bientity_action"] string,
@@ -73,6 +74,39 @@ dispatch origins:bientity_action["origins:add_to_entity_set", "apoli:add_to_enti
 }
 
 
+/// #	Add to Set
+/// 
+/// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
+/// 
+/// Add the target entity to the power that uses the [Entity Set (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types/entity_set) of the actor entity.
+/// 
+/// Type ID: `origins:add_to__set`
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "bientity_action": {
+/// 	"type": "origins:add_to_set",
+/// 	"set": "example:entities_to_exclude"
+/// }
+/// ```
+/// 
+/// This example will add the target entity to the `example:entities_to_exclude` (`data/example/powers/entities_to_exclude.json`) power permanently.
+/// <br>
+/// 
+/// ```json
+/// "bientity_action": {
+/// 	"type": "origins:add_to_set",
+/// 	"set": "example:make_em_glow",
+/// 	"time_limit": 200
+/// }
+/// ```
+/// 
+/// This example will add the target entity to the `example:make_em_glow` (`data/example/powers/make_em_glow.json`) power temporarily for 10 seconds, after which the target entity will be removed.
+#[until="1.20.4"]
+dispatch origins:bientity_action["origins:add_to_set", "apoli:add_to_set"] to AddToSet
+
 /// # Add Velocity
 /// 
 /// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
@@ -105,6 +139,12 @@ dispatch origins:bientity_action["origins:add_velocity", "apoli:add_velocity"] t
 	z?: float,
 	/// Determines whether to use the target entity's `"position"` or `"rotation"` when calculating the velocity that will be applied to the target entity.
 	reference?: ("position" | "rotation"),
+	/// If this is false, the action will not execute on the client.
+	#[until="1.21"]
+	client?: boolean,
+	/// If this is false, the action will not execute on the server.
+	#[until="1.21"]
+	server?: boolean,
 	/// If this is true, the action will act as a "set" velocity action, overriding the entity's current velocity instead of adding to it.
 	set?: boolean,
 }
@@ -169,6 +209,9 @@ dispatch origins:bientity_action["origins:add_velocity", "apoli:add_velocity"] t
 /// 
 /// This example will deal `minecraft:magic` damage to the target entity, with its damage value depending on the value of the `example:magic_damage` (`data/example/powers/magic_damage.json`) power from the actor entity.
 dispatch origins:bientity_action["origins:damage", "apoli:damage"] to struct Damage {
+	/// The damage source to be used. Controls e.g. the death message, invulnerabilities (e.g. towards fire), or whether armor is taken into account. Since 1.20.2 use `damage_type` instead. See [Damage Source (Data Type)](https://origins.readthedocs.io/en/latest/types/data_types/damage_source) for more details.
+	#[deprecated="1.19.4"] #[until="1.21"]
+	source?: DamageSource,
 	/// The amount of damage to deal.
 	#[until="1.21"]
 	amount: float,
@@ -176,10 +219,13 @@ dispatch origins:bientity_action["origins:damage", "apoli:damage"] to struct Dam
 	#[since="1.21"]
 	amount?: float,
 	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
+	#[since="1.19.4"]
 	damage_type: (#[id="damage_type"] string | string),
 	/// If specified, this modifier will be applied to the damage taken by the '**target**' entity.
+	#[since="1.20.2"]
 	modifier?: AttributeModifier,
 	/// If specified, these modifiers will be applied to the damage taken by the '**target**' entity.
+	#[since="1.20.2"]
 	modifiers?: [AttributeModifier],
 }
 

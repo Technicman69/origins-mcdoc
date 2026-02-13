@@ -7,6 +7,61 @@ struct BiomeCondition {
 	...origins:biome_condition[[type]],
 }
 
+/// # Category
+/// 
+/// [Biome Condition Type](https://origins.readthedocs.io/en/latest/types/biome_condition_types)
+/// 
+/// Checks for the category of a biome.
+/// 
+/// Type ID: `origins:category`
+/// 
+/// 
+/// !!! danger
+/// 
+///     This biome condition type has been <span style="color:darkred"><b>deprecated</b></span> and may be removed in a future version. Please use [In Tag (Biome Condition Type)](in_tag) instead.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "condition": {
+///     "type": "origins:biome",
+///     "condition": {
+///         "type": "origins:category",
+///         "category": "forest"
+///     }
+/// }
+/// ```
+/// 
+/// This example will check if the player is inside a Forest-like biome.
+#[deprecated="1.19"] #[until="1.21"]
+dispatch origins:biome_condition["origins:category", "apoli:category"] to struct Category {
+	/// Which category the biome must be in order to succeed the check.
+	category: BiomeCategory,
+}
+
+enum(string) BiomeCategory {
+	Beach = "beach",
+	Desert = "desert",
+	Extreme_hills = "extreme_hills",
+	Forest = "forest",
+	Icy = "icy",
+	Jungle = "jungle",
+	Mesa = "mesa",
+	Mountain = "mountain",
+	Mushroom = "mushroom",
+	Nether = "nether",
+	None = "none",
+	Ocean = "ocean",
+	Plains = "plains",
+	River = "river",
+	Savanna = "savanna",
+	Swamp = "swamp",
+	Taiga = "taiga",
+	TheEnd = "the_end",
+	Underground = "underground",
+}
+
 /// # High Humidity
 /// 
 /// [Biome Condition Type](https://origins.readthedocs.io/en/latest/types/biome_condition_types)

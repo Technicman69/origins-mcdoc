@@ -475,6 +475,37 @@ dispatch origins:block_condition["origins:light_level", "apoli:light_level"] to 
 	compare_to: int,
 }
 
+/// # Material
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks if the block is classified as the specified material.
+/// 
+/// Type ID: `origins:material`
+/// 
+/// !!! danger
+/// 
+///     This block condition type has been <span style="color:darkred"><b>deprecated</b></span> and may be removed in a future version. Please use the [In Tag (Block Condition Type)](in_tag) instead.
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:material",
+///     "material": "wood"
+/// }
+/// ```
+/// 
+/// This example will check if the block classifies as "wood".
+#[deprecated="1.20"] #[until="1.21"]
+dispatch origins:block_condition["origins:material", "apoli:material"] to struct MaterialCondition {
+	/// If specified, checks if the block classifies as this material.
+	material?: Material,
+	/// If specified, checks if the block classifies as one of these materials.
+	materials?: [Material],
+}
+
 enum(string) Material {
     Air = "air",
     StructureVoid = "structure_void",
@@ -626,9 +657,27 @@ dispatch origins:block_condition["origins:offset", "apoli:offset"] to struct Off
 ///     "type": "origins:repleacable"
 /// }
 /// ```
+#[since="1.21"]
 dispatch origins:block_condition["origins:replaceable", "apoli:replaceable"] to struct Replaceable {}
-//#[until="1.21"]
-//dispatch origins:block_condition["origins:replacable", "apoli:replacable"] to struct Replacable {}
+
+/// # Replaceable
+/// 
+/// [Block Condition Type](https://origins.readthedocs.io/en/latest/types/block_condition_types)
+/// 
+/// Checks whether the block is a replaceable material (e.g. tall grass, water, ...).
+/// 
+/// Type ID: `origins:repleacable`
+/// 
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// "block_condition": {
+///     "type": "origins:repleacable"
+/// }
+/// ```
+#[until="1.21"]
+dispatch origins:block_condition["origins:replacable", "apoli:replacable"] to struct Replacable {}
 
 /// # Slipperiness
 /// 
