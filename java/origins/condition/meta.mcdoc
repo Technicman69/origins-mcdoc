@@ -7,13 +7,13 @@ use super::FluidCondition
 use super::ItemCondition
 
 
-dispatch origins:bientity_condition["origins:and", "apoli:and"] to BientityConditionAnd 
-#[since="1.21"] dispatch origins:bientity_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to struct BientityConditionAnd {
+#[since="1.21"] dispatch origins:bientity_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to BientityConditionAnd 
+dispatch origins:bientity_condition["origins:and", "apoli:and"] to struct BientityConditionAnd {
 	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [BientityCondition],
 }
-dispatch origins:bientity_condition["origins:chance", "apoli:chance"] to BientityConditionChance
-#[since="1.21"] dispatch origins:bientity_condition["origins:random_chance", "apoli:random_chance"] to struct BientityConditionChance {
+#[since="1.21"] dispatch origins:bientity_condition["origins:random_chance", "apoli:random_chance"] to BientityConditionChance
+dispatch origins:bientity_condition["origins:chance", "apoli:chance"] to struct BientityConditionChance {
 	/// The value to compare the randomly generated number to.
  	chance: float @ 0.0..1.0,
 }
@@ -21,20 +21,20 @@ dispatch origins:bientity_condition["origins:constant", "apoli:constant"] to str
 	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
  	value: boolean,
 }
-dispatch origins:bientity_condition["origins:any_of", "apoli:any_of"] to BientityConditionOr
-#[since="1.21"] dispatch origins:bientity_condition["origins:or", "apoli:or"] to struct BientityConditionOr {
+#[since="1.21"] dispatch origins:bientity_condition["origins:any_of", "apoli:any_of"] to BientityConditionOr
+dispatch origins:bientity_condition["origins:or", "apoli:or"] to struct BientityConditionOr {
 	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [BientityCondition],
 }
 
 
-dispatch origins:biome_condition["origins:and", "apoli:and"] to BiomeConditionAnd 
-#[since="1.21"] dispatch origins:biome_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to struct BiomeConditionAnd {
+#[since="1.21"] dispatch origins:biome_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to BiomeConditionAnd 
+dispatch origins:biome_condition["origins:and", "apoli:and"] to struct BiomeConditionAnd {
 	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [BiomeCondition],
 }
-dispatch origins:biome_condition["origins:chance", "apoli:chance"] to BiomeConditionChance
-#[since="1.21"] dispatch origins:biome_condition["origins:random_chance", "apoli:random_chance"] to struct BiomeConditionChance {
+#[since="1.21"] dispatch origins:biome_condition["origins:random_chance", "apoli:random_chance"] to BiomeConditionChance
+dispatch origins:biome_condition["origins:chance", "apoli:chance"] to struct BiomeConditionChance {
 	/// The value to compare the randomly generated number to.
  	chance: float @ 0.0..1.0,
 }
@@ -42,20 +42,20 @@ dispatch origins:biome_condition["origins:constant", "apoli:constant"] to struct
 	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
  	value: boolean,
 }
-dispatch origins:biome_condition["origins:any_of", "apoli:any_of"] to BiomeConditionOr
-#[since="1.21"] dispatch origins:biome_condition["origins:or", "apoli:or"] to struct BiomeConditionOr {
+#[since="1.21"] dispatch origins:biome_condition["origins:any_of", "apoli:any_of"] to BiomeConditionOr
+dispatch origins:biome_condition["origins:or", "apoli:or"] to struct BiomeConditionOr {
 	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [BiomeCondition],
 }
 
 
-dispatch origins:block_condition["origins:and", "apoli:and"] to BlockConditionAnd 
-#[since="1.21"] dispatch origins:block_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to struct BlockConditionAnd {
+#[since="1.21"] dispatch origins:block_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to BlockConditionAnd 
+dispatch origins:block_condition["origins:and", "apoli:and"] to struct BlockConditionAnd {
 	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [BlockCondition],
 }
-dispatch origins:block_condition["origins:chance", "apoli:chance"] to BlockConditionChance
-#[since="1.21"] dispatch origins:block_condition["origins:random_chance", "apoli:random_chance"] to struct BlockConditionChance {
+#[since="1.21"] dispatch origins:block_condition["origins:random_chance", "apoli:random_chance"] to BlockConditionChance
+dispatch origins:block_condition["origins:chance", "apoli:chance"] to struct BlockConditionChance {
 	/// The value to compare the randomly generated number to.
  	chance: float @ 0.0..1.0,
 }
@@ -63,20 +63,20 @@ dispatch origins:block_condition["origins:constant", "apoli:constant"] to struct
 	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
  	value: boolean,
 }
-dispatch origins:block_condition["origins:any_of", "apoli:any_of"] to BlockConditionOr
-#[since="1.21"] dispatch origins:block_condition["origins:or", "apoli:or"] to struct BlockConditionOr {
+#[since="1.21"] dispatch origins:block_condition["origins:any_of", "apoli:any_of"] to BlockConditionOr
+dispatch origins:block_condition["origins:or", "apoli:or"] to struct BlockConditionOr {
 	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [BlockCondition],
 }
 
 
-dispatch origins:damage_condition["origins:and", "apoli:and"] to DamageConditionAnd 
-#[since="1.21"] dispatch origins:damage_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to struct DamageConditionAnd {
+#[since="1.21"] dispatch origins:damage_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to DamageConditionAnd 
+dispatch origins:damage_condition["origins:and", "apoli:and"] to struct DamageConditionAnd {
 	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [DamageCondition],
 }
-dispatch origins:damage_condition["origins:chance", "apoli:chance"] to DamageConditionChance
-#[since="1.21"] dispatch origins:damage_condition["origins:random_chance", "apoli:random_chance"] to struct DamageConditionChance {
+#[since="1.21"] dispatch origins:damage_condition["origins:random_chance", "apoli:random_chance"] to DamageConditionChance
+dispatch origins:damage_condition["origins:chance", "apoli:chance"] to struct DamageConditionChance {
 	/// The value to compare the randomly generated number to.
  	chance: float @ 0.0..1.0,
 }
@@ -84,20 +84,20 @@ dispatch origins:damage_condition["origins:constant", "apoli:constant"] to struc
 	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
  	value: boolean,
 }
-dispatch origins:damage_condition["origins:any_of", "apoli:any_of"] to DamageConditionOr
-#[since="1.21"] dispatch origins:damage_condition["origins:or", "apoli:or"] to struct DamageConditionOr {
+#[since="1.21"] dispatch origins:damage_condition["origins:any_of", "apoli:any_of"] to DamageConditionOr
+dispatch origins:damage_condition["origins:or", "apoli:or"] to struct DamageConditionOr {
 	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [DamageCondition],
 }
 
 
-dispatch origins:entity_condition["origins:and", "apoli:and"] to EntityConditionAnd 
-#[since="1.21"] dispatch origins:entity_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to struct EntityConditionAnd {
+#[since="1.21"] dispatch origins:entity_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to EntityConditionAnd 
+dispatch origins:entity_condition["origins:and", "apoli:and"] to struct EntityConditionAnd {
 	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [EntityCondition],
 }
-dispatch origins:entity_condition["origins:chance", "apoli:chance"] to EntityConditionChance
-#[since="1.21"] dispatch origins:entity_condition["origins:random_chance", "apoli:random_chance"] to struct EntityConditionChance {
+#[since="1.21"] dispatch origins:entity_condition["origins:random_chance", "apoli:random_chance"] to EntityConditionChance
+dispatch origins:entity_condition["origins:chance", "apoli:chance"] to struct EntityConditionChance {
 	/// The value to compare the randomly generated number to.
  	chance: float @ 0.0..1.0,
 }
@@ -105,20 +105,20 @@ dispatch origins:entity_condition["origins:constant", "apoli:constant"] to struc
 	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
  	value: boolean,
 }
-dispatch origins:entity_condition["origins:any_of", "apoli:any_of"] to EntityConditionOr
-#[since="1.21"] dispatch origins:entity_condition["origins:or", "apoli:or"] to struct EntityConditionOr {
+#[since="1.21"] dispatch origins:entity_condition["origins:any_of", "apoli:any_of"] to EntityConditionOr
+dispatch origins:entity_condition["origins:or", "apoli:or"] to struct EntityConditionOr {
 	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [EntityCondition],
 }
 
 
-dispatch origins:fluid_condition["origins:and", "apoli:and"] to FluidConditionAnd 
-#[since="1.21"] dispatch origins:fluid_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to struct FluidConditionAnd {
+#[since="1.21"] dispatch origins:fluid_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to FluidConditionAnd 
+dispatch origins:fluid_condition["origins:and", "apoli:and"] to struct FluidConditionAnd {
 	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [FluidCondition],
 }
-dispatch origins:fluid_condition["origins:chance", "apoli:chance"] to FluidConditionChance
-#[since="1.21"] dispatch origins:fluid_condition["origins:random_chance", "apoli:random_chance"] to struct FluidConditionChance {
+#[since="1.21"] dispatch origins:fluid_condition["origins:random_chance", "apoli:random_chance"] to FluidConditionChance
+dispatch origins:fluid_condition["origins:chance", "apoli:chance"] to struct FluidConditionChance {
 	/// The value to compare the randomly generated number to.
  	chance: float @ 0.0..1.0,
 }
@@ -126,20 +126,20 @@ dispatch origins:fluid_condition["origins:constant", "apoli:constant"] to struct
 	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
  	value: boolean,
 }
-dispatch origins:fluid_condition["origins:any_of", "apoli:any_of"] to FluidConditionOr
-#[since="1.21"] dispatch origins:fluid_condition["origins:or", "apoli:or"] to struct FluidConditionOr {
+#[since="1.21"] dispatch origins:fluid_condition["origins:any_of", "apoli:any_of"] to FluidConditionOr
+dispatch origins:fluid_condition["origins:or", "apoli:or"] to struct FluidConditionOr {
 	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [FluidCondition],
 }
 
 
-dispatch origins:item_condition["origins:and", "apoli:and"] to ItemConditionAnd 
-#[since="1.21"] dispatch origins:item_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to struct ItemConditionAnd {
+#[since="1.21"] dispatch origins:item_condition["origins:all_of", "apoli:all_of", "origins:sequence", "apoli:sequence"] to ItemConditionAnd 
+dispatch origins:item_condition["origins:and", "apoli:and"] to struct ItemConditionAnd {
 	/// All of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [ItemCondition],
 }
-dispatch origins:item_condition["origins:chance", "apoli:chance"] to ItemConditionChance
-#[since="1.21"] dispatch origins:item_condition["origins:random_chance", "apoli:random_chance"] to struct ItemConditionChance {
+#[since="1.21"] dispatch origins:item_condition["origins:random_chance", "apoli:random_chance"] to ItemConditionChance
+dispatch origins:item_condition["origins:chance", "apoli:chance"] to struct ItemConditionChance {
 	/// The value to compare the randomly generated number to.
  	chance: float @ 0.0..1.0,
 }
@@ -147,8 +147,8 @@ dispatch origins:item_condition["origins:constant", "apoli:constant"] to struct 
 	/// If true, the condition is always fulfilled. If false, the condition is never fulfilled.
  	value: boolean,
 }
-dispatch origins:item_condition["origins:any_of", "apoli:any_of"] to ItemConditionOr
-#[since="1.21"] dispatch origins:item_condition["origins:or", "apoli:or"] to struct ItemConditionOr {
+#[since="1.21"] dispatch origins:item_condition["origins:any_of", "apoli:any_of"] to ItemConditionOr
+dispatch origins:item_condition["origins:or", "apoli:or"] to struct ItemConditionOr {
 	/// Any of these condition types have to be fulfilled in order for this condition to be fulfilled.
  	conditions: [ItemCondition],
 }
