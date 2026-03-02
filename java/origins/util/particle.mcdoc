@@ -6,5 +6,10 @@ type ParticleEffect = (
 
 struct Particle {
     type: (#[id="particle"] string | string),
-    params?: string
+    params?: (
+        #[until="1.21"]
+        string |
+        #[since="1.21"]
+        minecraft:particle[[type]]
+    )
 }
