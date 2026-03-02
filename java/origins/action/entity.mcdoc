@@ -243,14 +243,14 @@ dispatch origins:entity_action["origins:add_xp", "apoli:add_xp"] to struct AddXp
 /// 		{
 /// 			"effect": "minecraft:slow_falling",
 /// 			"duration": 400,
-/// 			"is_ambient": false,
+/// 			"ambient": false,
 /// 			"show_particles": false,
 /// 			"show_icon": true
 /// 		},
 /// 		{
 /// 			"effect": "minecraft:slowness",
 /// 			"duration": 400,
-/// 			"is_ambient": false,
+/// 			"ambient": false,
 /// 			"show_particles": false,
 /// 			"show_icon": true
 /// 		}
@@ -1888,7 +1888,11 @@ dispatch origins:entity_action["origins:spawn_entity", "apoli:spawn_entity"] to 
 ///     "type": "origins:spawn_particles",
 ///     "particle": {
 ///         "type": "minecraft:block",
-///         "params": "minecraft:redstone_block"
+///         "params": {
+///             "block_state": {
+///                 "Name": "minecraft:redstone_block"
+///             }
+///         }
 ///     },
 ///     "count": 16,
 ///     "speed": 0.0,
