@@ -51,6 +51,7 @@ struct SingleHudRender {
     /// The indexed position of the bar on the sprite to use. Please note that indexes start at 0.
     bar_index?: int @ 0..,
     /// The indexed position of the icon on the sprite to use. Please note that indexes start at 0.
+	#[since="1.20.2"]
     icon_index?: int @ 0..,
     /// If set (and should_render is true), the bar will only display when the entity with the power fulfills this condition.
     condition?: EntityCondition,
@@ -586,6 +587,7 @@ dispatch origins:power["origins:action_on_callback", "apoli:action_on_callback"]
 /// ```
 /// 
 /// This example will make the entity that died explode.
+#[since="1.20.2"]
 dispatch origins:power["origins:action_on_death", "apoli:action_on_death"] to struct ActionOnDeath {
 	...Conditioned,
 	/// The action to be executed on either or both the '**actor**' and '**target**' entities.
@@ -1634,6 +1636,7 @@ dispatch origins:power["origins:disable_regen", "apoli:disable_regen"] to struct
 /// ```
 /// 
 /// This example will replace the food component of Cookies, making it take 0.8 seconds to eat (same as kelp) while also giving 4 hunger shanks and 3.2 saturation (4.0 * 0.4 * 2).
+#[since="1.20.2"]
 dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct EdibleItem {
 	...Conditioned,
 	/// If specified, this action will be executed on the player upon consuming an item.
@@ -2141,6 +2144,7 @@ dispatch origins:power["origins:freeze", "apoli:freeze"] to struct Freeze {
 /// ```
 /// 
 /// This example will set the entity with the power on fire every time the `hit_ground` game event is emmited.
+#[since="1.20.2"]
 dispatch origins:power["origins:game_event_listener", "apoli:game_event_listener"] to struct GameEventListener {
 	...Conditioned,
 	...OptionalCooldown,
@@ -2379,6 +2383,7 @@ dispatch origins:power["origins:invisibility", "apoli:invisibility"] to struct I
 	/// Determines whether the glowing outline should be shown or not.
 	render_outline?: boolean,
 	/// If specified, the '**target**' will only be invisible to '**actors**' (either the player or mobs that may see the target) if the bientity condition is fulfilled by either or both of them.
+	#[since="1.20.2"]
 	bientity_condition?: BientityCondition,
 }
 
@@ -2566,6 +2571,7 @@ dispatch origins:power["origins:item_on_item", "apoli:item_on_item"] to struct I
 	/// If specified, this action will be executed on the player after they used an item on an item.
 	entity_action?: EntityAction,
 	/// Determines whether to execute the actions if the player does a right-click (`0` or `"primary"`) or left-click (`1` or `"secondary"`) action.
+	#[since="1.20.2"]
 	click_type?: (0 | "primary" | 1 | "secondary"),
 	/// Determines whether the power should trigger when left-clicking ("primary"), right-clicking ("secondary"), or both, an item.
 	#[since="1.20.4"]
@@ -3177,6 +3183,7 @@ dispatch origins:power["origins:modify_damage_taken", "apoli:modify_damage_taken
 /// ```
 /// 
 /// This example will grant the player the ability to use Silk Touch, regardless of whether the player is holding any item or no item at all.
+#[since="1.20.2"]
 dispatch origins:power["origins:modify_enchantment_level", "apoli:modify_enchantment_level"] to struct ModifyEnchantmentLevel {
 	...Conditioned,
 	/// ID of the enchantment to apply/modify the level of to the entity., e.g. `minecraft:protection`.
@@ -4826,6 +4833,7 @@ dispatch origins:power["origins:prevent_sleep", "apoli:prevent_sleep"] to struct
 	/// Determines whether the spawnpoint of the player is set upon right-clicking a bed while being prevented. (similar to what happens when you right-click a bed while it's daytime)
 	set_spawn_point?: boolean,
 	/// Determines the priority of which power will prevent the player to sleep, set their spawn and display a message. The power with `set_spawn_point` set to `true` and the highest `priority` value will be prioritized.
+	#[since="1.20.2"]
 	priority?: int,
 }
 

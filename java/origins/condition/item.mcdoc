@@ -259,6 +259,7 @@ dispatch origins:item_condition["origins:food", "apoli:food"] to struct Food {}
 /// ```
 /// 
 /// This example will check if the item fuel time value of 10 or more.
+#[since="1.20.2"]
 dispatch origins:item_condition["origins:fuel", "apoli:fuel"] to struct Fuel {
 	/// Determines how the fuel time value (in ticks) of the item stack should be compared to a specific value.
 	comparison?: Comparison,

@@ -1157,6 +1157,7 @@ dispatch origins:entity_condition["origins:in_block_anywhere", "apoli:in_block_a
 ///     "type": "origins:in_rain"
 /// }
 /// ```
+#[since="1.20.2"]
 dispatch origins:entity_condition["origins:in_rain", "apoli:in_rain"] to struct InRain {}
 
 /// # In Snow
@@ -1217,6 +1218,7 @@ dispatch origins:entity_condition["origins:in_tag", "apoli:in_tag"] to struct In
 ///     "type": "origins:in_thunderstorm"
 /// }
 /// ```
+#[since="1.20.2"]
 dispatch origins:entity_condition["origins:in_thunderstorm", "apoli:in_thunderstorm"] to struct InThunderstorm {}
 
 /// # Living
@@ -1628,18 +1630,22 @@ dispatch origins:entity_condition["origins:raycast", "apoli:raycast"] to struct 
 	/// Determines how the ray-cast will handle fluids.
 	fluid_handling?: FluidHandling,
 	/// Determines how the direction will be calculated. <span style="color: goldenrod;"><b>Only used if <code>direction</code> is specified.</b></span>
+	#[since="1.20.2"]
 	space?: Space,
 	/// If specified, determines the direction of the raycast. Otherwise, defaults to the direction at the entity is facing (as if `space` is `"local"`.)
+	#[since="1.20.2"]
 	direction?: Vector,
 	/// If specified, the entity condition type will check if this bientity condition type is fulfilled by either or both the 'actor' (the entity being checked by the entity condition type) and 'target' (entity that the ray-cast has gone through). If not, the entity will be ignored.
 	match_bientity_condition?: BientityCondition,
 	/// If specified, the entity condition type will check if this bientity condition type is fulfilled by either or both the 'actor' (the entity being checked by the entity condition type) and 'target' (the entity that has hit by the ray-cast).
 	hit_bientity_condition?: BientityCondition,
 	/// Determines the distance of the raycast for entities if `entity` is set to `true`. If absent, it will use the higher value between the entity's attack range (with Reach Entity Attributes compatibility) or the `distance` field.
+	#[since="1.20.2"]
 	entity_distance?: float @ 0.0..,
 	/// If specified, the entity condition type will check if the block that was hit by the ray-cast fulfills this block condition type.
 	block_condition?: BlockCondition,
 	/// Determines the distance of the raycast for blocks if `block` is set to `true`. If absent, it will use the higher value between the entity's block reach (with Reach Entity Attributes compatibility) or the `distance` field.
+	#[since="1.20.2"]
 	block_distance?: float @ 0.0..,
 }
 

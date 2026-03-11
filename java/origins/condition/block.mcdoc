@@ -234,6 +234,7 @@ dispatch origins:block_condition["origins:block_state", "apoli:block_state"] to 
 /// ```
 /// 
 /// This example will check if there is an entity inside the block.
+#[since="1.20.2"]
 dispatch origins:block_condition["origins:command", "apoli:command"] to struct Command {
 	/// The command to execute.
 	command: #[command(slash="allowed")] string,

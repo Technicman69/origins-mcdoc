@@ -928,10 +928,13 @@ dispatch origins:entity_action["origins:grant_advancement", "apoli:grant_advance
 	/// The namespace and ID of the advancement to be granted to the player.
 	advancement: (#[id="advancement"] string | string),
 	/// If specified, determines the criteria to grant to the specified advancement.
+	#[since="1.20.2"]
 	criteria?: [#[advancement_criterion=(id=[advancement])] string],
 	/// If specified, determines the criterion to grant to the specified advancement.
+	#[since="1.20.2"]
 	criterion?: #[advancement_criterion=(id=[advancement])] string,
 	/// Determines how to select the parent advancement(s) or child(ren) advancement(s) of the specified advancement. Can be one of: `"only"`, `"through"`, `"from"`, `"until"`, `"everything"`
+	#[since="1.20.2"]
 	selection?: AdvancementSelection,
 }
 
@@ -1426,18 +1429,22 @@ dispatch origins:entity_action["origins:raycast", "apoli:raycast"] to struct Ray
 	/// Determines how the ray-cast will handle fluids.
 	fluid_handling?: FluidHandling,
 	/// Determines how the direction will be calculated. <span style="color: goldenrod;"><b>Only used if <code>direction</code> is specified.</b></span>
+	#[since="1.20.2"]
 	space?: Space,
 	/// If specified, determines the direction of the raycast. Otherwise, defaults to the direction at the entity is facing (as if `space` is `"local"`.)
+	#[since="1.20.2"]
 	direction?: Vector,
 	/// If specified, the specified bientity action type will only be executed if the specified bientity condition type is fulfilled by either or both the 'actor' (the entity that has the power) or 'target' (the entity that was hit by the ray-cast).
 	bientity_condition?: BientityCondition,
 	/// If specified, this bientity action type will be executed on either or both the 'actor' (the entity that has the power) or 'target' (the entity that was hit by the ray-cast).
 	bientity_action?: BientityAction,
 	/// Determines the distance of the raycast for entities if `entity` is set to `true`. If absent, it will use the higher value between the entity's attack range (with Reach Entity Attributes compatibility) or the `distance` field.
+	#[since="1.20.2"]
 	entity_distance?: float @ 0.0<..,
 	/// If specified, this block action type will be executed on the block the ray-cast has hit.
 	block_action?: BlockAction,
 	/// Determines the distance of the raycast for blocks if `block` is set to `true`. If absent, it will use the higher value between the entity's block reach (with Reach Entity Attributes compatibility) or the `distance` field.
+	#[since="1.20.2"]
 	block_distance?: float @ 0.0<..,
 	/// If specified, execute this entity action type *before* casting a ray.
 	before_action?: EntityAction,
@@ -1573,10 +1580,13 @@ dispatch origins:entity_action["origins:revoke_advancement", "apoli:revoke_advan
 	/// The namespace and ID of the advancement to be revoked from the player.
 	advancement?: (#[id="advancement"] string | string),
 	/// If specified, determines the criteria to revoke from the specified advancement.
+	#[since="1.20.2"]
 	criteria?: [#[advancement_criterion=(id=[advancement])] string],
 	/// If specified, determines the criterion to revoke from the specified advancement.
+	#[since="1.20.2"]
 	criterion?: #[advancement_criterion=(id=[advancement])] string,
 	/// Determines how to select the parent advancement(s) or child(ren) advancement(s) of the specified advancement. Can be one of: `"only"`, `"through"`, `"from"`, `"until"`, `"everything"`
+	#[since="1.20.2"]
 	selection?: AdvancementSelection,
 }
 
