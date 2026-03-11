@@ -38,9 +38,14 @@ use ::java::fabric::load_condition::LoadCondition
 
 
 
-struct HudRender {
+type HudRender = (
+	SingleHudRender |
+	#[since="1.20.2"] [SingleHudRender]
+)
+
+struct SingleHudRender {
     /// Whether the bar should be visible or not.
-    should_render?: boolean,
+  	should_render?: boolean,
     /// The path to the file in the assets which contains what the bar looks like. See the List of sprites for a list of files included by default in the mod.
     sprite_location?: ResourceBarFile,
     /// The indexed position of the bar on the sprite to use. Please note that indexes start at 0.
@@ -378,6 +383,7 @@ dispatch origins:power["origins:action_on_block_break", "apoli:action_on_block_b
 /// }
 /// ```
 /// This example will make Netherrack blocks placed by the player will absorb Lava fluid with a 4 radius star-shaped area, and replace the placed Netherrack with a Magma block.
+#[since="1.20.2"]
 dispatch origins:power["origins:action_on_block_place", "apoli:action_on_block_place"] to struct ActionOnBlockPlace {
 	...Conditioned,
 	/// If specified, this entity action will be executed on the player upon placing a block.
@@ -1912,6 +1918,7 @@ dispatch origins:power["origins:entity_group", "apoli:entity_group"] to struct E
 /// ```
 /// 
 /// This example will deal 6 (3 hearts of) damage to entities that were removed from the set.
+#[since="1.20.2"]
 dispatch origins:power["origins:entity_set", "apoli:entity_set"] to struct EntitySet {
 	...Conditioned,
 	/// If specified, this bientity action will be executed on either or both the '**actor**' and the '**target**' upon the '**target**' being added to the set.
@@ -4055,20 +4062,24 @@ dispatch origins:power["origins:particle", "apoli:particle"] to struct Particle 
 	/// The particle type that will be spawned.
 	particle: ParticleEffect,
 	/// If specified, the particle will only be visible if this bientity condition is fulfilled by either or both the entity that has the power and the entity looking at the entity that has the power.
+	#[since="1.20.2"]
 	bientity_condition?: BientityCondition,
 	/// Determines the amount of particles to spawn.
 	count?: int @ 0..,
 	/// Determines the speed of the specified particle type.
 	speed?: float @ 0.0..,
 	/// Determines whether to display the emitted particles within 512 blocks (`true`) or 32 blocks (`false`).
+	#[since="1.20.2"]
 	force?: boolean,
 	/// Determines the size of the three-dimensional cuboid volume to spawn the specified particle type in.
 	spread?: Vector,
 	/// The offset of where the particle will be centered in the X axis.
+	#[since="1.20.2"]
 	offset_x?: float,
 	/// The offset of where the particle will be centered in the Y axis.
 	offset_y?: float,
 	/// The offset of where the particle will be centered in the Z axis.
+	#[since="1.20.2"]
 	offset_z?: float,
 	/// Determines how often the particles should spawn (interval in ticks).
 	frequency: int,
@@ -4258,6 +4269,7 @@ dispatch origins:power["origins:prevent_being_used", "apoli:prevent_being_used"]
 /// ```
 /// 
 /// This example will prevent the player from placing blocks in spaces occupied by source fluids.
+#[since="1.20.2"]
 dispatch origins:power["origins:prevent_block_place", "apoli:prevent_block_place"] to struct PreventBlockPlace {
 	...Conditioned,
 	/// If specified, this entity action will be executed on the player upon being prevented from placing a block.

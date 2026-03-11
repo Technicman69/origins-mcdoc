@@ -1313,6 +1313,7 @@ dispatch origins:entity_action["origins:play_sound", "apoli:play_sound"] to stru
 /// ```
 /// 
 /// This example will teleport the entity on top of the center of a random block included in the `minecraft:wools` block tag within a 9x17x9 area.
+#[since="1.20.2"]
 dispatch origins:entity_action["origins:random_teleport", "apoli:random_teleport"] to struct RandomTeleport {
 	/// Determines the width of the area.
 	area_width?: float @ 0.0..,
@@ -1486,6 +1487,7 @@ dispatch origins:entity_action["origins:raycast", "apoli:raycast"] to struct Ray
 /// ```
 /// 
 /// This example will remove the power itself from the entity.
+#[since="1.20.2"]
 dispatch origins:entity_action["origins:remove_power", "apoli:remove_power"] to struct RemovePower {
 	/// The ID of the power to remove from the entity.
 	power: (#[id="origins:power"] string | string),
@@ -1597,6 +1599,7 @@ dispatch origins:entity_action["origins:revoke_advancement", "apoli:revoke_advan
 /// ```
 /// 
 /// This example will revoke all powers granted by the Blazeborn origin.
+#[since="1.20.2"]
 dispatch origins:entity_action["origins:revoke_all_powers", "apoli:revoke_all_powers"] to struct RevokeAllPowers {
 	/// The ID of the source to revoke powers from.
 	source: (#[id(registry="origins:source")] string | string),
@@ -1910,6 +1913,7 @@ dispatch origins:entity_action["origins:spawn_particles", "apoli:spawn_particles
 	/// The particle type that will be spawned.
 	particle: ParticleEffect,
 	/// If specified, the particle will only be visible if this bientity condition is fulfilled by either or both the entity that has the power and the entity looking at the entity that has the power.
+	#[since="1.20.2"]
 	bientity_condition?: BientityCondition,
 	/// How much of the specified particle type will be spawned.
 	count: int @ 0..,
@@ -1920,10 +1924,12 @@ dispatch origins:entity_action["origins:spawn_particles", "apoli:spawn_particles
 	/// Determines the size of the three-dimensional cuboid volume to spawn the specified particle type in.
 	spread?: Vector,
 	/// The offset of where the particle will be centered in the X axis.
+	#[since="1.20.2"]
 	offset_x?: float,
 	/// The offset of where the particle will be centered in the Y axis.
 	offset_y?: float,
 	/// The offset of where the particle will be centered in the Z axis.
+	#[since="1.20.2"]
 	offset_z?: float,
 }
 

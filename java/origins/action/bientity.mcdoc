@@ -104,7 +104,7 @@ dispatch origins:bientity_action["origins:add_to_entity_set", "apoli:add_to_enti
 /// ```
 /// 
 /// This example will add the target entity to the `example:make_em_glow` (`data/example/powers/make_em_glow.json`) power temporarily for 10 seconds, after which the target entity will be removed.
-#[until="1.20.4"]
+#[since="1.20.2"] #[until="1.20.4"]
 dispatch origins:bientity_action["origins:add_to_set", "apoli:add_to_set"] to AddToSet
 
 /// # Add Velocity
@@ -301,6 +301,28 @@ dispatch origins:bientity_action["origins:remove_from_entity_set", "apoli:remove
 	/// The ID of the power to remove the target entity from.
 	set: (#[id="origins:power"] string | string),
 }
+
+/// #	Remove from Set
+/// 
+/// [Bientity Action Type](https://origins.readthedocs.io/en/latest/types/bientity_action_types)
+/// 
+/// Removes the target entity from the power that uses the [Entity Set (Power Type)](https://origins.readthedocs.io/en/latest/types/power_types) of the actor entity.
+/// 
+/// Type ID: `origins:remove_from_set`
+/// 
+/// 
+/// ###	Examples
+/// 
+/// ```json
+/// "bientity_action": {
+/// 	"type": "origins:remove_from_set",
+/// 	"set": "example:entities_to_exclude"
+/// }
+/// ```
+/// 
+/// This example will remove the target entity from the `example:entities_to_exclude` (`data/example/powers/entities_to_exclude.json`) power.
+#[since="1.20.2"] #[until="1.20.4"]
+dispatch origins:bientity_action["origins:remove_from_set", "apoli:remove_from_set"] to RemoveFromSet
 
 
 /// # Set In Love
