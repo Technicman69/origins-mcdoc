@@ -53,5 +53,7 @@ The syntax checking includes all data types defined in Origins mod:
 - support for texture/model/shader paths auto-completing
 - support for particle params syntax
 - support for earlier versions
-- Fabric load conditions
-- (maybe) add versioned comments (changes in 1.21)
+- *Fabric load conditions
+- *add versioned comments (changes in 1.21)
+
+*maybe
