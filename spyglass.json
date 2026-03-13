@@ -5,7 +5,8 @@
       "@vanilla-resourcepack",
       "@vanilla-mcdoc",
       "./resources/origins/",
-      "./resources/apoli/"
+      "./resources/apoli/",
+      "./resources/fabric/"
     ],
     "mcmetaSummaryOverrides": {
       "commands": {
