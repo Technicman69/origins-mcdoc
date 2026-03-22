@@ -38,14 +38,20 @@ use ::java::fabric::load_condition::LoadCondition
 
 
 
-struct HudRender {
+type HudRender = (
+	SingleHudRender |
+	#[since="1.20.2"] [SingleHudRender]
+)
+
+struct SingleHudRender {
     /// Whether the bar should be visible or not.
-    should_render?: boolean,
+  	should_render?: boolean,
     /// The path to the file in the assets which contains what the bar looks like. See the List of sprites for a list of files included by default in the mod.
     sprite_location?: ResourceBarFile,
     /// The indexed position of the bar on the sprite to use. Please note that indexes start at 0.
     bar_index?: int @ 0..,
     /// The indexed position of the icon on the sprite to use. Please note that indexes start at 0.
+	#[since="1.20.2"]
     icon_index?: int @ 0..,
     /// If set (and should_render is true), the bar will only display when the entity with the power fulfills this condition.
     condition?: EntityCondition,
@@ -378,6 +384,7 @@ dispatch origins:power["origins:action_on_block_break", "apoli:action_on_block_b
 /// }
 /// ```
 /// This example will make Netherrack blocks placed by the player will absorb Lava fluid with a 4 radius star-shaped area, and replace the placed Netherrack with a Magma block.
+#[since="1.20.2"]
 dispatch origins:power["origins:action_on_block_place", "apoli:action_on_block_place"] to struct ActionOnBlockPlace {
 	...Conditioned,
 	/// If specified, this entity action will be executed on the player upon placing a block.
@@ -580,6 +587,7 @@ dispatch origins:power["origins:action_on_callback", "apoli:action_on_callback"]
 /// ```
 /// 
 /// This example will make the entity that died explode.
+#[since="1.20.2"]
 dispatch origins:power["origins:action_on_death", "apoli:action_on_death"] to struct ActionOnDeath {
 	...Conditioned,
 	/// The action to be executed on either or both the '**actor**' and '**target**' entities.
@@ -1541,8 +1549,15 @@ dispatch origins:power["origins:damage_over_time", "apoli:damage_over_time"] to 
 	damage: float,
 	/// How much damage will be dealt each interval on Easy difficulty. If not set, this will be equal to `damage`.
 	damage_easy?: float,
+	/// Use `damage_type` instead.
+	#[until="1.21"]
+	damage_source?: DamageSource,
 	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
+	#[since="1.19.4"] #[until="1.21"]
 	damage_type?: (#[id="damage_type"] string | string),
+	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
+	#[since="1.21"]
+	damage_type: (#[id="damage_type"] string | string),
 	/// If set, the total amount of levels of this enchantment will be counted on the player's armor to increase the `onset_delay`.
 	protection_enchantment?: Enchantment,
 	/// If `protection_enchantment` is set, this multiplier scales how effective it will be (1.0 = time the `onset_delay` is increased is the same as with Hydrophobia and Water Protection).
@@ -1628,6 +1643,7 @@ dispatch origins:power["origins:disable_regen", "apoli:disable_regen"] to struct
 /// ```
 /// 
 /// This example will replace the food component of Cookies, making it take 0.8 seconds to eat (same as kelp) while also giving 4 hunger shanks and 3.2 saturation (4.0 * 0.4 * 2).
+#[since="1.20.2"]
 dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct EdibleItem {
 	...Conditioned,
 	/// If specified, this action will be executed on the player upon consuming an item.
@@ -1910,6 +1926,7 @@ dispatch origins:power["origins:entity_group", "apoli:entity_group"] to struct E
 /// ```
 /// 
 /// This example will deal 6 (3 hearts of) damage to entities that were removed from the set.
+#[since="1.20.2"]
 dispatch origins:power["origins:entity_set", "apoli:entity_set"] to struct EntitySet {
 	...Conditioned,
 	/// If specified, this bientity action will be executed on either or both the '**actor**' and the '**target**' upon the '**target**' being added to the set.
@@ -2132,6 +2149,7 @@ dispatch origins:power["origins:freeze", "apoli:freeze"] to struct Freeze {
 /// ```
 /// 
 /// This example will set the entity with the power on fire every time the `hit_ground` game event is emmited.
+#[since="1.20.2"]
 dispatch origins:power["origins:game_event_listener", "apoli:game_event_listener"] to struct GameEventListener {
 	...Conditioned,
 	...OptionalCooldown,
@@ -2370,6 +2388,7 @@ dispatch origins:power["origins:invisibility", "apoli:invisibility"] to struct I
 	/// Determines whether the glowing outline should be shown or not.
 	render_outline?: boolean,
 	/// If specified, the '**target**' will only be invisible to '**actors**' (either the player or mobs that may see the target) if the bientity condition is fulfilled by either or both of them.
+	#[since="1.20.2"]
 	bientity_condition?: BientityCondition,
 }
 
@@ -2557,6 +2576,7 @@ dispatch origins:power["origins:item_on_item", "apoli:item_on_item"] to struct I
 	/// If specified, this action will be executed on the player after they used an item on an item.
 	entity_action?: EntityAction,
 	/// Determines whether to execute the actions if the player does a right-click (`0` or `"primary"`) or left-click (`1` or `"secondary"`) action.
+	#[since="1.20.2"]
 	click_type?: (0 | "primary" | 1 | "secondary"),
 	/// Determines whether the power should trigger when left-clicking ("primary"), right-clicking ("secondary"), or both, an item.
 	#[since="1.20.4"]
@@ -3168,6 +3188,7 @@ dispatch origins:power["origins:modify_damage_taken", "apoli:modify_damage_taken
 /// ```
 /// 
 /// This example will grant the player the ability to use Silk Touch, regardless of whether the player is holding any item or no item at all.
+#[since="1.20.2"]
 dispatch origins:power["origins:modify_enchantment_level", "apoli:modify_enchantment_level"] to struct ModifyEnchantmentLevel {
 	...Conditioned,
 	/// ID of the enchantment to apply/modify the level of to the entity., e.g. `minecraft:protection`.
@@ -4053,20 +4074,24 @@ dispatch origins:power["origins:particle", "apoli:particle"] to struct Particle 
 	/// The particle type that will be spawned.
 	particle: ParticleEffect,
 	/// If specified, the particle will only be visible if this bientity condition is fulfilled by either or both the entity that has the power and the entity looking at the entity that has the power.
+	#[since="1.20.2"]
 	bientity_condition?: BientityCondition,
 	/// Determines the amount of particles to spawn.
 	count?: int @ 0..,
 	/// Determines the speed of the specified particle type.
 	speed?: float @ 0.0..,
 	/// Determines whether to display the emitted particles within 512 blocks (`true`) or 32 blocks (`false`).
+	#[since="1.20.2"]
 	force?: boolean,
 	/// Determines the size of the three-dimensional cuboid volume to spawn the specified particle type in.
 	spread?: Vector,
 	/// The offset of where the particle will be centered in the X axis.
+	#[since="1.20.2"]
 	offset_x?: float,
 	/// The offset of where the particle will be centered in the Y axis.
 	offset_y?: float,
 	/// The offset of where the particle will be centered in the Z axis.
+	#[since="1.20.2"]
 	offset_z?: float,
 	/// Determines how often the particles should spawn (interval in ticks).
 	frequency: int,
@@ -4256,6 +4281,7 @@ dispatch origins:power["origins:prevent_being_used", "apoli:prevent_being_used"]
 /// ```
 /// 
 /// This example will prevent the player from placing blocks in spaces occupied by source fluids.
+#[since="1.20.2"]
 dispatch origins:power["origins:prevent_block_place", "apoli:prevent_block_place"] to struct PreventBlockPlace {
 	...Conditioned,
 	/// If specified, this entity action will be executed on the player upon being prevented from placing a block.
@@ -4812,6 +4838,7 @@ dispatch origins:power["origins:prevent_sleep", "apoli:prevent_sleep"] to struct
 	/// Determines whether the spawnpoint of the player is set upon right-clicking a bed while being prevented. (similar to what happens when you right-click a bed while it's daytime)
 	set_spawn_point?: boolean,
 	/// Determines the priority of which power will prevent the player to sleep, set their spawn and display a message. The power with `set_spawn_point` set to `true` and the highest `priority` value will be prioritized.
+	#[since="1.20.2"]
 	priority?: int,
 }
 

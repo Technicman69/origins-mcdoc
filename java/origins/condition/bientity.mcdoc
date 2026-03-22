@@ -283,7 +283,7 @@ dispatch origins:bientity_condition["origins:in_entity_set", "apoli:in_entity_se
 /// ```
 /// 
 /// This example will check whether the target entity is either owned by the actor entity or if the target entity is within the `example:special_pets` (`data/example/powers/special_pets.json`) power.
-#[until="1.20.4"]
+#[since="1.20.2"] #[until="1.20.4"]
 dispatch origins:bientity_condition["origins:in_set", "apoli:in_set"] to InSet
 
 /// # Owner

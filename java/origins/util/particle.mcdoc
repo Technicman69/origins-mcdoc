@@ -1,6 +1,5 @@
 type ParticleEffect = (
-    #[id="particle"] string |
-    string |
+    #[id="particle"] string | string |
     Particle
 )
 

@@ -20,7 +20,9 @@ Currently the only way is either:
 - downloading the whole repository and putting it in the datapack's folder, either:
   - via `git clone` command
   - **OR** `Code -> Download ZIP` on Github
-- **OR** downloading it somewhere on your computer and adding it to the workspace, via `File -> Add Folder to Workspace...` and selecting it
+- **OR** downloading it somewhere on your computer and adding your datapack to the workspace, so:
+  1. Open the folder with origins-mcdoc in vs code
+  2. Add your datapack to the workspace via `File -> Add Folder to Workspace...`
 
 ## Features
 The syntax checking includes all data types defined in Origins mod:
@@ -51,5 +53,7 @@ The syntax checking includes all data types defined in Origins mod:
 - support for texture/model/shader paths auto-completing
 - support for particle params syntax
 - support for earlier versions
-- Fabric load conditions
-- (maybe) add versioned comments (changes in 1.21)
+- *Fabric load conditions
+- *add versioned comments (changes in 1.21)
+
+*maybe
