@@ -650,7 +650,7 @@ dispatch origins:entity_action["origins:ender_chest", "apoli:ender_chest"] to st
 /// "entity_action": {
 ///   	"type": "origins:equipped_item_action",
 ///   	"equipment_slot": "mainhand",
-///   	"action": {
+///   	"item_action": {
 /// 	  	"type": "origins:consume",
 /// 	  	"amount": 1
 ///   	}
@@ -662,7 +662,11 @@ dispatch origins:entity_action["origins:equipped_item_action", "apoli:equipped_i
 	/// Which equipped item to execute the action on. One of: `"mainhand"`, `"offhand"`, `"head"`, `"chest"`, `"legs"`, `"feet"`.
 	equipment_slot: EquipmentSlot,
 	/// The item action type to execute on the item stack in the specified equipment slot.
+	#[until="1.21"]
 	action: ItemAction,
+	/// The item action type to execute on the item stack in the specified equipment slot.
+	#[since="1.21"]
+	item_action: ItemAction,
 }
 
 /// # Exhaust
@@ -791,7 +795,11 @@ dispatch origins:entity_action["origins:extinguish", "apoli:extinguish"] to stru
 /// This example will *feed* the player 2 hunger shanks (4 hunger points), and 16 saturation points.
 dispatch origins:entity_action["origins:feed", "apoli:feed"] to struct Feed {
 	/// The amount of food points to restore.
+	#[until="1.21"]
 	food: int,
+	/// The amount of food points to restore.
+	#[since="1.21"]
+	nutrition: int,
 	/// The amount of saturation points to restore.
 	saturation: float,
 }

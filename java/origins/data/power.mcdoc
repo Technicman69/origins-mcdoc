@@ -1650,8 +1650,6 @@ dispatch origins:power["origins:edible_item", "apoli:edible_item"] to struct Edi
 	use_action?: ("eat" | "drink"),
 	/// If specified, the sound event with this namespace and ID will be played when the item is eaten.
 	consume_sound?: (#[id="sound_event"] string | string),
-	/// If specified, the sound event with this namespace and ID will be played when the item is eaten.
-	sound?: (#[id="sound_event"] string | string),
 	/// If specified, this modifier will be applied on the maximum time the item is being consumed (in ticks).
 	#[until="1.21"]
 	consuming_time_modifier?: AttributeModifier,
