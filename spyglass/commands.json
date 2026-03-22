@@ -620,7 +620,7 @@
                         }
                     }
                 },
-                "substract": {
+                "subtract": {
                     "type": "literal",
                     "children": {
                         "value": {
@@ -761,115 +761,103 @@
                 "get": {
                     "type": "literal",
                     "children": {
-                        "target": {
-                            "type": "argument",
-                            "executable": true,
-                            "parser": "minecraft:entity",
-                            "properties": {
-                                "type": "entities",
-                                "amount": "single"
-                            }
-                        },
                         "scale_type": {
                             "type": "argument",
-                            "executable": true,
                             "parser": "minecraft:resource",
                             "properties": {
                                 "registry": "pehkui:scale_type"
                             },
                             "children": {
-                                "target": {
+                                "entity": {
                                     "type": "argument",
-                                    "executable": true,
                                     "parser": "minecraft:entity",
                                     "properties": {
-                                        "type": "entities",
-                                        "amount": "single"
-                                    }
+                                        "amount": "single",
+                                        "type": "entities"
+                                    },
+                                    "children": {
+                                        "scalingFactor": {
+                                            "type": "argument",
+                                            "parser": "brigadier:float",
+                                            "executable": true
+                                        }
+                                    },
+                                    "executable": true
+                                },
+                                "scalingFactor": {
+                                    "type": "argument",
+                                    "parser": "brigadier:float",
+                                    "executable": true
                                 }
-                            }
+                            },
+                            "executable": true
+                        },
+                        "scalingFactor": {
+                            "type": "argument",
+                            "parser": "brigadier:float",
+                            "executable": true
+                        },
+                        "entity": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "amount": "single",
+                                "type": "entities"
+                            },
+                            "children": {
+                                "scalingFactor": {
+                                    "type": "argument",
+                                    "parser": "brigadier:float",
+                                    "executable": true
+                                }
+                            },
+                            "executable": true
                         }
-                    }
+                    },
+                    "executable": true
                 },
                 "compute": {
                     "type": "literal",
                     "children": {
                         "scale_type": {
                             "type": "argument",
-                            "executable": true,
                             "parser": "minecraft:resource",
                             "properties": {
                                 "registry": "pehkui:scale_type"
                             },
                             "children": {
-                                "target": {
+                                "entity": {
                                     "type": "argument",
-                                    "executable": true,
                                     "parser": "minecraft:entity",
                                     "properties": {
-                                        "type": "entities",
-                                        "amount": "single"
-                                    }
+                                        "amount": "single",
+                                        "type": "entities"
+                                    },
+                                    "children": {
+                                        "scalingFactor": {
+                                            "type": "argument",
+                                            "parser": "brigadier:float",
+                                            "executable": true
+                                        }
+                                    },
+                                    "executable": true
+                                },
+                                "scalingFactor": {
+                                    "type": "argument",
+                                    "parser": "brigadier:float",
+                                    "executable": true
                                 }
-                            }
+                            },
+                            "executable": true
                         }
                     }
                 },
                 "delay": {
                     "type": "literal",
                     "children": {
-                        "get": {
-                            "type": "literal",
-                            "children": {
-                                "target": {
-                                    "type": "argument",
-                                    "executable": true,
-                                    "parser": "minecraft:entity",
-                                    "properties": {
-                                        "type": "entities",
-                                        "amount": "single"
-                                    }
-                                },
-                                "scale_type": {
-                                    "type": "argument",
-                                    "executable": true,
-                                    "parser": "minecraft:resource",
-                                    "properties": {
-                                        "registry": "pehkui:scale_type"
-                                    },
-                                    "children": {
-                                        "target": {
-                                            "type": "argument",
-                                            "executable": true,
-                                            "parser": "minecraft:entity",
-                                            "properties": {
-                                                "type": "entities",
-                                                "amount": "single"
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        },
                         "set": {
                             "type": "literal",
                             "children": {
-                                "ticks": {
-                                    "type": "argument",
-                                    "executable": true,
-                                    "parser": "brigadier:integer",
-                                    "children": {
-                                        "target": {
-                                            "type": "argument",
-                                            "executable": true,
-                                            "parser": "minecraft:entity",
-                                            "properties": {
-                                                "type": "entities",
-                                                "amount": "single"
-                                            }
-                                        }
-                                    }
-                                },
                                 "scale_type": {
                                     "type": "argument",
                                     "parser": "minecraft:resource",
@@ -879,76 +867,175 @@
                                     "children": {
                                         "ticks": {
                                             "type": "argument",
-                                            "executable": true,
                                             "parser": "brigadier:integer",
                                             "children": {
-                                                "target": {
+                                                "targets": {
                                                     "type": "argument",
-                                                    "executable": true,
                                                     "parser": "minecraft:entity",
                                                     "properties": {
-                                                        "type": "entities",
-                                                        "amount": "single"
-                                                    }
+                                                        "amount": "multiple",
+                                                        "type": "entities"
+                                                    },
+                                                    "executable": true
                                                 }
-                                            }
+                                            },
+                                            "executable": true
                                         }
                                     }
+                                },
+                                "ticks": {
+                                    "type": "argument",
+                                    "parser": "brigadier:integer",
+                                    "children": {
+                                        "targets": {
+                                            "type": "argument",
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "amount": "multiple",
+                                                "type": "entities"
+                                            },
+                                            "executable": true
+                                        }
+                                    },
+                                    "executable": true
                                 }
                             }
+                        },
+                        "get": {
+                            "type": "literal",
+                            "children": {
+                                "scale_type": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "entity": {
+                                            "type": "argument",
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "amount": "single",
+                                                "type": "entities"
+                                            },
+                                            "executable": true
+                                        }
+                                    },
+                                    "executable": true
+                                },
+                                "entity": {
+                                    "type": "argument",
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "amount": "single",
+                                        "type": "entities"
+                                    },
+                                    "executable": true
+                                }
+                            },
+                            "executable": true
+                        },
+                        "reset": {
+                            "type": "literal",
+                            "children": {
+                                "scale_type": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "targets": {
+                                            "type": "argument",
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "amount": "multiple",
+                                                "type": "entities"
+                                            },
+                                            "executable": true
+                                        }
+                                    },
+                                    "executable": true
+                                },
+                                "targets": {
+                                    "type": "argument",
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "amount": "multiple",
+                                        "type": "entities"
+                                    },
+                                    "executable": true
+                                }
+                            },
+                            "executable": true
                         }
                     }
                 },
                 "reset": {
                     "type": "literal",
                     "children": {
-                        "target": {
-                            "type": "argument",
-                            "executable": true,
-                            "parser": "minecraft:entity",
-                            "properties": {
-                                "type": "entities",
-                                "amount": "single"
-                            }
-                        },
                         "scale_type": {
                             "type": "argument",
-                            "executable": true,
                             "parser": "minecraft:resource",
                             "properties": {
                                 "registry": "pehkui:scale_type"
                             },
                             "children": {
-                                "target": {
+                                "targets": {
                                     "type": "argument",
-                                    "executable": true,
                                     "parser": "minecraft:entity",
                                     "properties": {
-                                        "type": "entities",
-                                        "amount": "single"
-                                    }
+                                        "amount": "multiple",
+                                        "type": "entities"
+                                    },
+                                    "executable": true
                                 }
-                            }
+                            },
+                            "executable": true
+                        },
+                        "targets": {
+                            "type": "argument",
+                            "parser": "minecraft:entity",
+                            "properties": {
+                                "amount": "multiple",
+                                "type": "entities"
+                            },
+                            "executable": true
                         }
-                    }
+                    },
+                    "executable": true
                 },
                 "nbt": {
                     "type": "literal",
                     "children": {
                         "get": {
                             "type": "literal",
-                            "executable": true,
                             "children": {
-                                "target": {
+                                "entity": {
                                     "type": "argument",
-                                    "executable": true,
                                     "parser": "minecraft:entity",
                                     "properties": {
-                                        "type": "entities",
-                                        "amount": "single"
-                                    }
+                                        "amount": "single",
+                                        "type": "entities"
+                                    },
+                                    "children": {
+                                        "path": {
+                                            "type": "argument",
+                                            "parser": "minecraft:nbt_path",
+                                            "children": {
+                                                "scale": {
+                                                    "type": "argument",
+                                                    "parser": "brigadier:double",
+                                                    "executable": true
+                                                }
+                                            },
+                                            "executable": true
+                                        }
+                                    },
+                                    "executable": true
                                 }
-                            }
+                            },
+                            "executable": true
                         }
                     }
                 },
@@ -958,22 +1045,6 @@
                         "set": {
                             "type": "literal",
                             "children": {
-                                "value": {
-                                    "type": "argument",
-                                    "executable": true,
-                                    "parser": "brigadier:bool",
-                                    "children": {
-                                        "target": {
-                                            "type": "argument",
-                                            "executable": true,
-                                            "parser": "minecraft:entity",
-                                            "properties": {
-                                                "type": "entities",
-                                                "amount": "single"
-                                            }
-                                        }
-                                    }
-                                },
                                 "scale_type": {
                                     "type": "argument",
                                     "parser": "minecraft:resource",
@@ -981,23 +1052,39 @@
                                         "registry": "pehkui:scale_type"
                                     },
                                     "children": {
-                                        "value": {
+                                        "enabled": {
                                             "type": "argument",
-                                            "executable": true,
                                             "parser": "brigadier:bool",
                                             "children": {
-                                                "target": {
+                                                "targets": {
                                                     "type": "argument",
-                                                    "executable": true,
                                                     "parser": "minecraft:entity",
                                                     "properties": {
-                                                        "type": "entities",
-                                                        "amount": "single"
-                                                    }
+                                                        "amount": "multiple",
+                                                        "type": "entities"
+                                                    },
+                                                    "executable": true
                                                 }
-                                            }
+                                            },
+                                            "executable": true
                                         }
                                     }
+                                },
+                                "enabled": {
+                                    "type": "argument",
+                                    "parser": "brigadier:bool",
+                                    "children": {
+                                        "targets": {
+                                            "type": "argument",
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "amount": "multiple",
+                                                "type": "entities"
+                                            },
+                                            "executable": true
+                                        }
+                                    },
+                                    "executable": true
                                 }
                             }
                         },
@@ -1006,57 +1093,58 @@
                             "children": {
                                 "scale_type": {
                                     "type": "argument",
-                                    "executable": true,
                                     "parser": "minecraft:resource",
                                     "properties": {
                                         "registry": "pehkui:scale_type"
                                     },
                                     "children": {
-                                        "target": {
+                                        "entity": {
                                             "type": "argument",
-                                            "executable": true,
                                             "parser": "minecraft:entity",
                                             "properties": {
-                                                "type": "entities",
-                                                "amount": "single"
-                                            }
+                                                "amount": "single",
+                                                "type": "entities"
+                                            },
+                                            "executable": true
                                         }
-                                    }
+                                    },
+                                    "executable": true
                                 }
                             }
                         },
                         "reset": {
                             "type": "literal",
                             "children": {
-                                "target": {
-                                    "type": "argument",
-                                    "executable": true,
-                                    "parser": "minecraft:entity",
-                                    "properties": {
-                                        "type": "entities",
-                                        "amount": "single"
-                                    }
-                                },
                                 "scale_type": {
                                     "type": "argument",
-                                    "executable": true,
                                     "parser": "minecraft:resource",
                                     "properties": {
                                         "registry": "pehkui:scale_type"
                                     },
                                     "children": {
-                                        "target": {
+                                        "targets": {
                                             "type": "argument",
-                                            "executable": true,
                                             "parser": "minecraft:entity",
                                             "properties": {
-                                                "type": "entities",
-                                                "amount": "single"
-                                            }
+                                                "amount": "multiple",
+                                                "type": "entities"
+                                            },
+                                            "executable": true
                                         }
-                                    }
+                                    },
+                                    "executable": true
+                                },
+                                "targets": {
+                                    "type": "argument",
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "amount": "multiple",
+                                        "type": "entities"
+                                    },
+                                    "executable": true
                                 }
-                            }
+                            },
+                            "executable": true
                         }
                     }
                 },
@@ -1084,26 +1172,2229 @@
                                 },
                                 "get": {
                                     "type": "literal",
-                                    "executable": true
+                                    "children": {
+                                        "scaledProjectiles": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "block_reach": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "eye_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledReach": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "scaledHealth": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "width": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "visibility": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "interaction_box_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "explosions": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "interaction_box_width": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "flight": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "entity_reach": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "attack": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "jump_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "step_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledFallDamage": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "held_item": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "enableDebugCommands": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "reach": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "view_bobbing": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "model_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "drops": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "knockback": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "minimumCameraDepth": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "enableCommands": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "defense": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "third_person": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "falling": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledMotion": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "base": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "motion": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "attack_speed": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "health": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledExplosions": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "mining_speed": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "accurateNetherPortals": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "scaledDefense": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "model_width": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "projectiles": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledAttack": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "hitbox_width": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "hitbox_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledItemDrops": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "keepAllScalesOnRespawn": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "scalesKeptOnRespawn": {
+                                            "type": "literal",
+                                            "executable": true
+                                        }
+                                    }
                                 },
                                 "set": {
                                     "type": "literal",
-                                    "executable": true
+                                    "children": {
+                                        "scaledProjectiles": {
+                                            "type": "literal",
+                                            "children": {
+                                                "value": {
+                                                    "type": "argument",
+                                                    "parser": "brigadier:bool",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "block_reach": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "eye_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "scaledReach": {
+                                            "type": "literal",
+                                            "children": {
+                                                "value": {
+                                                    "type": "argument",
+                                                    "parser": "brigadier:bool",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledHealth": {
+                                            "type": "literal",
+                                            "children": {
+                                                "value": {
+                                                    "type": "argument",
+                                                    "parser": "brigadier:bool",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "width": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "visibility": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "interaction_box_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "explosions": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "interaction_box_width": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "flight": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "entity_reach": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "attack": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "jump_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "step_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "scaledFallDamage": {
+                                            "type": "literal",
+                                            "children": {
+                                                "value": {
+                                                    "type": "argument",
+                                                    "parser": "brigadier:bool",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "held_item": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "reach": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "view_bobbing": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "model_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "drops": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "knockback": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "defense": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "third_person": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "falling": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "scaledMotion": {
+                                            "type": "literal",
+                                            "children": {
+                                                "value": {
+                                                    "type": "argument",
+                                                    "parser": "brigadier:bool",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "base": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "motion": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "attack_speed": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "health": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "scaledExplosions": {
+                                            "type": "literal",
+                                            "children": {
+                                                "value": {
+                                                    "type": "argument",
+                                                    "parser": "brigadier:bool",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "mining_speed": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "accurateNetherPortals": {
+                                            "type": "literal",
+                                            "children": {
+                                                "value": {
+                                                    "type": "argument",
+                                                    "parser": "brigadier:bool",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledDefense": {
+                                            "type": "literal",
+                                            "children": {
+                                                "value": {
+                                                    "type": "argument",
+                                                    "parser": "brigadier:bool",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "model_width": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "projectiles": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "scaledAttack": {
+                                            "type": "literal",
+                                            "children": {
+                                                "value": {
+                                                    "type": "argument",
+                                                    "parser": "brigadier:bool",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "hitbox_width": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "hitbox_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "children": {
+                                                        "value": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:double",
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "scaledItemDrops": {
+                                            "type": "literal",
+                                            "children": {
+                                                "value": {
+                                                    "type": "argument",
+                                                    "parser": "brigadier:bool",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "keepAllScalesOnRespawn": {
+                                            "type": "literal",
+                                            "children": {
+                                                "value": {
+                                                    "type": "argument",
+                                                    "parser": "brigadier:bool",
+                                                    "executable": true
+                                                }
+                                            }
+                                        }
+                                    }
                                 },
                                 "reset": {
                                     "type": "literal",
+                                    "children": {
+                                        "scaledProjectiles": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "block_reach": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "eye_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledReach": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "scaledHealth": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "width": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "visibility": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "interaction_box_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "explosions": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "interaction_box_width": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "flight": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "entity_reach": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "attack": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "jump_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "step_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledFallDamage": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "held_item": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "reach": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "view_bobbing": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "model_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "drops": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "knockback": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "defense": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "third_person": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "falling": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledMotion": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "base": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "motion": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "attack_speed": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "health": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledExplosions": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "mining_speed": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "accurateNetherPortals": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "scaledDefense": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "model_width": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "projectiles": {
+                                            "type": "literal",
+                                            "children": {
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledAttack": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "hitbox_width": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "hitbox_height": {
+                                            "type": "literal",
+                                            "children": {
+                                                "maximum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                },
+                                                "minimum": {
+                                                    "type": "literal",
+                                                    "executable": true
+                                                }
+                                            }
+                                        },
+                                        "scaledItemDrops": {
+                                            "type": "literal",
+                                            "executable": true
+                                        },
+                                        "keepAllScalesOnRespawn": {
+                                            "type": "literal",
+                                            "executable": true
+                                        }
+                                    },
                                     "executable": true
                                 }
                             }
                         },
                         "delete_scale_data": {
+                            "type": "literal",
+                            "children": {
+                                "uuid": {
+                                    "type": "literal",
+                                    "children": {
+                                        "uuid": {
+                                            "type": "argument",
+                                            "parser": "brigadier:string",
+                                            "properties": {
+                                                "type": "phrase"
+                                            },
+                                            "executable": true
+                                        }
+                                    }
+                                },
+                                "username": {
+                                    "type": "literal",
+                                    "children": {
+                                        "username": {
+                                            "type": "argument",
+                                            "parser": "brigadier:string",
+                                            "properties": {
+                                                "type": "phrase"
+                                            },
+                                            "executable": true
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "garbage_collect": {
+                            "type": "literal",
+                            "executable": true
                         }
                     }
                 },
-                "easing": {},
-                "modifier": {},
-                "power": {},
-                "randomize": {}
+                "easing": {
+                    "type": "literal",
+                    "children": {
+                        "set": {
+                            "type": "literal",
+                            "children": {
+                                "scale_type": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "easing": {
+                                            "type": "argument",
+                                            "parser": "minecraft:resource",
+                                            "properties": {
+                                                "registry": "pehkui:scale_easing"
+                                            },
+                                            "children": {
+                                                "targets": {
+                                                    "type": "argument",
+                                                    "parser": "minecraft:entity",
+                                                    "properties": {
+                                                        "amount": "multiple",
+                                                        "type": "entities"
+                                                    },
+                                                    "executable": true
+                                                }
+                                            },
+                                            "executable": true
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "get": {
+                            "type": "literal",
+                            "children": {
+                                "scale_type": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "entity": {
+                                            "type": "argument",
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "amount": "single",
+                                                "type": "entities"
+                                            },
+                                            "executable": true
+                                        }
+                                    },
+                                    "executable": true
+                                },
+                                "entity": {
+                                    "type": "argument",
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "amount": "single",
+                                        "type": "entities"
+                                    },
+                                    "executable": true
+                                }
+                            },
+                            "executable": true
+                        },
+                        "reset": {
+                            "type": "literal",
+                            "children": {
+                                "scale_type": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "targets": {
+                                            "type": "argument",
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "amount": "multiple",
+                                                "type": "entities"
+                                            },
+                                            "executable": true
+                                        }
+                                    },
+                                    "executable": true
+                                },
+                                "targets": {
+                                    "type": "argument",
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "amount": "multiple",
+                                        "type": "entities"
+                                    },
+                                    "executable": true
+                                }
+                            },
+                            "executable": true
+                        }
+                    }
+                },
+                "modifier": {
+                    "type": "literal",
+                    "children": {
+                        "get": {
+                            "type": "literal",
+                            "children": {
+                                "scale_type": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "entity": {
+                                            "type": "argument",
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "amount": "single",
+                                                "type": "entities"
+                                            },
+                                            "executable": true
+                                        }
+                                    },
+                                    "executable": true
+                                }
+                            }
+                        },
+                        "add": {
+                            "type": "literal",
+                            "children": {
+                                "scale_type": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "scale_modifier": {
+                                            "type": "argument",
+                                            "parser": "minecraft:resource",
+                                            "properties": {
+                                                "registry": "pehkui:scale_modifier"
+                                            },
+                                            "children": {
+                                                "targets": {
+                                                    "type": "argument",
+                                                    "parser": "minecraft:entity",
+                                                    "properties": {
+                                                        "amount": "multiple",
+                                                        "type": "entities"
+                                                    },
+                                                    "executable": true
+                                                }
+                                            },
+                                            "executable": true
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "remove": {
+                            "type": "literal",
+                            "children": {
+                                "scale_type": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "scale_modifier": {
+                                            "type": "argument",
+                                            "parser": "minecraft:resource",
+                                            "properties": {
+                                                "registry": "pehkui:scale_modifier"
+                                            },
+                                            "children": {
+                                                "targets": {
+                                                    "type": "argument",
+                                                    "parser": "minecraft:entity",
+                                                    "properties": {
+                                                        "amount": "multiple",
+                                                        "type": "entities"
+                                                    },
+                                                    "executable": true
+                                                }
+                                            },
+                                            "executable": true
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "reset": {
+                            "type": "literal",
+                            "children": {
+                                "scale_type": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_type"
+                                    },
+                                    "children": {
+                                        "targets": {
+                                            "type": "argument",
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "amount": "multiple",
+                                                "type": "entities"
+                                            },
+                                            "executable": true
+                                        }
+                                    },
+                                    "executable": true
+                                }
+                            }
+                        }
+                    }
+                },
+                "power": {
+                    "type": "literal",
+                    "children": {
+                        "value": {
+                            "type": "argument",
+                            "executable": true,
+                            "parser": "brigadier:float",
+                            "children": {
+                                "target": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "type": "entities",
+                                        "amount": "single"
+                                    }
+                                }
+                            }
+                        },
+                        "scale_type": {
+                            "type": "argument",
+                            "parser": "minecraft:resource",
+                            "properties": {
+                                "registry": "pehkui:scale_type"
+                            },
+                            "children": {
+                                "value": {
+                                    "type": "argument",
+                                    "executable": true,
+                                    "parser": "brigadier:float",
+                                    "children": {
+                                        "target": {
+                                            "type": "argument",
+                                            "executable": true,
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "type": "entities",
+                                                "amount": "single"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "randomize": {
+                    "type": "literal",
+                    "children": {
+                        "scale_type": {
+                            "type": "argument",
+                            "parser": "minecraft:resource",
+                            "properties": {
+                                "registry": "pehkui:scale_type"
+                            },
+                            "children": {
+                                "minOperation": {
+                                    "type": "argument",
+                                    "parser": "minecraft:resource",
+                                    "properties": {
+                                        "registry": "pehkui:scale_operation"
+                                    },
+                                    "children": {
+                                        "minValue": {
+                                            "type": "argument",
+                                            "parser": "brigadier:float",
+                                            "children": {
+                                                "maxOperation": {
+                                                    "type": "argument",
+                                                    "parser": "minecraft:resource",
+                                                    "properties": {
+                                                        "registry": "pehkui:scale_operation"
+                                                    },
+                                                    "children": {
+                                                        "maxValue": {
+                                                            "type": "argument",
+                                                            "parser": "brigadier:float",
+                                                            "children": {
+                                                                "targets": {
+                                                                    "type": "argument",
+                                                                    "parser": "minecraft:entity",
+                                                                    "properties": {
+                                                                        "amount": "multiple",
+                                                                        "type": "entities"
+                                                                    },
+                                                                    "executable": true
+                                                                }
+                                                            },
+                                                            "executable": true
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "operation": {
+                    "type": "argument",
+                    "parser": "minecraft:resource",
+                    "properties": {
+                        "registry": "pehkui:scale_operation"
+                    },
+                    "children": {
+                        "scale_type": {
+                            "type": "argument",
+                            "parser": "minecraft:resource",
+                            "properties": {
+                                "registry": "pehkui:scale_type"
+                            },
+                            "children": {
+                                "value": {
+                                    "type": "argument",
+                                    "parser": "brigadier:float",
+                                    "children": {
+                                        "targets": {
+                                            "type": "argument",
+                                            "parser": "minecraft:entity",
+                                            "properties": {
+                                                "amount": "multiple",
+                                                "type": "entities"
+                                            },
+                                            "executable": true
+                                        }
+                                    },
+                                    "executable": true
+                                }
+                            }
+                        },
+                        "value": {
+                            "type": "argument",
+                            "parser": "brigadier:float",
+                            "children": {
+                                "targets": {
+                                    "type": "argument",
+                                    "parser": "minecraft:entity",
+                                    "properties": {
+                                        "amount": "multiple",
+                                        "type": "entities"
+                                    },
+                                    "executable": true
+                                }
+                            },
+                            "executable": true
+                        }
+                    }
+                }
             }
         }
     }
