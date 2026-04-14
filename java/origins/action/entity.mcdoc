@@ -491,18 +491,22 @@ dispatch origins:entity_action["origins:damage", "apoli:damage"] to struct Damag
 	/// The damage source to be used. Controls e.g. the death message, invulnerabilities (e.g. towards fire), or whether armor is taken into account. Since 1.20.2 use `damage_type` instead. See [Damage Source (Data Type)](https://origins.readthedocs.io/en/latest/types/data_types/damage_source) for more details.
 	#[deprecated="1.19.4"] #[until="1.21"]
 	source?: DamageSource,
-	/// The amount of damage to deal.
-	#[until="1.21"]
-	amount: float,
-	/// The amount of damage to deal.
-	#[since="1.21"]
-	amount?: float,
-	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
-	#[since="1.19.4"] #[until="1.21"]
-	damage_type?: (#[id="damage_type"] string | string),
-	/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
-	#[since="1.21"]
-	damage_type: (#[id="damage_type"] string | string),
+	#[until="1.21"] ...struct {
+		/// The amount of damage to deal.
+		amount: float,
+	},
+	#[since="1.21"] ...struct {
+		/// The amount of damage to deal.
+		amount?: float,
+	},
+	#[since="1.19.4"] #[until="1.21"] ...struct {
+		/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
+		damage_type?: (#[id="damage_type"] string | string),
+	},
+	#[since="1.21"] ...struct {
+		/// Defines the properties of the damage source that will be dealt, such as part of its death message, and whether it can bypass armor, shield, etc. (via damage type tags.)
+		damage_type: (#[id="damage_type"] string | string),
+	},
 	/// If specified, this modifier will be applied to the damage taken by the entity.
 	#[since="1.20.2"]
 	modifier?: AttributeModifier,
@@ -652,7 +656,7 @@ dispatch origins:entity_action["origins:ender_chest", "apoli:ender_chest"] to st
 /// "entity_action": {
 ///   	"type": "origins:equipped_item_action",
 ///   	"equipment_slot": "mainhand",
-///   	"action": {
+///   	"item_action": {
 /// 	  	"type": "origins:consume",
 /// 	  	"amount": 1
 ///   	}
@@ -664,7 +668,11 @@ dispatch origins:entity_action["origins:equipped_item_action", "apoli:equipped_i
 	/// Which equipped item to execute the action on. One of: `"mainhand"`, `"offhand"`, `"head"`, `"chest"`, `"legs"`, `"feet"`.
 	equipment_slot: EquipmentSlot,
 	/// The item action type to execute on the item stack in the specified equipment slot.
+	#[until="1.21"]
 	action: ItemAction,
+	/// The item action type to execute on the item stack in the specified equipment slot.
+	#[since="1.21"]
+	item_action: ItemAction,
 }
 
 /// # Exhaust
@@ -793,7 +801,11 @@ dispatch origins:entity_action["origins:extinguish", "apoli:extinguish"] to stru
 /// This example will *feed* the player 2 hunger shanks (4 hunger points), and 16 saturation points.
 dispatch origins:entity_action["origins:feed", "apoli:feed"] to struct Feed {
 	/// The amount of food points to restore.
+	#[until="1.21"]
 	food: int,
+	/// The amount of food points to restore.
+	#[since="1.21"]
+	nutrition: int,
 	/// The amount of saturation points to restore.
 	saturation: float,
 }
