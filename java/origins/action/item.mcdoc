@@ -85,6 +85,7 @@ dispatch origins:item_action["origins:damage", "apoli:damage"] to struct Damage 
 /// ```
 /// 
 /// This example will recover 2 hearts (4 health points) of the holder of the item stack.
+#[since="1.20.2"]
 dispatch origins:item_action["origins:holder_action", "apoli:holder_action", "origins:holder", "apoli:holder"] to struct HolderAction {
 	/// The entity action to execute on the holder of the item stack.
 	action?: EntityAction,

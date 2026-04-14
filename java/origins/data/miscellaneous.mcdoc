@@ -2,15 +2,16 @@ use ::java::util::slot::EquipmentSlot
 use ::java::data::advancement::trigger::TriggerBase
 use ::java::data::advancement::trigger::Conditions
 use ::java::data::advancement::Trigger
+use ::java::data::loot::function::Conditions as LootConditions
 
-dispatch minecraft:loot_condition[origins:origin] to struct OriginCondition {
+dispatch minecraft:loot_condition["origins:origin"] to struct OriginCondition {
   /// Checks if the player has the specified origin.
 	origin: #[id="origins:origin"] string,
   /// If specified, checks if the specified origin is from this origin layer.
   layer?: #[id="origins:origin_layer"] string,
 }
 
-dispatch minecraft:loot_condition[apoli:power] to struct PowerCondition {
+dispatch minecraft:loot_condition["apoli:power"] to struct PowerCondition {
   /// Checks if the entity has the specified power.
   power: #[id="origins:power"] string,
   /// If specified, checks if the specified power is from this power source.
@@ -23,12 +24,12 @@ inject enum(string) ::java::data::advancement::Trigger {
 }
 
 /// Player has choosen specified origin
-dispatch minecraft:trigger[origins:chose_origin] to Conditions<struct ChoseOrigin {
+dispatch minecraft:trigger["origins:chose_origin"] to Conditions<struct ChoseOrigin {
 	...TriggerBase,
 	origin: #[id="origins:origin"] string,
 }>
 
-dispatch minecraft:loot_function[apoli:add_power] to struct AddPower {
+dispatch minecraft:loot_function["apoli:add_power"] to struct AddPower {
 	power: #[id="origins:power"] string,
   /// Determines if the item should add the power to the entity if held/equipped in the specified equipment slot.
   slot: EquipmentSlot,
@@ -36,9 +37,11 @@ dispatch minecraft:loot_function[apoli:add_power] to struct AddPower {
   hidden?: boolean,
   /// Determines if the color of the tooltip should be blue (false) or red (true).
   negative?: boolean,
+  ...LootConditions,
 }
 
-dispatch minecraft:loot_function[apoli:remove_power] to struct RemovePower {
+dispatch minecraft:loot_function["apoli:remove_power"] to struct RemovePower {
 	power: #[id="origins:power"] string,
   slot: EquipmentSlot,
+  ...LootConditions,
 }
