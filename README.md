@@ -7,13 +7,15 @@ Definition files using the schema format, [`mcdoc`](https://github.com/SpyglassM
 ## Dependencies
 - [Datapack Helper Plus](https://marketplace.visualstudio.com/items?itemName=SPGoding.datapack-language-server) (Visual Studio Code extension) from [Spyglass](https://github.com/SpyglassMC/Spyglass) project by SPGoding
 
-## Instalation
-1. Download the whole repository and putting it in the datapack's folder, either:
-  - via `git clone` command
-  - **OR** `Code -> Download ZIP` on Github
-- **OR** downloading it somewhere on your computer and adding your datapack to the workspace, so:
-  1. Open the folder with origins-mcdoc in vs code
-  2. Add your datapack to the workspace via `File -> Add Folder to Workspace...`
+## Instalation and Recommended Configuration 
+1. ⬇️ Download the whole repository, either:
+    - via `git clone` command
+    - **OR** `Code -> Download ZIP` on Github, and extract `zip` archive *(rearange the folder structure if needed, so the `java` folder is directly inside of it)*
+2. 💡 Put the folder with **Origins MCDOC** somewhere, you will remember
+3. ➕ While having any datapack projects open in Visual Studio Code:
+    1. Go to `File -> Add Folder to Workspace...`
+    2. Navigate and select the **Origins MCDOC** folder
+    3. In the "EXPLORER" tab on the left, drag and put that folder on top of your workspace (Spyglass searches only the root folder for mcdoc) 
   
 <img width="1499" height="743" alt="downloadin_zip_file" src="https://github.com/user-attachments/assets/21148ad3-9c09-4404-b57b-73aab705f8d8" />
 
