@@ -15,7 +15,7 @@ Definition files using the schema format, [`mcdoc`](https://github.com/SpyglassM
   1. Open the folder with origins-mcdoc in vs code
   2. Add your datapack to the workspace via `File -> Add Folder to Workspace...`
   
-<img width="1499" height="743" alt="Downloading zip file: Code -> Download ZIP" src="https://github.com/user-attachments/assets/21148ad3-9c09-4404-b57b-73aab705f8d8" />
+<img width="1499" height="743" alt="downloadin_zip_file" src="https://github.com/user-attachments/assets/21148ad3-9c09-4404-b57b-73aab705f8d8" />
 
 ## Credits
 The whole "resources" directory contains data types from other repositories, and owned by their respective owners!
