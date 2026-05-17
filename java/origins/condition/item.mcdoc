@@ -549,7 +549,7 @@ dispatch origins:item_condition["origins:meat", "apoli:meat"] to struct Meat {}
 /// 
 /// This example will check if the item stack has the `exampleCustomTag: 1b` nbt in `minecraft:custom_data` component.
 #[since="1.21"]
-dispatch origins:item_condition["origins:custom_data", "apoli:custom_data"] to struct Nbt {
+dispatch origins:item_condition["origins:custom_data", "apoli:custom_data"] to struct CustomDataCondition {
 	/// The `minecraft:custom_data` component nbt to check for.
 	nbt: CustomData,
 }
