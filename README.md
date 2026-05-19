@@ -4,20 +4,31 @@
 
 Definition files using the schema format, [`mcdoc`](https://github.com/SpyglassMC/Spyglass/tree/main/packages/mcdoc), for describing data structures used by [Minecraft Origins](https://modrinth.com/mod/origins), including its CODECs, JSONs, and NBTs
 
+<img width="1500" height="500" alt="showcase" src="https://github.com/user-attachments/assets/b2dc2c84-8e40-4284-9ea2-0f1a1f962ddb" />
+
 ## Dependencies
 - [Datapack Helper Plus](https://marketplace.visualstudio.com/items?itemName=SPGoding.datapack-language-server) (Visual Studio Code extension) from [Spyglass](https://github.com/SpyglassMC/Spyglass) project by SPGoding
 
 ## Instalation and Recommended Configuration 
+
 1. ⬇️ Download the whole repository, either:
-    - via `git clone` command
+    - via [**git tool**](https://github.com/git-guides/install-git): [`git clone`](https://github.com/git-guides/git-clone) and (easier to update, via [`git pull`](https://github.com/git-guides/git-pull))
     - **OR** `Code -> Download ZIP` on Github, and extract `zip` archive *(rearange the folder structure if needed, so the `java` folder is directly inside of it)*
 2. 💡 Put the folder with **Origins MCDOC** somewhere, you will remember
 3. ➕ While having any datapack projects open in Visual Studio Code:
     1. Go to `File -> Add Folder to Workspace...`
     2. Navigate and select the **Origins MCDOC** folder
-    3. In the "EXPLORER" tab on the left, drag and put that folder on top of your workspace (Spyglass searches only the root folder for mcdoc) 
-  
-<img width="1499" height="743" alt="downloadin_zip_file" src="https://github.com/user-attachments/assets/21148ad3-9c09-4404-b57b-73aab705f8d8" />
+    3. In the "EXPLORER" tab on the left, drag and put that folder on top of your workspace (Spyglass searches only the root folder for mcdoc)
+
+<img width="1000" height="500" alt="downloadin_zip_file" src="https://github.com/user-attachments/assets/21148ad3-9c09-4404-b57b-73aab705f8d8" />
+<img width="375" height="250" alt="add_to_workspace1" src="https://github.com/user-attachments/assets/90b72a5d-34fc-4ac4-b9bc-829ad1d986ad" />
+<img width="375" height="250" alt="add_to_workspace2" src="https://github.com/user-attachments/assets/2c193525-8edd-4718-a81c-5f1e611890cc" />
+
+## Supported Versions
+- **`1.20.1`** - *experimental*
+- **`1.20.2`** - full support
+- **`1.20.4`** - full support
+- **`1.21.1`** - full support
 
 ## Credits
 The whole "resources" directory contains data types from other repositories, and owned by their respective owners!
