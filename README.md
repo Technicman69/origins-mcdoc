@@ -41,6 +41,7 @@ Reference mcdoc used:
 Big thanks to people from Spyglass discord server who create this wonderfull project and helped me to deal with problems with mcdoc!
 
 ## Future features:
+- Support for `*:*` identifier syntax
 - Making `origins:multiple` unable to be defined as subpower type inside another `origins:multiple`
 - Registering of "origins:multiple" subpowers in power resource, so it can be referenced from actions like `origins:grant_power`
 - Some field requirements are not met (ex. in `apoli:damage` one of `amount`, `modifier`, `modifiers` should be defined, in the meantime all are just set to optional).
