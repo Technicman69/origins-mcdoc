@@ -48,4 +48,3 @@ Big thanks to people from Spyglass discord server who create this wonderfull pro
 - Support for cardinal component `nbt`
 - Support for texture/model/shader paths auto-completing
 - Support for particle params syntax of [Particle Effect](https://origins.readthedocs.io/en/latest/types/data_types/particle_effect/) data type
-- *Fabric load conditions
