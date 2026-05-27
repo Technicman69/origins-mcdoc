@@ -12,46 +12,46 @@ dispatch fabric:load_condition["fabric:not"] to struct Not {
 }
 
 /// A condition that passes if each of the `condition` passes.
-/// If there are no conditions to check, it always passes.
 dispatch fabric:load_condition["fabric:and"] to struct And {
 	/// list of resource conditions.
+	/// If there are no conditions to check, it always passes.
 	values: [LoadCondition],
 }
 
 /// A condition that passes if any of the `condition` passes.
-/// If there are no conditions to check, it always fails.
 dispatch fabric:load_condition["fabric:or"] to struct Or {
 	/// list of resource conditions.
+	/// If there are no conditions to check, it always fails.
 	values: [LoadCondition],
 }
 
 /// A condition that passes if each of the specified `modIds` are loaded.
-/// If there are no IDs to check, it always passes.
 dispatch fabric:load_condition["fabric:all_mods_loaded"] to struct AllModsLoaded {
 	/// list of strings indicating mod IDs.
+	/// If there are no IDs to check, it always passes.
 	values: [string],
 }
 
 /// A condition that passes if any of the specified `modIds` are loaded.
-/// If there are no IDs to check, it always fails.
 dispatch fabric:load_condition["fabric:any_mods_loaded"] to struct AnyModsLoaded {
 	/// list of strings indicating mod IDs.
+	/// If there are no IDs to check, it always fails.
 	values: [string],
 }
 
 /// A condition that passes if each of the `tags` exist. This does not check if those tags have any entries.
-/// If there are no IDs to check, it always passes, including in cases where a nonexistent registry is specified.
 dispatch fabric:load_condition["fabric:tags_populated"] to struct TagsPopulated {
 	/// ID of the registry the tag is for.
 	registry: #[dispatcher_key="util:tag"] string,
 	/// list of tag IDs to check.
+	/// If there are no IDs to check, it always passes, including in cases where a nonexistent registry is specified.
 	tags: [util:tag[[%parent.registry]]],
 }
 
 /// A condition that passes if each of the `features` are enabled.
-/// If there are no IDs to check, it always passes. If an unknown feature is specified, it always fails.
 dispatch fabric:load_condition["fabric:features_enabled"] to struct FeaturesEnables {
 	/// list of the feature IDs
+	/// If there are no IDs to check, it always passes. If an unknown feature is specified, it always fails.
 	features: [(
 		#[id] string |
 		enum(string) FeatureFlags {
@@ -68,11 +68,11 @@ dispatch fabric:load_condition["fabric:features_enabled"] to struct FeaturesEnab
 }
 
 /// A condition that passes if each of the `entries` exist. The entries may be from static or dynamic registries.
-/// If there are no IDs to check, it always passes, including in cases where a nonexistent registry is specified
 dispatch fabric:load_condition["fabric:registry_contains"] to struct RegistryContains {
 	/// ID of the registry.
 	registry: #[dispatcher_key="util:registry_ids"] string,
 	/// List of IDs to check
+	/// If there are no IDs to check, it always passes, including in cases where a nonexistent registry is specified
 	values: [util:registry_ids[[%parent.registry]]],
 }
 
