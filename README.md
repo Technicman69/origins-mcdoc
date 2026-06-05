@@ -15,10 +15,10 @@ Definition files using the schema format, [`mcdoc`](https://github.com/SpyglassM
     - via [**git tool**](https://github.com/git-guides/install-git): [`git clone`](https://github.com/git-guides/git-clone) and (easier to update, via [`git pull`](https://github.com/git-guides/git-pull))
     - **OR** `Code -> Download ZIP` on Github, and extract `zip` archive *(rearange the folder structure if needed, so the `java` folder is directly inside of it)*
 2. 💡 Put the folder with **Origins MCDOC** somewhere, you will remember
-3. ➕ While having any datapack projects open in Visual Studio Code:
+3. ➕ While having any datapack or workspace with datapacks open in Visual Studio Code:
     1. Go to `File -> Add Folder to Workspace...`
-    2. Navigate and select the **Origins MCDOC** folder
-    3. In the "EXPLORER" tab on the left, drag and put that folder on top of your workspace (Spyglass searches only the root folder for mcdoc)
+    2. Navigate and select the **Origins MCDOC** folder you stored somewhere in **step 2.**
+    3. In the *"EXPLORER"* tab on the left, drag and the newly added folder **above** the top folder of your workspace *(Spyglass searches only the root folder of the workspace for `spyglass.json` file and mcdoc inside it recursively)*. **See the gifs below for a demonstration of configuration!**
 
 <img width="1000" height="500" alt="downloadin_zip_file" src="https://github.com/user-attachments/assets/21148ad3-9c09-4404-b57b-73aab705f8d8" />
 <img width="375" height="250" alt="add_to_workspace1" src="https://github.com/user-attachments/assets/90b72a5d-34fc-4ac4-b9bc-829ad1d986ad" />
