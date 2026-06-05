@@ -9,6 +9,8 @@ Definition files using the schema format, [`mcdoc`](https://github.com/SpyglassM
 ## Dependencies
 - [Datapack Helper Plus](https://marketplace.visualstudio.com/items?itemName=SPGoding.datapack-language-server) (Visual Studio Code extension) from [Spyglass](https://github.com/SpyglassMC/Spyglass) project by SPGoding
 
+Origins MCDOC schemas should work similarly to how *Datapack Helper Plus* works with vanilla datapack files like `loot_tables`, `advancements`, etc.
+
 ## Instalation and Recommended Configuration 
 
 1. ⬇️ Download the whole repository, either:
@@ -18,7 +20,8 @@ Definition files using the schema format, [`mcdoc`](https://github.com/SpyglassM
 3. ➕ While having any datapack or workspace with datapacks open in Visual Studio Code:
     1. Go to `File -> Add Folder to Workspace...`
     2. Navigate and select the **Origins MCDOC** folder you stored somewhere in **step 2.**
-    3. In the *"EXPLORER"* tab on the left, drag and the newly added folder **above** the top folder of your workspace *(Spyglass searches only the root folder of the workspace for `spyglass.json` file and mcdoc inside it recursively)*. **See the gifs below for a demonstration of configuration!**
+    3. In the *"EXPLORER"* tab on the left, drag and drop the newly added folder **above** the top folder of your workspace *(Spyglass searches only the root folder of the workspace for `spyglass.json` file and mcdoc inside it recursively)*. **See the gifs below for a demonstration of configuration!**
+    4. If everything is done correctly, once the "Initializing Spyglass..." text on the bottom of the window disappears you should be good to go!
 
 <img width="1000" height="500" alt="downloadin_zip_file" src="https://github.com/user-attachments/assets/21148ad3-9c09-4404-b57b-73aab705f8d8" />
 <img width="375" height="250" alt="add_to_workspace1" src="https://github.com/user-attachments/assets/90b72a5d-34fc-4ac4-b9bc-829ad1d986ad" />
