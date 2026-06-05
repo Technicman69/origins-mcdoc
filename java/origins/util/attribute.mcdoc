@@ -1,3 +1,4 @@
+use ::java::origins::data::attribute::Attribute
 
 /// # Attributed Attribute Modifier
 /// 
@@ -52,7 +53,7 @@
 /// (For example: if the total value is 0.7, the new total value will be 1.05 since `0.7 * (1 + 0.5) = 1.05`)
 struct AttributedAttributeModifier {
 	/// ID of the attribute which will be modified by this modifier.
-	attribute: (#[id="attribute"] string | string),
+	attribute: Attribute,
 	/// The operation which will be performed by this modifier.
 	operation: AttributedAttributeModifierOperation,
 	/// The value to use for the modifier operation.

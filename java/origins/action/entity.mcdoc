@@ -1896,6 +1896,7 @@ dispatch origins:entity_action["origins:spawn_entity", "apoli:spawn_entity"] to 
 	/// If specified, the specified entity action type will be executed on the entity that will be spawned when it is spawned.
 	entity_action?: EntityAction,
 	/// If specified, this bientity action will be executed on either or both the actor (the entity that invoked the entity action) and the target (the spawned entity).
+	#[since="1.20.2"]
 	bientity_action?: BientityAction,
 }
 

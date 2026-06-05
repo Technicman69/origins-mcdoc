@@ -1,0 +1,53 @@
+type Attribute = (
+  OriginsAttribute |
+  #[id="attribute"] string |
+)
+
+enum(string) OriginsAttribute {
+  AttackRange = "reach-entity-attributes:attack_range",
+  Reach = "reach-entity-attributes:reach",
+  ///Controls the speed of the player when in water.
+  WaterSpeed = "additionalentityattributes:water_speed",
+  ///Controls the player's speed when in lava.
+  LavaSpeed = "additionalentityattributes:lava_speed",
+  ///Extra air when underwater / suffocating
+  LungCapacity = "additionalentityattributes:lung_capacity",
+  ///Controls the jump height of the player.
+  JumpHeight = "additionalentityattributes:jump_height",
+  ///Changes the amount of experience dropped from mining blocks and killing mobs.
+  DroppedExperience = "additionalentityattributes:dropped_experience",
+  ///Reduces the amount of magic damage taken.
+  MagicProtection = "additionalentityattributes:magic_protection",
+  ///Controls the player's width.
+  Width = "additionalentityattributes:width",
+  ///Controls the player's height.
+  Height = "additionalentityattributes:height",
+  ///Controls the player's hitbox scale.
+  HitboxScale = "additionalentityattributes:hitbox_scale",
+  ///Controls the player's hitbox width.
+  HitboxWidth = "additionalentityattributes:hitbox_width",
+  ///Controls the player's hitbox height.
+  HitboxHeight = "additionalentityattributes:hitbox_height",
+  ///Controls the player's model scale.
+  ModelScale = "additionalentityattributes:model_scale",
+  ///Controls the player's model width.
+  ModelWidth = "additionalentityattributes:model_width",
+  ///Controls the player's model height.
+  ModelHeight = "additionalentityattributes:model_height",
+  ///Controls the range that the player can be detected by hostile mobs.
+  MobDetectionRange = "additionalentityattributes:mob_detection_range",
+  ///Controls the player's visibility in water by adjusting the fog distance.
+  WaterVisibility = "additionalentityattributes:water_visibility",
+  ///Controls the player's visibility in lava by adjusting the fog distance.
+  LavaVisibility = "additionalentityattributes:lava_visibility",
+  ///Controls the bonus damage dealt when critical hits are made.
+  CriticalBonusDamage = "additionalentityattributes:critical_bonus_damage",
+  ///Controls the player's digging speed
+  DigSpeed = "additionalentityattributes:dig_speed",
+  ///Controls the number of drops the player receives when using enchantments such as Loot and Luck.
+  BonusLootCountRolls = "additionalentityattributes:bonus_loot_count_rolls",
+  ///The number of times the chance-based loot table is rolled.
+  BonusRareLootRolls = "additionalentityattributes:bonus_rare_loot_rolls",
+  ///Controls the distance where the player is able to collect ("touch") entity types in the additionalentityattributes:affected_by_collection_range tag (like items & experience orbs)
+  CollectionRange = "additionalentityattributes:collection_range",
+}

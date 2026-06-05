@@ -18,6 +18,7 @@ use ::java::origins::util::inventory::ProcessMode
 use ::java::origins::util::enchant::Enchantment
 use ::java::origins::util::effect::EffectID
 use ::java::origins::util::NBT
+use ::java::origins::data::attribute::Attribute
 
 struct EntityCondition {
 	type: #[id] #[dispatcher_key="origins:entity_condition"] string,
@@ -192,7 +193,7 @@ dispatch origins:entity_condition["origins:air", "apoli:air"] to struct Air {
 /// This example will check if the value of the entity's `minecraft:generic.armor` attribute is 10 or more.
 dispatch origins:entity_condition["origins:attribute", "apoli:attribute"] to struct Attribute {
 	/// ID of the attribute of which the value should be checked. See [Minecraft Wiki: Attribute (Attributes)](https://minecraft.wiki/w/Attribute#Attributes) for a list of vanilla attributes that can be checked for.
-	attribute:  (#[id="attribute"] string | string),
+	attribute:  Attribute,
 	/// Determines how the attribute's total value should be compared to the specified value.
 	comparison: Comparison,
 	/// The value at which the attribute's total value will be compared to.

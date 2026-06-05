@@ -1,8 +1,7 @@
 use ::java::util::effect::EffectId
 
 type EffectID = (
-    #[until="1.20.2"] EffectId |
-    #[since="1.20.2"] #[id="mob_effect"] string |
+    #[id="mob_effect"] string |
     string |
 )
 

@@ -2,7 +2,6 @@ use ::java::util::text::Keybind
 
 use ::java::util::text::TextBase
 use ::java::util::text::NormalText
-use ::java::util::text::TranslatedText
 use ::java::util::text::ScoreText
 use ::java::util::text::SelectorText
 use ::java::util::text::BlockNbtText
@@ -17,7 +16,15 @@ type Text = (
 
 type TextObject = (
 	NormalText |
-	TranslatedText |
+	struct TranslatedText {
+		translate: #[translation_key] string,
+		#[since="1.19.4"]
+		fallback?: #[translation_value] string,
+		with?: [Text] @ 1..,
+		#[since="1.20.3"]
+		type?: "translatable",
+		...TextBase,
+	} |
 	ScoreText |
 	SelectorText |
 	struct KeybindText {

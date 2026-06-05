@@ -3,7 +3,7 @@ use ::java::origins::util::NBT
 use ::java::origins::util::enchant::Enchantment
 use ::java::origins::util::ingredient::Ingredient
 
-use ::java::world::component::CustomData
+use ::java::world::component::CustomData as CustomDataComponent
 use ::java::util::slot::EquipmentSlot
 
 struct ItemCondition {
@@ -549,9 +549,9 @@ dispatch origins:item_condition["origins:meat", "apoli:meat"] to struct Meat {}
 /// 
 /// This example will check if the item stack has the `exampleCustomTag: 1b` nbt in `minecraft:custom_data` component.
 #[since="1.21"]
-dispatch origins:item_condition["origins:custom_data", "apoli:custom_data"] to struct CustomDataCondition {
+dispatch origins:item_condition["origins:custom_data", "apoli:custom_data"] to struct CustomData {
 	/// The `minecraft:custom_data` component nbt to check for.
-	nbt: CustomData,
+	nbt: CustomDataComponent,
 }
 
 /// # NBT
@@ -572,7 +572,7 @@ dispatch origins:item_condition["origins:custom_data", "apoli:custom_data"] to s
 /// }
 /// ```
 /// 
-//
+/// This example will check if the item stack has the `exampleCustomTag: 1b` nbt.
 #[until="1.21"]
 dispatch origins:item_condition["origins:nbt", "apoli:nbt"] to struct Nbt {
 	/// The NBT data to check for.
