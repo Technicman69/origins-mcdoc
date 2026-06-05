@@ -5,3 +5,212 @@ struct LoadCondition {
 
 /// A condition that always passes
 dispatch fabric:load_condition["fabric:true"] to struct True {}
+
+/// A condition that passes if `condition` does not pass.
+dispatch fabric:load_condition["fabric:not"] to struct Not {
+	value: LoadCondition,
+}
+
+/// A condition that passes if each of the `condition` passes.
+dispatch fabric:load_condition["fabric:and"] to struct And {
+	/// list of resource conditions.
+	/// If there are no conditions to check, it always passes.
+	values: [LoadCondition],
+}
+
+/// A condition that passes if any of the `condition` passes.
+dispatch fabric:load_condition["fabric:or"] to struct Or {
+	/// list of resource conditions.
+	/// If there are no conditions to check, it always fails.
+	values: [LoadCondition],
+}
+
+/// A condition that passes if each of the specified `modIds` are loaded.
+dispatch fabric:load_condition["fabric:all_mods_loaded"] to struct AllModsLoaded {
+	/// list of strings indicating mod IDs.
+	/// If there are no IDs to check, it always passes.
+	values: [string],
+}
+
+/// A condition that passes if any of the specified `modIds` are loaded.
+dispatch fabric:load_condition["fabric:any_mods_loaded"] to struct AnyModsLoaded {
+	/// list of strings indicating mod IDs.
+	/// If there are no IDs to check, it always fails.
+	values: [string],
+}
+
+/// A condition that passes if each of the `tags` exist. This does not check if those tags have any entries.
+dispatch fabric:load_condition["fabric:tags_populated"] to struct TagsPopulated {
+	/// ID of the registry the tag is for.
+	registry: #[dispatcher_key="util:tag"] string,
+	/// list of tag IDs to check.
+	/// If there are no IDs to check, it always passes, including in cases where a nonexistent registry is specified.
+	tags: [util:tag[[%parent.registry]]],
+}
+
+/// A condition that passes if each of the `features` are enabled.
+dispatch fabric:load_condition["fabric:features_enabled"] to struct FeaturesEnables {
+	/// list of the feature IDs
+	/// If there are no IDs to check, it always passes. If an unknown feature is specified, it always fails.
+	features: [(
+		#[id] string |
+		enum(string) FeatureFlags {
+			#[until="1.20"] UPDATE_1_20 = "update_1_20",
+			#[until="1.20"] MINECRAFT_UPDATE_1_20 = "minecraft:update_1_20",
+			BUNDLE = "bundle",
+			MINECRAFT_BUNDLE = "minecraft:bundle",
+			VANILLA = "vanilla",
+			MINECRAFT_VANILLA = "minecraft:vanilla",
+			#[since="1.20.2"] TRADE_REBALANCE = "trade_rebalance",
+			#[since="1.20.2"] MINECRAFT_TRADE_REBALANCE = "minecraft:trade_rebalance",
+		}
+	)],
+}
+
+/// A condition that passes if each of the `entries` exist. The entries may be from static or dynamic registries.
+dispatch fabric:load_condition["fabric:registry_contains"] to struct RegistryContains {
+	/// ID of the registry.
+	registry: #[dispatcher_key="util:registry_ids"] string,
+	/// List of IDs to check
+	/// If there are no IDs to check, it always passes, including in cases where a nonexistent registry is specified
+	values: [util:registry_ids[[%parent.registry]]],
+}
+
+//TODO origins, powers and origin_layers tags?
+//AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+#[since="1.21"]                     dispatch util:tag["block",                       "minecraft:block"]                      	to	#[id(registry="block",                       tags="implicit")] string
+#[since="1.18.2"] #[until="1.21"]   dispatch util:tag["blocks",                      "minecraft:blocks"]                    	to	#[id(registry="blocks",                      tags="implicit")] string
+#[since="1.21"]                     dispatch util:tag["item",                        "minecraft:item"]                       	to	#[id(registry="item",                        tags="implicit")] string
+#[since="1.18.2"] #[until="1.21"]   dispatch util:tag["items",                       "minecraft:items"]                     	to	#[id(registry="items",                       tags="implicit")] string
+#[since="1.21"]                     dispatch util:tag["function",                    "minecraft:function"]                   	to	#[id(registry="function",                    tags="implicit")] string
+#[since="1.18.2"] #[until="1.21"]   dispatch util:tag["functions",                   "minecraft:functions"]                  	to	#[id(registry="functions",                   tags="implicit")] string
+#[since="1.21"]                     dispatch util:tag["fluid",                       "minecraft:fluid"]                      	to	#[id(registry="fluid",                       tags="implicit")] string
+#[since="1.18.2"] #[until="1.21"]   dispatch util:tag["fluids",                      "minecraft:fluids"]                     	to	#[id(registry="fluids",                      tags="implicit")] string
+#[since="1.21"]                     dispatch util:tag["entity_type",                 "minecraft:entity_type"]                	to	#[id(registry="entity_type",                 tags="implicit")] string
+#[since="1.18.2"] #[until="1.21"]   dispatch util:tag["entity_types",                "minecraft:entity_types"]               	to	#[id(registry="entity_types",                tags="implicit")] string
+#[since="1.21"]                     dispatch util:tag["game_event",                  "minecraft:game_event"]                 	to	#[id(registry="game_event",                  tags="implicit")] string
+#[since="1.18.2"] #[until="1.21"]   dispatch util:tag["game_events",                 "minecraft:game_events"]                	to	#[id(registry="game_events",                 tags="implicit")] string
+#[since="1.18.2"]                   dispatch util:tag["biome",                       "minecraft:biome"]                      	to	#[id(registry="biome",                       tags="implicit")] string
+#[since="1.19"]                     dispatch util:tag["flat_level_generator_preset", "minecraft:flat_level_generator_preset"]	to	#[id(registry="flat_level_generator_preset", tags="implicit")] string
+#[since="1.19"]                     dispatch util:tag["world_preset",                "minecraft:world_preset"]               	to	#[id(registry="world_preset",                tags="implicit")] string
+#[since="1.18.2"] #[until="1.19"]   dispatch util:tag["configured_structure_feature","minecraft:configured_structure_feature"]to	#[id(registry="configured_structure_feature",tags="implicit")] string
+#[since="1.19"]                     dispatch util:tag["structure",                   "minecraft:structure"]                  	to	#[id(registry="structure",                   tags="implicit")] string
+#[since="1.19"]                     dispatch util:tag["cat_variant",                 "minecraft:cat_variant"]                	to	#[id(registry="cat_variant",                 tags="implicit")] string
+#[since="1.19"]                     dispatch util:tag["point_of_interest_type",      "minecraft:point_of_interest_type"]     	to	#[id(registry="point_of_interest_type",      tags="implicit")] string
+#[since="1.19"]                     dispatch util:tag["painting_variant",            "minecraft:painting_variant"]           	to	#[id(registry="painting_variant",            tags="implicit")] string
+#[since="1.19"]                     dispatch util:tag["banner_pattern",              "minecraft:banner_pattern"]             	to	#[id(registry="banner_pattern",              tags="implicit")] string
+#[since="1.19"]                     dispatch util:tag["instrument",                  "minecraft:instrument"]                 	to	#[id(registry="instrument",                  tags="implicit")] string
+#[since="1.19.4"]                   dispatch util:tag["damage_type",                 "minecraft:damage_type"]                	to	#[id(registry="damage_type",                 tags="implicit")] string
+#[since="1.20.5"]                   dispatch util:tag["enchantment",                 "minecraft:enchantment"]                	to	#[id(registry="enchantment",                 tags="implicit")] string
+#[since="1.21.6"]                   dispatch util:tag["dialog",                      "minecraft:dialog"]                     	to	#[id(registry="dialog",                      tags="implicit")] string
+#[since="1.21.11"]                  dispatch util:tag["timeline",                    "minecraft:timeline"]                   	to	#[id(registry="timeline",                    tags="implicit")] string
+#[since="26.1"]                     dispatch util:tag["potion",                      "minecraft:potion"]                     	to	#[id(registry="potion",                      tags="implicit")] string
+#[since="26.1"]                     dispatch util:tag["villager_trade",              "minecraft:villager_trade"]             	to	#[id(registry="villager_trade",              tags="implicit")] string
+#[since="26.1"]                     dispatch util:tag["configured_feature",          "minecraft:configured_feature"]         	to	#[id(registry="configured_feature",          tags="implicit")] string
+
+// somehow, even more ĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄĄ
+dispatch util:registry_ids["activity", "minecraft:activity"] to #[id="activity"] string
+dispatch util:registry_ids["armor_material", "minecraft:armor_material"] to #[id="armor_material"] string
+dispatch util:registry_ids["attribute", "minecraft:attribute"] to #[id="attribute"] string
+dispatch util:registry_ids["attribute_type", "minecraft:attribute_type"] to #[id="attribute_type"] string
+dispatch util:registry_ids["block", "minecraft:block"] to #[id="block"] string
+dispatch util:registry_ids["block_entity_type", "minecraft:block_entity_type"] to #[id="block_entity_type"] string
+dispatch util:registry_ids["block_predicate_type", "minecraft:block_predicate_type"] to #[id="block_predicate_type"] string
+dispatch util:registry_ids["block_type", "minecraft:block_type"] to #[id="block_type"] string
+dispatch util:registry_ids["chunk_status", "minecraft:chunk_status"] to #[id="chunk_status"] string
+dispatch util:registry_ids["command_argument_type", "minecraft:command_argument_type"] to #[id="command_argument_type"] string
+dispatch util:registry_ids["consume_effect_type", "minecraft:consume_effect_type"] to #[id="consume_effect_type"] string
+dispatch util:registry_ids["creative_mode_tab", "minecraft:creative_mode_tab"] to #[id="creative_mode_tab"] string
+dispatch util:registry_ids["custom_stat", "minecraft:custom_stat"] to #[id="custom_stat"] string
+dispatch util:registry_ids["data_component_predicate_type", "minecraft:data_component_predicate_type"] to #[id="data_component_predicate_type"] string
+dispatch util:registry_ids["data_component_type", "minecraft:data_component_type"] to #[id="data_component_type"] string
+dispatch util:registry_ids["debug_subscription", "minecraft:debug_subscription"] to #[id="debug_subscription"] string
+dispatch util:registry_ids["decorated_pot_pattern", "minecraft:decorated_pot_pattern"] to #[id="decorated_pot_pattern"] string
+dispatch util:registry_ids["decorated_pot_patterns", "minecraft:decorated_pot_patterns"] to #[id="decorated_pot_patterns"] string
+dispatch util:registry_ids["dialog_action_type", "minecraft:dialog_action_type"] to #[id="dialog_action_type"] string
+dispatch util:registry_ids["dialog_body_type", "minecraft:dialog_body_type"] to #[id="dialog_body_type"] string
+dispatch util:registry_ids["dialog_type", "minecraft:dialog_type"] to #[id="dialog_type"] string
+dispatch util:registry_ids["enchantment_effect_component_type", "minecraft:enchantment_effect_component_type"] to #[id="enchantment_effect_component_type"] string
+dispatch util:registry_ids["enchantment_entity_effect_type", "minecraft:enchantment_entity_effect_type"] to #[id="enchantment_entity_effect_type"] string
+dispatch util:registry_ids["enchantment_level_based_value_type", "minecraft:enchantment_level_based_value_type"] to #[id="enchantment_level_based_value_type"] string
+dispatch util:registry_ids["enchantment_location_based_effect_type", "minecraft:enchantment_location_based_effect_type"] to #[id="enchantment_location_based_effect_type"] string
+dispatch util:registry_ids["enchantment_provider_type", "minecraft:enchantment_provider_type"] to #[id="enchantment_provider_type"] string
+dispatch util:registry_ids["enchantment_value_effect_type", "minecraft:enchantment_value_effect_type"] to #[id="enchantment_value_effect_type"] string
+dispatch util:registry_ids["entity_sub_predicate_type", "minecraft:entity_sub_predicate_type"] to #[id="entity_sub_predicate_type"] string
+dispatch util:registry_ids["entity_type", "minecraft:entity_type"] to #[id="entity_type"] string
+dispatch util:registry_ids["environment_attribute", "minecraft:environment_attribute"] to #[id="environment_attribute"] string
+dispatch util:registry_ids["float_provider_type", "minecraft:float_provider_type"] to #[id="float_provider_type"] string
+dispatch util:registry_ids["fluid", "minecraft:fluid"] to #[id="fluid"] string
+dispatch util:registry_ids["game_event", "minecraft:game_event"] to #[id="game_event"] string
+dispatch util:registry_ids["game_rule", "minecraft:game_rule"] to #[id="game_rule"] string
+dispatch util:registry_ids["height_provider_type", "minecraft:height_provider_type"] to #[id="height_provider_type"] string
+dispatch util:registry_ids["incoming_rpc_methods", "minecraft:incoming_rpc_methods"] to #[id="incoming_rpc_methods"] string
+dispatch util:registry_ids["input_control_type", "minecraft:input_control_type"] to #[id="input_control_type"] string
+dispatch util:registry_ids["instrument", "minecraft:instrument"] to #[id="instrument"] string
+dispatch util:registry_ids["int_provider_type", "minecraft:int_provider_type"] to #[id="int_provider_type"] string
+dispatch util:registry_ids["item", "minecraft:item"] to #[id="item"] string
+dispatch util:registry_ids["item_sub_predicate_type", "minecraft:item_sub_predicate_type"] to #[id="item_sub_predicate_type"] string
+dispatch util:registry_ids["loot_condition_type", "minecraft:loot_condition_type"] to #[id="loot_condition_type"] string
+dispatch util:registry_ids["loot_function_type", "minecraft:loot_function_type"] to #[id="loot_function_type"] string
+dispatch util:registry_ids["loot_nbt_provider_type", "minecraft:loot_nbt_provider_type"] to #[id="loot_nbt_provider_type"] string
+dispatch util:registry_ids["loot_number_provider_type", "minecraft:loot_number_provider_type"] to #[id="loot_number_provider_type"] string
+dispatch util:registry_ids["loot_pool_entry_type", "minecraft:loot_pool_entry_type"] to #[id="loot_pool_entry_type"] string
+dispatch util:registry_ids["loot_score_provider_type", "minecraft:loot_score_provider_type"] to #[id="loot_score_provider_type"] string
+dispatch util:registry_ids["map_decoration_type", "minecraft:map_decoration_type"] to #[id="map_decoration_type"] string
+dispatch util:registry_ids["memory_module_type", "minecraft:memory_module_type"] to #[id="memory_module_type"] string
+dispatch util:registry_ids["menu", "minecraft:menu"] to #[id="menu"] string
+dispatch util:registry_ids["mob_effect", "minecraft:mob_effect"] to #[id="mob_effect"] string
+dispatch util:registry_ids["motive", "minecraft:motive"] to #[id="motive"] string
+dispatch util:registry_ids["number_format_type", "minecraft:number_format_type"] to #[id="number_format_type"] string
+dispatch util:registry_ids["outgoing_rpc_methods", "minecraft:outgoing_rpc_methods"] to #[id="outgoing_rpc_methods"] string
+dispatch util:registry_ids["particle_type", "minecraft:particle_type"] to #[id="particle_type"] string
+dispatch util:registry_ids["permission_check_type", "minecraft:permission_check_type"] to #[id="permission_check_type"] string
+dispatch util:registry_ids["permission_type", "minecraft:permission_type"] to #[id="permission_type"] string
+dispatch util:registry_ids["point_of_interest_type", "minecraft:point_of_interest_type"] to #[id="point_of_interest_type"] string
+dispatch util:registry_ids["pos_rule_test", "minecraft:pos_rule_test"] to #[id="pos_rule_test"] string
+dispatch util:registry_ids["position_source_type", "minecraft:position_source_type"] to #[id="position_source_type"] string
+dispatch util:registry_ids["potion", "minecraft:potion"] to #[id="potion"] string
+dispatch util:registry_ids["recipe_book_category", "minecraft:recipe_book_category"] to #[id="recipe_book_category"] string
+dispatch util:registry_ids["recipe_display", "minecraft:recipe_display"] to #[id="recipe_display"] string
+dispatch util:registry_ids["recipe_serializer", "minecraft:recipe_serializer"] to #[id="recipe_serializer"] string
+dispatch util:registry_ids["recipe_type", "minecraft:recipe_type"] to #[id="recipe_type"] string
+dispatch util:registry_ids["rule_block_entity_modifier", "minecraft:rule_block_entity_modifier"] to #[id="rule_block_entity_modifier"] string
+dispatch util:registry_ids["rule_test", "minecraft:rule_test"] to #[id="rule_test"] string
+dispatch util:registry_ids["schedule", "minecraft:schedule"] to #[id="schedule"] string
+dispatch util:registry_ids["sensor_type", "minecraft:sensor_type"] to #[id="sensor_type"] string
+dispatch util:registry_ids["slot_display", "minecraft:slot_display"] to #[id="slot_display"] string
+dispatch util:registry_ids["slot_source_type", "minecraft:slot_source_type"] to #[id="slot_source_type"] string
+dispatch util:registry_ids["sound_event", "minecraft:sound_event"] to #[id="sound_event"] string
+dispatch util:registry_ids["spawn_condition_type", "minecraft:spawn_condition_type"] to #[id="spawn_condition_type"] string
+dispatch util:registry_ids["stat_type", "minecraft:stat_type"] to #[id="stat_type"] string
+dispatch util:registry_ids["test_environment_definition_type", "minecraft:test_environment_definition_type"] to #[id="test_environment_definition_type"] string
+dispatch util:registry_ids["test_function", "minecraft:test_function"] to #[id="test_function"] string
+dispatch util:registry_ids["test_instance_type", "minecraft:test_instance_type"] to #[id="test_instance_type"] string
+dispatch util:registry_ids["trigger_type", "minecraft:trigger_type"] to #[id="trigger_type"] string
+dispatch util:registry_ids["ticket_type", "minecraft:ticket_type"] to #[id="ticket_type"] string
+dispatch util:registry_ids["villager_profession", "minecraft:villager_profession"] to #[id="villager_profession"] string
+dispatch util:registry_ids["villager_type", "minecraft:villager_type"] to #[id="villager_type"] string
+dispatch util:registry_ids["worldgen/biome_source", "minecraft:worldgen/biome_source"] to #[id="worldgen/biome_source"] string
+dispatch util:registry_ids["worldgen/block_placer_type", "minecraft:worldgen/block_placer_type"] to #[id="worldgen/block_placer_type"] string
+dispatch util:registry_ids["worldgen/block_state_provider_type", "minecraft:worldgen/block_state_provider_type"] to #[id="worldgen/block_state_provider_type"] string
+dispatch util:registry_ids["worldgen/carver", "minecraft:worldgen/carver"] to #[id="worldgen/carver"] string
+dispatch util:registry_ids["worldgen/chunk_generator", "minecraft:worldgen/chunk_generator"] to #[id="worldgen/chunk_generator"] string
+dispatch util:registry_ids["worldgen/decorator", "minecraft:worldgen/decorator"] to #[id="worldgen/decorator"] string
+dispatch util:registry_ids["worldgen/density_function_type", "minecraft:worldgen/density_function_type"] to #[id="worldgen/density_function_type"] string
+dispatch util:registry_ids["worldgen/feature", "minecraft:worldgen/feature"] to #[id="worldgen/feature"] string
+dispatch util:registry_ids["worldgen/feature_size_type", "minecraft:worldgen/feature_size_type"] to #[id="worldgen/feature_size_type"] string
+dispatch util:registry_ids["worldgen/foliage_placer_type", "minecraft:worldgen/foliage_placer_type"] to #[id="worldgen/foliage_placer_type"] string
+dispatch util:registry_ids["worldgen/material_condition", "minecraft:worldgen/material_condition"] to #[id="worldgen/material_condition"] string
+dispatch util:registry_ids["worldgen/material_rule", "minecraft:worldgen/material_rule"] to #[id="worldgen/material_rule"] string
+dispatch util:registry_ids["worldgen/placement_modifier_type", "minecraft:worldgen/placement_modifier_type"] to #[id="worldgen/placement_modifier_type"] string
+dispatch util:registry_ids["worldgen/pool_alias_binding", "minecraft:worldgen/pool_alias_binding"] to #[id="worldgen/pool_alias_binding"] string
+dispatch util:registry_ids["worldgen/root_placer_type", "minecraft:worldgen/root_placer_type"] to #[id="worldgen/root_placer_type"] string
+dispatch util:registry_ids["worldgen/structure_feature", "minecraft:worldgen/structure_feature"] to #[id="worldgen/structure_feature"] string
+dispatch util:registry_ids["worldgen/structure_piece", "minecraft:worldgen/structure_piece"] to #[id="worldgen/structure_piece"] string
+dispatch util:registry_ids["worldgen/structure_placement", "minecraft:worldgen/structure_placement"] to #[id="worldgen/structure_placement"] string
+dispatch util:registry_ids["worldgen/structure_pool_element", "minecraft:worldgen/structure_pool_element"] to #[id="worldgen/structure_pool_element"] string
+dispatch util:registry_ids["worldgen/structure_processor", "minecraft:worldgen/structure_processor"] to #[id="worldgen/structure_processor"] string
+dispatch util:registry_ids["worldgen/structure_type", "minecraft:worldgen/structure_type"] to #[id="worldgen/structure_type"] string
+dispatch util:registry_ids["worldgen/surface_builder", "minecraft:worldgen/surface_builder"] to #[id="worldgen/surface_builder"] string
+dispatch util:registry_ids["worldgen/tree_decorator_type", "minecraft:worldgen/tree_decorator_type"] to #[id="worldgen/tree_decorator_type"] string
+dispatch util:registry_ids["worldgen/trunk_placer_type", "minecraft:worldgen/trunk_placer_type"] to #[id="worldgen/trunk_placer_type"] string

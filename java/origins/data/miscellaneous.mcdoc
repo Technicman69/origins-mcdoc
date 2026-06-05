@@ -45,3 +45,19 @@ dispatch minecraft:loot_function["apoli:remove_power"] to struct RemovePower {
   slot: EquipmentSlot,
   ...LootConditions,
 }
+
+// LOAD CONDITIONS
+
+/// A condition that passes if each of the specified `namespaces` is loaded.
+dispatch fabric:load_condition["apoli:all_namespaces_loaded"] to struct AllNamespacesLoaded {
+	/// list of namespace names to check.
+  /// If there are no namespaces to check, it always passes.
+	namespaces: [string],
+}
+
+/// A condition that passes if any of the specified `namespaces` is loaded.
+dispatch fabric:load_condition["apoli:any_namespace_loaded"] to struct AnyNamespaceLoaded {
+	/// list of namespace names to check.
+  /// If there are no namespaces to check, it always fails.
+	namespaces: [string],
+}
