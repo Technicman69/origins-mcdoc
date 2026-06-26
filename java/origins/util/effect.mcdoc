@@ -18,7 +18,7 @@ struct StatusEffectInstance {
         #[since="1.19.4"] -1 |
     ),
     /// Determines the strength of the status effect (0 being level 1).
-    amplifier?: byte,
+    amplifier?: (#[canonical] byte | int @ 0..255),  // TODO: Properly support unsigned byte in some way
     /// Determines whether the particle effects of the status effect is less noticeable.
     #[until="1.21"]
     is_ambient?: boolean,
