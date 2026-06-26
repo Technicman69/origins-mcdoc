@@ -29,7 +29,7 @@ dispatch minecraft:trigger["origins:chose_origin"] to Conditions<struct ChoseOri
 	origin: #[id="origins:origin"] string,
 }>
 
-dispatch minecraft:loot_function["apoli:add_power"] to struct AddPower {
+dispatch minecraft:loot_function["apoli:add_power"]<F, C> to struct AddPower {
 	power: #[id="origins:power"] string,
   /// Determines if the item should add the power to the entity if held/equipped in the specified equipment slot.
   slot: EquipmentSlot,
@@ -37,11 +37,11 @@ dispatch minecraft:loot_function["apoli:add_power"] to struct AddPower {
   hidden?: boolean,
   /// Determines if the color of the tooltip should be blue (false) or red (true).
   negative?: boolean,
-  ...LootConditions,
+  ...LootConditions<C>,
 }
 
-dispatch minecraft:loot_function["apoli:remove_power"] to struct RemovePower {
+dispatch minecraft:loot_function["apoli:remove_power"]<F, C> to struct RemovePower {
 	power: #[id="origins:power"] string,
   slot: EquipmentSlot,
-  ...LootConditions,
+  ...LootConditions<C>,
 }

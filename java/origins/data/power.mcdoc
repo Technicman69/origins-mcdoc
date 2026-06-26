@@ -52,7 +52,7 @@ struct SingleHudRender {
     /// The indexed position of the bar on the sprite to use. Please note that indexes start at 0.
     bar_index?: int @ 0..,
     /// The indexed position of the icon on the sprite to use. Please note that indexes start at 0.
-	#[since="1.20.2"]
+		#[since="1.20.2"]
     icon_index?: int @ 0..,
     /// If set (and should_render is true), the bar will only display when the entity with the power fulfills this condition.
     condition?: EntityCondition,
