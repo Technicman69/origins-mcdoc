@@ -1,0 +1,131 @@
+use ::java::origins::action::EntityAction
+use ::java::origins::data::power::Conditioned
+use ::java::techo::data::WeightedSound
+
+/// ## Replace Sound Emission
+/// 
+/// Replaces a sound emissed by power holder with a different sound.
+/// 
+/// Type ID: `techo:replace_sound_emission`
+/// 
+/// ### Examples
+/// ```json
+/// {
+///     "type": "techo:replace_sound_emission",
+///     "sounds": {
+///         "minecraft:entity.player.burp": "empty",
+///         "entity.generic.eat": "minecraft:empty"
+///     }
+/// }
+/// ```
+/// This example will replace `entity.player.burp` and `entity.generic.eat` sound events with `empty`, which will mute every eating sound coming from the power holder (`minecraft` namespace can be omitted).
+/// 
+/// ```json
+/// {
+///     "type": "techo:replace_sound_emission",
+///     "sounds": {
+///         "block.([a-z|0-9|-|_]*).step": "block.$1.break"
+///     },
+///     "condition": {
+///         "type": "apoli:on_block",
+///         "inverted": true,
+///         "block_condition": {
+///             "type": "apoli:and",
+///             "conditions": [
+///                 {
+///                     "type": "apoli:in_tag",
+///                     "tag": "minecraft:wool"
+///                 }
+///             ]
+///         }
+///     }
+/// }
+/// ```
+/// This example will replace any stepping sound coming from the power holder with a breaking sound used by the same block that was stepped upon (unless that block is a wool).
+/// 
+/// ```json
+/// {
+///     "type": "techo:replace_sound_emission",
+///     "sounds": {
+///         "(.*)": {
+///             "id": "$1",
+///             "pitch": 0.5
+///         }
+///     }
+/// }
+/// ```
+/// This example will make all the sounds emitted by power holder have pitch set to 0.5 making them sound slow and low.
+/// 
+/// ```json
+/// {
+///     "type": "techo:replace_sound_emission",
+///     "sounds": {
+///         "entity.player.(hurt|death)": [
+///             {
+///                 "id": "minecraft:entity.axolotl.$1",
+///                 "volume": 2,
+///                 "pitch": 0.5,
+///                 "weight": 1
+///             },
+///             {
+///                 "id": "minecraft:entity.wither.$1",
+///                 "volume": 2,
+///                 "pitch": 0.5,
+///                 "weight": 1
+///             }
+///         ]
+///     },
+///     "entity_action": {
+///         "type": "apoli:execute_command",
+///         "command": "say bleh XP"
+///     },
+///     "priority": 1
+/// }
+/// ```
+/// This example will replace power holder's death and hurt sounds with the corresponding sound from axolotl or wither (50% chance for either). The result sounds will be slowed 50% (`"pitch": 0.5`) and will be heard in distance of `32` blocks (`"volume": 2`, so `2 * 16 = 32 blocks`)
+/// 
+/// ### History
+/// | Version | Change                                                                                                       |
+/// |---------|--------------------------------------------------------------------------------------------------------------|
+/// | 1.0.0   | Added the power                                                                                              |
+/// | 1.1.0   | Added new fields: `replace`, `entity_action`, `priority`. Values in `sounds` now accepts **Weighted Sounds** |
+/// 
+dispatch origins:power["techo:replace_sound_emission"] to struct ReplaceSoundEmission {
+  ...Conditioned,
+  /// An object with `"key": "value"` pairs that determine which sound (`"key"`) will be replaced with a new sound (`"value"`). The "value" can be either a **String**, a **Weighted Sound** or an **Array** of **Weighted Sounds** Supports regex matching (with referencing captured groups in replacement) and resourcepack sounds
+  sounds: struct {
+		[#[regex_pattern] string]: (#[id="loot_table"] string | string | WeightedSound | [WeightedSound]),
+	},
+  /// Whether the correctly matched sound should replace the old one, or play along with it. If `false`, both old and new sound will be played
+  /// Defaults to `true`.
+  replace?: boolean,
+  /// If specified, this action will be executed on the player upon successfully replacing (or matching) sound
+  entity_action?: EntityAction,
+  /// Determines the application priority of the power. If several powers match the sound only the highest `priority` with `replace` set to `true` will replace sound and powers with higher `priority` but with `replace` set to `false` will play their sound along
+  /// Defaults to `0`.
+  priority?: int,
+}
+
+/// ## Replace Sound Reception
+/// 
+/// Replaces a sound recepted by power holder with a different sound.
+/// 
+/// Type ID: `techo:replace_sound_reception`
+/// 
+/// ### Examples
+/// ```json
+/// {
+///     "type": "techo:replace_sound_reception",
+///     "sounds": {
+///         "(?!.*:ui\\.).*": "empty"
+///     }
+/// }
+/// ```
+/// This example will mute everything the power holder hears, except for UI sounds (ex. it won't mute `minecraft:ui.button.click`)
+/// 
+/// ### History
+/// | Version | Change          |
+/// |---------|-----------------|
+/// | 1.2.0   | Added the power |
+/// 
+dispatch origins:power["techo:replace_sound_reception"] to ReplaceSoundEmission

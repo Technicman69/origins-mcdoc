@@ -1,0 +1,57 @@
+use ::java::origins::action::entity::PlaySound as OriginsPlaySound
+
+/// ## Play Sound
+/// 
+/// Plays a sound either at the entity's position or coming from the entity.
+/// 
+/// Type ID: `techo:play_sound`
+/// 
+/// !!! Note
+/// 
+/// The value of the volume field is used to multiply the base distance of the sound event, which is 16 blocks (1.0).
+/// 
+/// ### Examples
+/// 
+/// ```
+/// "entity_action": {
+///     "type": "techo:play_sound",
+///     "sound": "music_disc.pigstep",
+///     "follow_entity": true
+/// }
+/// ```
+/// This example will play the pigstep music disc that will be heard by all players in the dimension it was played if they are close enough to the entity that played this sound.
+/// 
+/// ```
+/// "entity_action": {
+///     "type": "techo:play_sound",
+///     "sound": "block.end_portal.spawn",
+///     "volume": 1e9001
+/// }
+/// ```
+/// This example will play the sound of creating end portal all around the dimension with all the players hearing it just as loud (`1e9001` yields special float value: `Infinity`).
+/// 
+/// ```
+/// "entity_action": {
+///     "type": "techo:play_sound",
+///     "sound": "ambient.cave",
+///     "internal": true
+/// }
+/// ```
+/// This example plays cave ambient only for this entity.
+/// ### History
+/// | Version | Change                      |
+/// |---------|-----------------------------|
+/// | 1.0.0   | Added the action            |
+/// | 1.2.0   | Added new field: `internal` |
+dispatch origins:entity_action["techo:play_sound"] to struct PlaySound {
+  ...OriginsPlaySound,
+  /// Whether the sound should be heard coming from entity's position when it moves.
+  /// Defaults to `false`
+  follow_entity: boolean,
+  /// Whether all players in the dimension should register this sound as playing even if outside of its range. If `false` player won't hear it even if they come in the range. <br/>**Note**: This does **not** make all the players hear the sound just as loud.
+  /// Defaults to value of `follow_entity`
+  global: boolean,
+  /// Whether only the entity that plays this sound should hear it.
+  /// Defaults to `false`
+  internal: boolean,
+}

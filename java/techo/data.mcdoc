@@ -1,0 +1,104 @@
+/// ## Weighted Sound
+/// 
+/// An **Object** representing a sound that can have volume and pitch. If in an **Array** it can also have weight that determines how likely it is to be chosen.
+/// 
+/// Used in **Replace Sound Emission** to provide a sound replacement.
+/// 
+/// ### Examples
+/// 
+/// ```json
+/// [
+///     {
+///         "id": "entity.villager.yes",
+///         "weight": 1
+///     },
+///     {
+///         "id": "entity.villager.no",
+///         "weight": 1
+///     }
+/// ]
+/// ```
+/// This example will return either `entity.villager.yes` or `entity.villager.no` with the same probability for both.
+/// 
+/// 
+/// ### History
+/// | Version | Change              |
+/// |---------|---------------------|
+/// | 1.1.0   | Added the data type |
+/// 
+/// ## Resource Value Provider
+/// 
+/// Provides a scaled value from a **Resource** power (in order to convert an integer resource value to a fraction float).
+/// 
+/// Can be passed instead of any float value of a uniform vector/matrix in a post shader
+/// 
+/// ### Fields
+/// 
+/// | Field      | Type       | Default | Description                                                                                                                     |
+/// |------------|------------|---------|---------------------------------------------------------------------------------------------------------------------------------|
+/// | `resource` | Identifier |         | The ID of the resource power from which the uniform value will be set.                                                          |
+/// | `scale`    | Float      | `0.01`  | Can be defined instead of `min` and `max` pair. The value by which the one provided by resource will be multiplied.             |
+/// | `min`      | Float      |         | The value to which the `min` boundary of the resource should be mapped. If defined with `max`, will be used instead of `scale`. |
+/// | `max`      | Float      |         | The value to which the `max` boundary of the resource should be mapped. If defined with `min`, will be used instead of `scale`. |
+/// 
+/// ### Examples
+/// `assets/example/shaders/post/chromatic_aberration.json`
+/// 
+/// ```json
+/// {
+///   "targets": [
+///     "swap"
+///   ],
+///   "passes": [
+///     {
+///       "name": "deconverge",
+///       "intarget": "minecraft:main",
+///       "outtarget": "swap",
+///       "uniforms": [
+///         {
+///           "name": "ConvergeX",
+///           "values": [ 0.0,  0.0,  0.0 ]
+///         },
+///         {
+///           "name": "ConvergeY",
+///           "values": [  0.0, 0.0,  0.0 ]
+///         },
+///         {
+///           "name": "RadialConvergeX",
+///           "values": [  {"resource": "example:intensity", "min": 0.9, "max": 1.0},  {"resource": "example:intensity", "min": 1.02, "max": 1.0},  {"resource": "example:intensity", "min": 1.02, "max": 1.0} ]
+///         },
+///         {
+///           "name": "RadialConvergeY",
+///           "values": [  {"resource": "example:intensity", "min": 0.9, "max": 1.0},  {"resource": "example:intensity", "min": 1.02, "max": 1.0},  {"resource": "example:intensity", "min": 1.02, "max": 1.0} ]
+///         }
+///       ]
+///     },
+///     {
+///       "name": "blit",
+///       "intarget": "swap",
+///       "outtarget": "minecraft:main"
+///     }
+///   ]
+/// }
+/// 
+/// ```
+/// This example will let the `example:intensity` resource power control the intensity of a Chromatic Aberration shader
+/// 
+/// ### History
+/// | Version | Change              |
+/// |---------|---------------------|
+/// | 1.2.0   | Added the data type |
+/// 
+struct WeightedSound {
+  /// The ID of the sound to play. Can contain backreferences (`$1`, `$2` etc.) of the regex groups matched.
+  id: (#[id] string | string),
+  /// The volume of the sound.
+  /// Defaults to the volume of the original sound.
+  volume?: float,
+  /// The pitch of the sound.
+  /// Defaults to the pitch of the original sound.
+  pitch?: float,
+  /// The weight of the sound. The chance of the sound to be picked is determined by dividing the weight to the sum of all weights (`weight / sumOfAllWeights = chance)`.
+  /// Defaults to `1`
+  weight?: int @ 1..
+}
