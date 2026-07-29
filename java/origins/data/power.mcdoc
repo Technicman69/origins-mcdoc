@@ -17,6 +17,7 @@ use ::java::origins::util::item::ItemStack
 use ::java::origins::util::item::PositionedItemStack
 use ::java::origins::util::attribute::AttributeModifier
 use ::java::origins::util::attribute::AttributedAttributeModifier
+use ::java::origins::util::attribute::WeirdCalioAttributeModifier
 use ::java::origins::util::inventory::ItemSlot
 use ::java::origins::util::inventory::PositionedItemSlot
 use ::java::origins::util::particle::ParticleEffect
@@ -3627,9 +3628,9 @@ dispatch origins:power["origins:modify_jump", "apoli:modify_jump"] to struct Mod
 dispatch origins:power["origins:modify_lava_speed", "apoli:modify_lava_speed"] to struct ModifyLavaSpeed {
 	...Conditioned,
 	/// If specified, this modifier will be applied to the movement speed while in lava.
-	modifier?: AttributeModifier,
+	modifier?: WeirdCalioAttributeModifier,
 	/// If specified, these modifiers will be applied to the movement speed while in lava.
-	modifiers?: [AttributeModifier],
+	modifiers?: [WeirdCalioAttributeModifier],
 }
 
 /// # Modify Player Spawn
@@ -3849,9 +3850,9 @@ dispatch origins:power["origins:modify_status_effect_duration", "apoli:modify_st
 dispatch origins:power["origins:modify_swim_speed", "apoli:modify_swim_speed"] to struct ModifySwimSpeed {
 	...Conditioned,
 	/// If specified, this modifier will apply to the swim speed.
-	modifier?: AttributeModifier,
+	modifier?: WeirdCalioAttributeModifier,
 	/// If specified, these modifiers will apply to the swim speed.
-	modifiers?: [AttributeModifier],
+	modifiers?: [WeirdCalioAttributeModifier],
 }
 
 /// # Modify Type Tag

@@ -214,6 +214,23 @@ type AttributeModifier = (
 	} |
 )
 
+type WeirdCalioAttributeModifier = (
+	#[until="1.21"]
+	AttributeModifier |
+	#[since="1.21"]
+	struct {
+		/// A descriptive id for the modifier, describing where it comes from.
+		id: #[id] string,
+		/// The operation which will be performed by this modifier.
+		operation: (
+			AttributeModifierOperation |
+			AttributedAttributeModifierOperation |
+		),
+		/// The amount to use for the modifier operation.
+		amount?: float,
+	} |
+)
+
 /// # Modifier Operation
 /// 
 /// [Data Type](https://origins.readthedocs.io/en/latest/types/data_types)
