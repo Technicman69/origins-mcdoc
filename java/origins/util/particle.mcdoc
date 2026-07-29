@@ -9,6 +9,8 @@ struct Particle {
         #[until="1.21"]
         string |
         #[since="1.21"]
+        #[nbt=minecraft:particle[[type]]] string |
+        #[since="1.21"]
         minecraft:particle[[type]]
     )
 }

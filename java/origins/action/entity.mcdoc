@@ -1433,6 +1433,10 @@ dispatch origins:entity_action["origins:random_teleport", "apoli:random_teleport
 /// This example will cast a ray that will travel in the direction that your body is facing towards but slightly down, and will travel the same distance as your block reach for blocks, and two blocks for entities.
 dispatch origins:entity_action["origins:raycast", "apoli:raycast"] to struct Raycast {
 	/// Determines the maximum distance the ray-cast will travel.
+	#[until="1.20.2"]
+	distance: float @ 0.0<..,
+	/// Determines the maximum distance the ray-cast will travel.
+	#[since="1.20.2"]
 	distance?: float @ 0.0<..,
 	/// Determines whether the ray-cast should include blocks.
 	block?: boolean,
